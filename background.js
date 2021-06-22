@@ -112,6 +112,8 @@ chrome.runtime.onMessage.addListener(
         headers: {
           // 'Authorization': bearer,
           'Content-type': 'application/json',
+		  		  'clientId': "5",
+		  'version': "1.0.0",
         },
           body: JSON.stringify({
             first_name: request.first_name,
@@ -152,6 +154,8 @@ chrome.runtime.onMessage.addListener(
         headers: {
           // 'Authorization': bearer,
           'Content-type': 'application/json',
+		  'clientId': "5",
+		  'version': "1.0.0",
         },
           body: JSON.stringify({
             // email: request.username,
@@ -184,7 +188,7 @@ chrome.runtime.onMessage.addListener(
     }
     if (request.greeting == "attachment") {
 
-      var url = "https://bugshot.view4all.de/api/companies/3941b6a0-afd5-11ea-aabd-b96c7ec27026/projects/39607b40-afd5-11ea-8927-2343a56055b9/bugs/"+id+"/attachements";
+      var url = "https://bugshot.view4all.de/api/companies/ed76dad0-d009-11eb-a6b2-6dc45fd46f39/projects/2616c0e0-d00a-11eb-8702-7714ecc69958/bugs/"+id+"/attachements";
       var bearer = 'Bearer ' + localStorage['bearer_token'];
       fetch(url, {
           method: 'POST',
@@ -194,6 +198,8 @@ chrome.runtime.onMessage.addListener(
           headers: {
             'Authorization': bearer,
             'Content-type': 'application/json',
+			'clientId': "5",
+		    'version': "1.0.0",
           },
           body: JSON.stringify({
             designation: request.name,
@@ -248,7 +254,7 @@ chrome.runtime.onMessage.addListener(
     if (request.greeting == "fetchpro") {
 
       // var bearer_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGJmMmE0YTdkODNiMWIyZTk5YmU2NzY0YzA5ZDJiZDI1YTc2OWRiYWNlMWJlMDAxMDJiOTNkOTc2YjU0NWY2MGY1ZGZiMTAyMjkwYTliOWEiLCJpYXQiOjE1OTI4OTYzOTEsIm5iZiI6MTU5Mjg5NjM5MSwiZXhwIjoxNjI0NDMyMzkxLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.t6zyqsg8MfFVRsf3NEGl1XmC7Ewu__Tiwq4NGL4Tkbl3u4WvKlJHVE59WMdzr1-58fOoyz-eh16S0Uvk_di1wglX_ebJBBDpLsbcxXuBFKXnJdSSjoCmJiAtQi-Nf7aOwb0lYJK5b8_MW_ey8PpVzop4bm1npAt-T9bznYNUd31SMHZeAggHDHz0GTfE4xuwghTmJQtVlgM2WcuCO2_GFSxpOJbdqA7TSZFcCjf_qfLadKlXQq6Y-l2wfRQgyeqU8M70vgBnSvAJGaLmquGt9aB963Ne9eybBpOdgvXrsJnjVKdHlNglm5O9xY7c3lZASFYjMxvbLwkA2ksBihxz1zZSymPKvE3Jbois7bul4sn4DQJZiQ_61HPyVYsfznC-L0kFFEQRjlq2UllhkR8qhxqGubEfGHTETdYk1BKEFOurRUEH5t504mzyQcwnukld2IvdUq4Ijn286usCn31uzgfPVEIVKEqK5gYgUcHzg3o5_mNOlaEpVIktdxWGW9KtCxursWcXxkyqar2q-1VTNFXU-PioEKMh6hsSgTc8WhnbeIGUEQcuHKPEELoVcfjTuafGHZAgY5lS4Zg0MjXYLHzxW0GXxXCx5NPMOdavF-EX0MMcVp93tDWAJvlfhp2IBB2kXseuQ6DZsjgbIkvTkU1EBYsM45B3JtofkBYKCHU';
-      var url = "https://bugshot.view4all.de/api/companies/3941b6a0-afd5-11ea-aabd-b96c7ec27026/projects";
+      var url = "https://bugshot.view4all.de/api/companies/ed76dad0-d009-11eb-a6b2-6dc45fd46f39/projects";
       var bearer = 'Bearer ' + localStorage['bearer_token'];
 
       fetch(url, {
@@ -256,7 +262,9 @@ chrome.runtime.onMessage.addListener(
           withCredentials: true,
           credentials: 'include',
           headers: {
-            'Authorization': bearer
+            'Authorization': bearer,
+		    'clientId': "5",
+		    'version': "1.0.0",			
           }
         }).then(response => {
           return response.json()
@@ -272,7 +280,7 @@ chrome.runtime.onMessage.addListener(
     if (request.greeting == "fetchbug") {
 
       // var bearer_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGJmMmE0YTdkODNiMWIyZTk5YmU2NzY0YzA5ZDJiZDI1YTc2OWRiYWNlMWJlMDAxMDJiOTNkOTc2YjU0NWY2MGY1ZGZiMTAyMjkwYTliOWEiLCJpYXQiOjE1OTI4OTYzOTEsIm5iZiI6MTU5Mjg5NjM5MSwiZXhwIjoxNjI0NDMyMzkxLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.t6zyqsg8MfFVRsf3NEGl1XmC7Ewu__Tiwq4NGL4Tkbl3u4WvKlJHVE59WMdzr1-58fOoyz-eh16S0Uvk_di1wglX_ebJBBDpLsbcxXuBFKXnJdSSjoCmJiAtQi-Nf7aOwb0lYJK5b8_MW_ey8PpVzop4bm1npAt-T9bznYNUd31SMHZeAggHDHz0GTfE4xuwghTmJQtVlgM2WcuCO2_GFSxpOJbdqA7TSZFcCjf_qfLadKlXQq6Y-l2wfRQgyeqU8M70vgBnSvAJGaLmquGt9aB963Ne9eybBpOdgvXrsJnjVKdHlNglm5O9xY7c3lZASFYjMxvbLwkA2ksBihxz1zZSymPKvE3Jbois7bul4sn4DQJZiQ_61HPyVYsfznC-L0kFFEQRjlq2UllhkR8qhxqGubEfGHTETdYk1BKEFOurRUEH5t504mzyQcwnukld2IvdUq4Ijn286usCn31uzgfPVEIVKEqK5gYgUcHzg3o5_mNOlaEpVIktdxWGW9KtCxursWcXxkyqar2q-1VTNFXU-PioEKMh6hsSgTc8WhnbeIGUEQcuHKPEELoVcfjTuafGHZAgY5lS4Zg0MjXYLHzxW0GXxXCx5NPMOdavF-EX0MMcVp93tDWAJvlfhp2IBB2kXseuQ6DZsjgbIkvTkU1EBYsM45B3JtofkBYKCHU';
-      var url = "https://bugshot.view4all.de/api/companies/3941b6a0-afd5-11ea-aabd-b96c7ec27026/projects/"+request.project+"/bugs";
+      var url = "https://bugshot.view4all.de/api/companies/ed76dad0-d009-11eb-a6b2-6dc45fd46f39/projects/"+request.project+"/bugs";
       var bearer = 'Bearer ' + localStorage['bearer_token'];
       console.log(url);
       fetch(url, {
@@ -280,7 +288,9 @@ chrome.runtime.onMessage.addListener(
           withCredentials: true,
           credentials: 'include',
           headers: {
-            'Authorization': bearer
+            'Authorization': bearer,
+		    'clientId': "5",
+		    'version': "1.0.0",			
           }
         }).then(response => {
           return response.json()
@@ -294,7 +304,7 @@ chrome.runtime.onMessage.addListener(
     if (request.greeting == "fetchscreenshots") {
 
       // var bearer_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGJmMmE0YTdkODNiMWIyZTk5YmU2NzY0YzA5ZDJiZDI1YTc2OWRiYWNlMWJlMDAxMDJiOTNkOTc2YjU0NWY2MGY1ZGZiMTAyMjkwYTliOWEiLCJpYXQiOjE1OTI4OTYzOTEsIm5iZiI6MTU5Mjg5NjM5MSwiZXhwIjoxNjI0NDMyMzkxLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.t6zyqsg8MfFVRsf3NEGl1XmC7Ewu__Tiwq4NGL4Tkbl3u4WvKlJHVE59WMdzr1-58fOoyz-eh16S0Uvk_di1wglX_ebJBBDpLsbcxXuBFKXnJdSSjoCmJiAtQi-Nf7aOwb0lYJK5b8_MW_ey8PpVzop4bm1npAt-T9bznYNUd31SMHZeAggHDHz0GTfE4xuwghTmJQtVlgM2WcuCO2_GFSxpOJbdqA7TSZFcCjf_qfLadKlXQq6Y-l2wfRQgyeqU8M70vgBnSvAJGaLmquGt9aB963Ne9eybBpOdgvXrsJnjVKdHlNglm5O9xY7c3lZASFYjMxvbLwkA2ksBihxz1zZSymPKvE3Jbois7bul4sn4DQJZiQ_61HPyVYsfznC-L0kFFEQRjlq2UllhkR8qhxqGubEfGHTETdYk1BKEFOurRUEH5t504mzyQcwnukld2IvdUq4Ijn286usCn31uzgfPVEIVKEqK5gYgUcHzg3o5_mNOlaEpVIktdxWGW9KtCxursWcXxkyqar2q-1VTNFXU-PioEKMh6hsSgTc8WhnbeIGUEQcuHKPEELoVcfjTuafGHZAgY5lS4Zg0MjXYLHzxW0GXxXCx5NPMOdavF-EX0MMcVp93tDWAJvlfhp2IBB2kXseuQ6DZsjgbIkvTkU1EBYsM45B3JtofkBYKCHU';
-      var url = "https://bugshot.view4all.de/api/companies/3941b6a0-afd5-11ea-aabd-b96c7ec27026/projects/"+request.project+"/bugs/"+request.bugid+"/screenshots";
+      var url = "https://bugshot.view4all.de/api/companies/ed76dad0-d009-11eb-a6b2-6dc45fd46f39/projects/"+request.project+"/bugs/"+request.bugid+"/screenshots";
       var bearer = 'Bearer ' + localStorage['bearer_token'];
       console.log(url);
       fetch(url, {
@@ -302,7 +312,9 @@ chrome.runtime.onMessage.addListener(
           withCredentials: true,
           credentials: 'include',
           headers: {
-            'Authorization': bearer
+            'Authorization': bearer,
+		    'clientId': "5",
+		    'version': "1.0.0",			
           }
         }).then(response => {
           return response.json()
@@ -316,7 +328,7 @@ chrome.runtime.onMessage.addListener(
     if (request.greeting == "fetchbase64") {
 
       // var bearer_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGJmMmE0YTdkODNiMWIyZTk5YmU2NzY0YzA5ZDJiZDI1YTc2OWRiYWNlMWJlMDAxMDJiOTNkOTc2YjU0NWY2MGY1ZGZiMTAyMjkwYTliOWEiLCJpYXQiOjE1OTI4OTYzOTEsIm5iZiI6MTU5Mjg5NjM5MSwiZXhwIjoxNjI0NDMyMzkxLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.t6zyqsg8MfFVRsf3NEGl1XmC7Ewu__Tiwq4NGL4Tkbl3u4WvKlJHVE59WMdzr1-58fOoyz-eh16S0Uvk_di1wglX_ebJBBDpLsbcxXuBFKXnJdSSjoCmJiAtQi-Nf7aOwb0lYJK5b8_MW_ey8PpVzop4bm1npAt-T9bznYNUd31SMHZeAggHDHz0GTfE4xuwghTmJQtVlgM2WcuCO2_GFSxpOJbdqA7TSZFcCjf_qfLadKlXQq6Y-l2wfRQgyeqU8M70vgBnSvAJGaLmquGt9aB963Ne9eybBpOdgvXrsJnjVKdHlNglm5O9xY7c3lZASFYjMxvbLwkA2ksBihxz1zZSymPKvE3Jbois7bul4sn4DQJZiQ_61HPyVYsfznC-L0kFFEQRjlq2UllhkR8qhxqGubEfGHTETdYk1BKEFOurRUEH5t504mzyQcwnukld2IvdUq4Ijn286usCn31uzgfPVEIVKEqK5gYgUcHzg3o5_mNOlaEpVIktdxWGW9KtCxursWcXxkyqar2q-1VTNFXU-PioEKMh6hsSgTc8WhnbeIGUEQcuHKPEELoVcfjTuafGHZAgY5lS4Zg0MjXYLHzxW0GXxXCx5NPMOdavF-EX0MMcVp93tDWAJvlfhp2IBB2kXseuQ6DZsjgbIkvTkU1EBYsM45B3JtofkBYKCHU';
-      var url = "https://bugshot.view4all.de/api/companies/3941b6a0-afd5-11ea-aabd-b96c7ec27026/projects/"+request.project+"/bugs/"+request.bugid+"/screenshots/"+request.screenid;
+      var url = "https://bugshot.view4all.de/api/companies/ed76dad0-d009-11eb-a6b2-6dc45fd46f39/projects/"+request.project+"/bugs/"+request.bugid+"/screenshots/"+request.screenid;
       var bearer = 'Bearer ' + localStorage['bearer_token'];
       console.log(url);
       fetch(url, {
@@ -324,7 +336,9 @@ chrome.runtime.onMessage.addListener(
           withCredentials: true,
           credentials: 'include',
           headers: {
-            'Authorization': bearer
+            'Authorization': bearer,
+		    'clientId': "5",
+		    'version': "1.0.0",			
           }
         }).then(response => {
           return response.json()
@@ -485,7 +499,7 @@ function b64ToUint8Array(b64Image) {
 
 
 //   var xhr = new XMLHttpRequest();
-//   xhr.open('POST', 'http://bugshot.view4all.de/api/companies/3941b6a0-afd5-11ea-aabd-b96c7ec27026/projects/39607b40-afd5-11ea-8927-2343a56055b9/bugs/3976f790-afd5-11ea-a638-efc26cd0d66f/screenshots', true);
+//   xhr.open('POST', 'http://bugshot.view4all.de/api/companies/ed76dad0-d009-11eb-a6b2-6dc45fd46f39/projects/2616c0e0-d00a-11eb-8702-7714ecc69958/bugs/3976f790-afd5-11ea-a638-efc26cd0d66f/screenshots', true);
 //   xmlhttp.setRequestHeader("x-Authorization", photoId);
 //   xhr.onload = function () {
 //     if (xhr.status === 200) {
@@ -502,7 +516,7 @@ function b64ToUint8Array(b64Image) {
 
 function connect() {
 // var bearer_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGJmMmE0YTdkODNiMWIyZTk5YmU2NzY0YzA5ZDJiZDI1YTc2OWRiYWNlMWJlMDAxMDJiOTNkOTc2YjU0NWY2MGY1ZGZiMTAyMjkwYTliOWEiLCJpYXQiOjE1OTI4OTYzOTEsIm5iZiI6MTU5Mjg5NjM5MSwiZXhwIjoxNjI0NDMyMzkxLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.t6zyqsg8MfFVRsf3NEGl1XmC7Ewu__Tiwq4NGL4Tkbl3u4WvKlJHVE59WMdzr1-58fOoyz-eh16S0Uvk_di1wglX_ebJBBDpLsbcxXuBFKXnJdSSjoCmJiAtQi-Nf7aOwb0lYJK5b8_MW_ey8PpVzop4bm1npAt-T9bznYNUd31SMHZeAggHDHz0GTfE4xuwghTmJQtVlgM2WcuCO2_GFSxpOJbdqA7TSZFcCjf_qfLadKlXQq6Y-l2wfRQgyeqU8M70vgBnSvAJGaLmquGt9aB963Ne9eybBpOdgvXrsJnjVKdHlNglm5O9xY7c3lZASFYjMxvbLwkA2ksBihxz1zZSymPKvE3Jbois7bul4sn4DQJZiQ_61HPyVYsfznC-L0kFFEQRjlq2UllhkR8qhxqGubEfGHTETdYk1BKEFOurRUEH5t504mzyQcwnukld2IvdUq4Ijn286usCn31uzgfPVEIVKEqK5gYgUcHzg3o5_mNOlaEpVIktdxWGW9KtCxursWcXxkyqar2q-1VTNFXU-PioEKMh6hsSgTc8WhnbeIGUEQcuHKPEELoVcfjTuafGHZAgY5lS4Zg0MjXYLHzxW0GXxXCx5NPMOdavF-EX0MMcVp93tDWAJvlfhp2IBB2kXseuQ6DZsjgbIkvTkU1EBYsM45B3JtofkBYKCHU';
-var url = "https://bugshot.view4all.de/api/companies/3941b6a0-afd5-11ea-aabd-b96c7ec27026/projects/39607b40-afd5-11ea-8927-2343a56055b9/bugs/" +id+ "/screenshots";
+var url = "https://bugshot.view4all.de/api/companies/ed76dad0-d009-11eb-a6b2-6dc45fd46f39/projects/2616c0e0-d00a-11eb-8702-7714ecc69958/bugs/" +id+ "/screenshots";
 var bearer = 'Bearer ' + localStorage['bearer_token'];
 console.log(url);
 fetch(url, {
@@ -513,6 +527,8 @@ fetch(url, {
     headers: {
       'Authorization': bearer,
       'Content-type': 'application/json',
+	  'clientId': "5",
+	  'version': "1.0.0",	  
     },
     body: JSON.stringify({
       base64: localStorage['screen'],
@@ -541,7 +557,7 @@ fetch(url, {
 function sendbug() {
 
   // var bearer_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGJmMmE0YTdkODNiMWIyZTk5YmU2NzY0YzA5ZDJiZDI1YTc2OWRiYWNlMWJlMDAxMDJiOTNkOTc2YjU0NWY2MGY1ZGZiMTAyMjkwYTliOWEiLCJpYXQiOjE1OTI4OTYzOTEsIm5iZiI6MTU5Mjg5NjM5MSwiZXhwIjoxNjI0NDMyMzkxLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.t6zyqsg8MfFVRsf3NEGl1XmC7Ewu__Tiwq4NGL4Tkbl3u4WvKlJHVE59WMdzr1-58fOoyz-eh16S0Uvk_di1wglX_ebJBBDpLsbcxXuBFKXnJdSSjoCmJiAtQi-Nf7aOwb0lYJK5b8_MW_ey8PpVzop4bm1npAt-T9bznYNUd31SMHZeAggHDHz0GTfE4xuwghTmJQtVlgM2WcuCO2_GFSxpOJbdqA7TSZFcCjf_qfLadKlXQq6Y-l2wfRQgyeqU8M70vgBnSvAJGaLmquGt9aB963Ne9eybBpOdgvXrsJnjVKdHlNglm5O9xY7c3lZASFYjMxvbLwkA2ksBihxz1zZSymPKvE3Jbois7bul4sn4DQJZiQ_61HPyVYsfznC-L0kFFEQRjlq2UllhkR8qhxqGubEfGHTETdYk1BKEFOurRUEH5t504mzyQcwnukld2IvdUq4Ijn286usCn31uzgfPVEIVKEqK5gYgUcHzg3o5_mNOlaEpVIktdxWGW9KtCxursWcXxkyqar2q-1VTNFXU-PioEKMh6hsSgTc8WhnbeIGUEQcuHKPEELoVcfjTuafGHZAgY5lS4Zg0MjXYLHzxW0GXxXCx5NPMOdavF-EX0MMcVp93tDWAJvlfhp2IBB2kXseuQ6DZsjgbIkvTkU1EBYsM45B3JtofkBYKCHU';
-  var url = "https://bugshot.view4all.de/api/companies/3941b6a0-afd5-11ea-aabd-b96c7ec27026/projects/39607b40-afd5-11ea-8927-2343a56055b9/bugs";
+  var url = "https://bugshot.view4all.de/api/companies/ed76dad0-d009-11eb-a6b2-6dc45fd46f39/projects/2616c0e0-d00a-11eb-8702-7714ecc69958/bugs";
   var bearer = 'Bearer ' + localStorage['bearer_token'];
   if(!comment)
 {
@@ -555,6 +571,8 @@ function sendbug() {
       headers: {
         'Authorization': bearer,
         'Content-type': 'application/json',
+		'clientId': "5",
+		'version': "1.0.0",		
       },
       body: JSON.stringify({
         id: id,
@@ -576,7 +594,7 @@ function sendbug() {
       console.log(response)
     })
     .catch(err => {
-      console.log(err);
+      //console.log(err);
     })
     return true;  // Will respond asynchronously.
   };
@@ -607,7 +625,7 @@ function userloggedin() {
 
 
 function geturls() {
-var url = "https://bugshot.view4all.de/api/companies/3941b6a0-afd5-11ea-aabd-b96c7ec27026/projects/39607b40-afd5-11ea-8927-2343a56055b9/bugs";
+var url = "https://bugshot.view4all.de/api/companies/ed76dad0-d009-11eb-a6b2-6dc45fd46f39/projects/2616c0e0-d00a-11eb-8702-7714ecc69958/bugs";
 var bearer = 'Bearer ' + localStorage['bearer_token'];
 console.log(url);
 fetch(url, {
@@ -615,7 +633,9 @@ fetch(url, {
     withCredentials: true,
     credentials: 'include',
     headers: {
-      'Authorization': bearer
+      'Authorization': bearer,
+	  'clientId': "5",
+	  'version': "1.0.0",	  
     }
   }).then(response => {
     return response.json()
@@ -647,7 +667,9 @@ function getcompanies(taburl) {
       withCredentials: true,
       credentials: 'include',
       headers: {
-        'Authorization': bearer
+        'Authorization': bearer,
+		  'clientId': "5",
+		  'version': "1.0.0",		
       }
     }).then(response => {
       return response.json()
@@ -681,7 +703,9 @@ function getprojects(cid, taburl) {
       withCredentials: true,
       credentials: 'include',
       headers: {
-        'Authorization': bearer
+        'Authorization': bearer,
+				  'clientId': "5",
+		  'version': "1.0.0",
       }
     }).then(response => {
       return response.json()
