@@ -82,6 +82,7 @@ font-weight: 300;
     cursor: pointer;
 }
 
+
 #tasks {
     z-index: 9996;
     text-align: center;
@@ -93,13 +94,53 @@ font-weight: 300;
 }
 #tasks:hover {
     padding: 38px 16px 16px 16px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='79' viewBox='0 0 56 79'%3E%3Cdefs%3E%3Cstyle%3E.a%7Bfill:%237a2ee6;%7D.b,.c%7Bfill:none;%7D.c%7Bstroke:%23f8f8fc;stroke-miterlimit:10;stroke-width:2px;%7D.d%7Bfill:%23f8f8fc;font-size:12px;font-family:SegoeUI, Segoe UI;%7D%3C/style%3E%3C/defs%3E%3Ccircle class='a' cx='28' cy='28' r='28'/%3E%3Crect class='b' width='32' height='32' transform='translate(12 12)'/%3E%3Cg transform='translate(17.333 14.667)'%3E%3Cpath class='c' d='M9.333,4H6.667L4,6.526V25.474L6.667,28h16l2.667-1.263V6.526L22.667,4H20' transform='translate(-4 -1.333)'/%3E%3Cpath class='c' d='M18.667,5.2,16,2H10.667L8.083,5.2,8,7.333H18.667Z' transform='translate(-2.667 -2)'/%3E%3Cline class='c' x2='13.333' transform='translate(4 10.667)'/%3E%3Cline class='c' x2='13.333' transform='translate(4 16)'/%3E%3Cline class='c' x2='13.333' transform='translate(4 21.333)'/%3E%3C/g%3E%3Ctext class='d' transform='translate(28 76)'%3E%3Ctspan x='-23.531' y='0'%3EMy Tasks%3C/tspan%3E%3C/text%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='79' viewBox='0 0 56 79'%3E%3Cdefs%3E%3Cstyle%3E.a%7Bfill:%237a2ee6;%7D.b,.c%7Bfill:none;%7D.c%7Bstroke:%23f8f8fc;stroke-miterlimit:10;stroke-width:2px;%7D.d%7Bfill:%23f8f8fc;font-size:12px;font-family:SegoeUI, Segoe UI;%7D%3C/style%3E%3C/defs%3E%3Ccircle class='a' cx='28' cy='28' r='28'/%3E%3Crect class='b' width='32' height='32' transform='translate(12 12)'/%3E%3Cg transform='translate(17.333 14.667)'%3E%3Cpath class='c' d='M9.333,4H6.667L4,6.526V25.474L6.667,28h16l2.667-1.263V6.526L22.667,4H20' transform='translate(-4 -1.333)'/%3E%3Cpath class='c' d='M18.667,5.2,16,2H10.667L8.083,5.2,8,7.333H18.667Z' transform='translate(-2.667 -2)'/%3E%3Cline class='c' x2='13.333' transform='translate(4 10.667)'/%3E%3Cline class='c' x2='13.333' transform='translate(4 16)'/%3E%3Cline class='c' x2='13.333' transform='translate(4 21.333)'/%3E%3C/g%3E%3Ctext class='d' transform='translate(28 76)'%3E%3Ctspan x='-23.531' y='0'%3EBugs List%3C/tspan%3E%3C/text%3E%3C/svg%3E");
     cursor: pointer;
 }
 
 #tasks svg {
     margin: unset;
 }
+
+
+#adminPannel {
+    z-index: 9996;
+    text-align: center;
+    /* padding: 16px; */
+    height: 78px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32.001' height='32' viewBox='0 0 32.001 32'%3E%3Cg id='btn_admin_panel' transform='translate(-10870 -6681)'%3E%3Crect id='Rectangle_146' data-name='Rectangle 146' width='32' height='32' transform='translate(10870 6681)' fill='none'/%3E%3Cg id='Group_1779' data-name='Group 1779' transform='translate(10857.994 6669)'%3E%3Crect id='Rectangle_2524' data-name='Rectangle 2524' width='32' height='32' transform='translate(12.006 12)' fill='none'/%3E%3Cpath id='Path_651' data-name='Path 651' d='M20.173,35.588H17.5L15.806,33.9V24.36l6.06-6.06h9.446l6.06,6.06V33.9l-1.693,1.693H33' transform='translate(1.317 1.056)' fill='none' stroke='%23f8f8fc' stroke-miterlimit='10' stroke-width='2'/%3E%3Cpath id='Path_652' data-name='Path 652' d='M26.412,34.862l-2.406-2.317V30.317L26.323,28h2.228l2.317,2.317v2.228l-2.317,2.317Z' transform='translate(0.425 0)' fill='none' stroke='%23f8f8fc' stroke-miterlimit='10' stroke-width='2'/%3E%3Cline id='Line_153' data-name='Line 153' y1='3.743' x2='3.832' transform='translate(30.223 25.327)' fill='none' stroke='%23f8f8fc' stroke-miterlimit='10' stroke-width='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A");
+    background-position: center;
+    background-repeat: no-repeat;
+}
+#adminPannel:hover {
+    padding: 38px 16px 16px 16px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='91' viewBox='0 0 56 91'%3E%3Cg id='btn_admin_panel_hover' transform='translate(-10858 -6731)'%3E%3Ccircle id='Ellipse_50' data-name='Ellipse 50' cx='28' cy='28' r='28' transform='translate(10858 6731)' fill='%237a2ee6'/%3E%3Crect id='Rectangle_146' data-name='Rectangle 146' width='32' height='32' transform='translate(10870 6743)' fill='none'/%3E%3Ctext id='Admin_Panel' data-name='Admin%0APanel' transform='translate(10886 6807)' fill='%23f8f8fc' font-size='12' font-family='SegoeUI, Segoe UI'%3E%3Ctspan x='-18.96' y='0'%3EAdmin%3C/tspan%3E%3Ctspan x='-16.068' y='13'%3EPanel%3C/tspan%3E%3C/text%3E%3Crect id='Rectangle_146-2' data-name='Rectangle 146' width='32' height='32' transform='translate(10870 6743)' fill='none'/%3E%3Cg id='Group_1779' data-name='Group 1779' transform='translate(10857.994 6731)'%3E%3Crect id='Rectangle_2524' data-name='Rectangle 2524' width='32' height='32' transform='translate(12.006 12)' fill='none'/%3E%3Cpath id='Path_651' data-name='Path 651' d='M20.173,35.588H17.5L15.806,33.9V24.36l6.06-6.06h9.446l6.06,6.06V33.9l-1.693,1.693H33' transform='translate(1.317 1.056)' fill='none' stroke='%23f8f8fc' stroke-miterlimit='10' stroke-width='2'/%3E%3Cpath id='Path_652' data-name='Path 652' d='M26.412,34.862l-2.406-2.317V30.317L26.323,28h2.228l2.317,2.317v2.228l-2.317,2.317Z' transform='translate(0.425 0)' fill='none' stroke='%23f8f8fc' stroke-miterlimit='10' stroke-width='2'/%3E%3Cline id='Line_153' data-name='Line 153' y1='3.743' x2='3.832' transform='translate(30.223 25.327)' fill='none' stroke='%23f8f8fc' stroke-miterlimit='10' stroke-width='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E%0A");
+    cursor: pointer;
+}
+
+#adminPannel svg {
+    margin: unset;
+}
+
+#projectPannel {
+    z-index: 9996;
+    text-align: center;
+    padding: 16px;
+    height: 78px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg id='btn_project_normal' transform='translate(-10870 -6516)'%3E%3Crect id='Rectangle_146' data-name='Rectangle 146' width='32' height='32' transform='translate(10870 6516)' fill='none'/%3E%3Cpath id='Path_650' data-name='Path 650' d='M22.324,6.58V18.287L18.281,22.33H6.588V18.017H2.525L.994,16.486V12.424l1.531-1.531H6.588V6.58H10.9V2.517l1.53-1.53h4.063l1.53,1.53V6.58Z' transform='translate(10874.339 6520.449)' fill='none' stroke='%23f8f8fc' stroke-miterlimit='9.996' stroke-width='1.999'/%3E%3C/g%3E%3C/svg%3E%0A");
+    background-position: center;
+    background-repeat: no-repeat;
+}
+#projectPannel:hover {
+    padding: 38px 16px 16px 16px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='91' viewBox='0 0 56 91'%3E%3Cg id='btn_project_hover' transform='translate(-10858 -6553)'%3E%3Ccircle id='Ellipse_50' data-name='Ellipse 50' cx='28' cy='28' r='28' transform='translate(10858 6553)' fill='%237a2ee6'/%3E%3Crect id='Rectangle_146' data-name='Rectangle 146' width='32' height='32' transform='translate(10870 6565)' fill='none'/%3E%3Ctext id='Project_Panel' data-name='Project%0APanel' transform='translate(10886 6629)' fill='%23f8f8fc' font-size='12' font-family='SegoeUI, Segoe UI'%3E%3Ctspan x='-20.514' y='0'%3EProject%3C/tspan%3E%3Ctspan x='-16.068' y='13'%3EPanel%3C/tspan%3E%3C/text%3E%3Cpath id='Path_650' data-name='Path 650' d='M22.324,6.58V18.287L18.281,22.33H6.588V18.017H2.525L.994,16.486V12.424l1.531-1.531H6.588V6.58H10.9V2.517l1.53-1.53h4.063l1.53,1.53V6.58Z' transform='translate(10874.339 6569.449)' fill='none' stroke='%23fff' stroke-miterlimit='9.996' stroke-width='1.999'/%3E%3C/g%3E%3C/svg%3E%0A");
+    cursor: pointer;
+}
+
+#projectPannel svg {
+    margin: unset;
+}
+
 
 #add {
     position: fixed;
@@ -164,6 +205,7 @@ font-weight: 300;
 }
 
 #create textarea {
+    padding: 10px;
     resize:none;
     overflow:auto;
     border-radius: 12px;
@@ -192,7 +234,7 @@ font-weight: 300;
     color: #F23838;
     border: 2px solid #F23838;
 }
-.b1:hover {
+.b1:hover, .b1.active {
     background-color: #F23838;
     color: #ffffff;
     text-decoration: none;
@@ -201,7 +243,7 @@ font-weight: 300;
     color: #FFB157;
     border: 2px solid #FFB157;
 }
-.b2:hover {
+.b2:hover, .b2.active {
     background-color: #FFB157;
     color: #ffffff;
 }
@@ -209,15 +251,15 @@ font-weight: 300;
     color: #185FD9;
     border: 2px solid #185FD9;
 }
-.b3:hover {
+.b3:hover, .b3.active{
     background-color: #185FD9;
     color: #ffffff;
 }
-.b4, .b4:link, .b4:visited  {
+.b4, .b4:link, .b4:visited   {
     color: #18C0D9;
     border: 2px solid #18C0D9;
 }
-.b4:hover {
+.b4:hover, .b4.active {
     background-color: #18C0D9;
     color: #ffffff;
 }
@@ -278,9 +320,13 @@ font-weight: 300;
     padding: 15px;
 }
 
+#pending-response {
+    margin-top: 76%;
+}
+
 #success {
     text-align: center;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' width='244' height='246' viewBox='0 0 244 246'%3E%3Cdefs%3E%3ClinearGradient id='a' y1='0.751' x2='1.095' y2='0.29' gradientUnits='objectBoundingBox'%3E%3Cstop offset='0' stop-color='%2315be80'/%3E%3Cstop offset='1' stop-color='%2318d992'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg transform='translate(-885 -264)'%3E%3Cg transform='translate(-2087 -3150)'%3E%3Ctext transform='translate(3091 3534)' fill='%235916b9' font-size='33' font-family='SegoeUI-Bold, Segoe UI' font-weight='700'%3E%3Ctspan x='-63.913' y='0'%3ESuccess!%3C/tspan%3E%3C/text%3E%3C/g%3E%3Ctext transform='translate(1007 449)' fill='%231a2040' font-size='17' font-family='SegoeUI, Segoe UI'%3E%3Ctspan x='-98.053' y='0'%3EBug successfully reported!%3C/tspan%3E%3Ctspan x='0' y='19'%3E%3C/tspan%3E%3Ctspan x='-121.183' y='38'%3EYou can view the progress in the%3C/tspan%3E%3Ctspan x='-54.142' y='57'%3Etasks overview%3C/tspan%3E%3C/text%3E%3Ccircle cx='40' cy='40' r='40' transform='translate(964 264)' fill='url(%23a)'/%3E%3Cg transform='translate(981 281)'%3E%3Cg transform='translate(1.429 1.429)'%3E%3Cpath d='M44.857,2l-30,41.429L2,27.317' transform='translate(-2 -2)' fill='none' stroke='%23fff' stroke-miterlimit='10' stroke-width='8'/%3E%3C/g%3E%3Crect width='46' height='46' fill='none'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg id='a0d0397e-a7b0-46f4-8bb3-ded3d9f4a3ec' data-name='fc26ce23-1ac5-4acf-894e-f523e6d6ecf9' xmlns='http://www.w3.org/2000/svg' width='85.5mm' height='55.4mm' viewBox='0 0 242.36 157.04'%3E%3Ctext transform='translate(54.27 28.05)' font-size='33' fill='%235916b9' font-family='SegoeUI-Bold, Segoe UI' font-weight='700' style='isolation:isolate'%3ESuccess!%3C/text%3E%3Ctext transform='translate(23.13 93.05)' font-size='17' fill='%231a2040' font-family='SegoeUI, Segoe UI' style='isolation:isolate'%3EBug successfully reported!%3C/text%3E%3Cg style='isolation:isolate'%3E%3Ctext transform='translate(0 131.05)' font-size='17' fill='%231a2040' font-family='SegoeUI, Segoe UI' letter-spacing='-0.09em' style='isolation:isolate'%3EY%3C/text%3E%3Ctext transform='translate(7.9 131.05)' font-size='17' fill='%231a2040' font-family='SegoeUI, Segoe UI' style='isolation:isolate'%3Eou can view the progress in the%3C/text%3E%3C/g%3E%3Ctext transform='translate(67.04 150.05)' font-size='17' fill='%231a2040' font-family='SegoeUI, Segoe UI' style='isolation:isolate'%3Etasks overview%3C/text%3E%3C/svg%3E");
     background-position: center center;
     background-repeat: no-repeat;
     width: 100%;

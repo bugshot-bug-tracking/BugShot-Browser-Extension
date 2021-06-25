@@ -31,7 +31,8 @@ log.innerHTML = 'login';
 reg.style.width = "calc(50% - (5px * 2))";
 reg.style.padding = "5px";
 reg.style.textAlign = "center";
-reg.style.display = 'inline-block';
+// reg.style.display = 'inline-block';
+reg.style.display = 'none'
 reg.style.color = '#888';
 reg.style.cursor = 'pointer';
 reg.id = 'register';
@@ -106,7 +107,8 @@ loginForm.innerHTML = "<label>username</label><br/>" +
                  "<label>password</label><br/>" + 
                  "<input type='password' name='pw' id='pw' placeholder='*************' style='"+ inputStyles +"' required/><br/>" + 
                  "<input type='submit' id='loginb' value='Login' style='"+ btnStyles +"' />" + 
-                 "<p><a style='"+ forgetStyles +"' href='#'>forget password ?</a></p><br/>";
+                //  "<p><a style='"+ forgetStyles +"' href='#'>forget password ?</a></p><br/>"; suspended
+                "<br/>";
 
 // set registerForm styles
 registerForm.style.margin = '50px 20px 20px 20px';
@@ -217,3 +219,4 @@ chrome.runtime.sendMessage({
     out.style.display = 'none';
   }
 });
+
