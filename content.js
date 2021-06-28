@@ -751,8 +751,7 @@ function open() {
           e.preventDefault();
           var format = document.getElementById("desc").value;
           capture(format, prioid);
-          send();
-
+          setTimeout(function(){ send() }, 3000);
 
 
           if (document.getElementById("create")) {

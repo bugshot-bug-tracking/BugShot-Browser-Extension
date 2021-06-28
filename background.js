@@ -674,8 +674,11 @@ function checkProject() {
                 }
               }
           }else {
-            console.log("project Dont exists")
-            chrome.runtime.sendMessage({action: 'errorLogin'})
+            countRequest++
+            if(countRequest == 6) { // here is made 6 request on error dont know why but solved with one counter
+              sendFail()
+            }
+            // chrome.runtime.sendMessage({action: 'errorLogin'})
           }
       }
     });
