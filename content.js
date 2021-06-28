@@ -44,6 +44,12 @@ chrome.runtime.onMessage.addListener(
     if (request.action == "errorLogin") {
       alert("You are logged in, but project dont exist, create it from admin panel and relog!")
     }
+    if(request.action == "resultFail") {
+      alert("ERROR")
+      sendResponse({
+        confirmation: 'done'
+      });
+    }
     if (request.action == "remvoeMarkerSign") {
       var markerSign = document.getElementById("svgdiv");
       document.body.removeChild(markerSign);
@@ -178,12 +184,16 @@ function capture(format, prioid) {
     title: document.title,
     url: window.location.href,
     prio: prioid,
-  }, function (response) {
-    // maybe the confirmation will be moved here
-    console.log(response.farewell);
+  });
+  // , function (response) {
+    
+  //   console.log(response.farewell);
+    // if(response.farewell == 'FAIL') {
+    //   alert('ERROR, DATA WASNT SAVE')
+    // }
     
 
-  });
+  // }
 };
 
 //logged in? - url in projects?

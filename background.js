@@ -224,13 +224,25 @@ chrome.runtime.onMessage.addListener(
       title = request.title;
       pageid = 33;
       prioid = request.prio;
-      if (sendbug()){
-        addmarker();
-      }
+      // refactor this section to be async because we need to know if data was saved or not
+      // if (sendbug()){
+      //   addmarker();
+      // }
+      sendbug().then((response) => {
+        // console.log(response)
+        if(response.success) {
+          addmarker()
+          
+          return true
+        } else {
+          sendFail()
+          // chrome.tabs.sendMessage(tabs[0].id, {action:'bugresult', error: 'SUCCESS'})
+          return false
+          
+        }
+      })
       // maybe this will be suspended
-      sendResponse({
-        farewell: "SUCCESS"
-      });
+     
     }
     if (request.greeting == "screen") { // save the screenshot to storage
       makeShot();
@@ -277,7 +289,7 @@ chrome.runtime.onMessage.addListener(
       var project = JSON.parse(localStorage['project'])
       var url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs`;
       var bearer = 'Bearer ' + localStorage['bearer_token'];
-      console.log(url);
+      
       fetch(url, {
           method: 'GET',
           withCredentials: true,
@@ -413,8 +425,6 @@ function addmarker() {
       var blob2 = await blobToCanvas(blob, 38, 56);
       context.drawImage(blob2, (xxpos - 14), (yypos - 52));
 
-      console.log(xxpos + ' ' + yypos);
-      console.log(data.color);
       
       var link = canvas.toDataURL('image/jpeg');
       var img = link.replace(/^data:image\/[a-z]+;base64,/, "");
@@ -505,52 +515,76 @@ function connect() {
   return true;  // Will respond asynchronously.
 };
 
-function sendbug() {
+// this fucntion has been refactored to be async 
+async function sendbug() {
 
-  var project = JSON.parse(localStorage['project'])
-  var companyId = project.company_id
-  
-  var url = `https://bugshot.view4all.de/api/companies/${companyId}/projects/${project.id}/bugs`;
-  var bearer = 'Bearer ' + localStorage['bearer_token'];
-  if(!comment)
-  {
-    comment = "null";
-  };
-  fetch(url, {
-    method: 'POST',
-    // withCredentials: true,
-    // redirect: 'follow',
-    // credentials: 'include',
-    headers: {
-      'Authorization': bearer,
-      'Content-type': 'application/json',
-      'clientId': "5",
-      'version': "1.0.0",		
-    },
-    body: JSON.stringify({
-      // id: id,
-      designation: "test",
-      description: comment,
-      url: pageurl,
-      priority_id: prioid,
-      // status_id: "test",
-      // user_id: "test",
-      operating_system: system,
-      browser: browser,
-      selector: selector,
-      resolution: resolution,
-      screenshot_url: "test",
-      // deadline: "1987-12-23 00:00:00"
+    var project = JSON.parse(localStorage['project'])
+    var companyId = project.company_id
+    
+    var url = `https://bugshot.view4all.de/api/companies/${companyId}/projects/${project.id}/bugs`;
+    var bearer = 'Bearer ' + localStorage['bearer_token'];
+    if(!comment)
+    {
+      comment = "null";
+    };
+
+    const response = await fetch(url, {
+      method: 'POST',
+      // withCredentials: true,
+      // redirect: 'follow',
+      // credentials: 'include',
+      headers: {
+        'Authorization': bearer,
+        'Content-type': 'application/json',
+        'clientId': "5",
+        'version': "1.0.0",		
+      },
+      body: JSON.stringify({
+        // id: id,
+        designation: "test",
+        description: comment,
+        url: pageurl,
+        priority_id: prioid,
+        // status_id: "test",
+        // user_id: "test",
+        operating_system: system,
+        browser: browser,
+        selector: selector,
+        resolution: resolution,
+        screenshot_url: "test",
+        // deadline: "1987-12-23 00:00:00"
+      })
     })
-  })
-  .then(response => response.json()) // get json response to can use it in the next
-  .then((data) => {
-    localStorage['bugId'] = data.data.id
-  })
-  .catch(err => {
-    console.log(err);
-  })
-  return true;  // Will respond asynchronously.
+
+    const resp =  await response.json()
+    // console.log(resp)
+    localStorage['bugId'] = resp.data.id
+    return resp
+    //  return async function 
+    // var resp = storeBug().then(response => {
+    //   if(response.status == 200) {
+    //     console.log("in response async")
+        
+    //     return true
+    //   }
+    //   else {
+    //     return false
+    //   }
+    // })
+    //
+    // if(localStorage['bugId']) {
+    //   return true
+    // } else {
+    //   return false
+    // }
+    // .then(response => response.json()) // get json response to can use it in the next
+    // .then((data) => {
+    //   localStorage['bugId'] = data.data.id
+    // })
+    // .catch(err => {
+    //   console.log(err);
+    // })
+    // return true;  // Will respond asynchronously.
  
 };
 
@@ -574,7 +608,6 @@ function userloggedin() {
 }
 
 function removeMarkerSign() {
-  
   chrome.tabs.query({
     active: true,
     currentWindow: true
@@ -586,6 +619,21 @@ function removeMarkerSign() {
     });
   });
 }
+
+function sendFail() {
+  chrome.tabs.query({
+    active: true,
+    currentWindow: true
+  }, function (tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, {
+      action: "resultFail"
+    }, function (response) {
+      // for the moment not used
+    });
+  });
+}
+
+
 
 function checkProject() {
   var countRequest = 0
