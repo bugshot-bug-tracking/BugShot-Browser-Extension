@@ -676,7 +676,7 @@ function checkProject() {
           }else {
             countRequest++
             if(countRequest == 6) { // here is made 6 request on error dont know why but solved with one counter
-              sendFail()
+              setTimeout(function(){ sendFail() }, 1000);
             }
             // chrome.runtime.sendMessage({action: 'errorLogin'})
           }
