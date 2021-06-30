@@ -24,6 +24,17 @@ chrome.runtime.onMessage.addListener(
         confirmation: "oke"
       });
     }
+    if (request.action == "projectNotExists") {
+      docReady(function () {
+        if (document.getElementById("sidecont")) {
+          sidecont.style.display = 'none';
+        }
+      });
+      alert("Project with this domain name does not exists on you admin pannel")
+      sendResponse({
+        confirmation: "oke"
+      });
+    }
     if (request.action == "logout") {
       docReady(function () {
         if (document.getElementById("sidecont")) {

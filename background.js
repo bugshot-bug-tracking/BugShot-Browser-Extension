@@ -174,8 +174,10 @@ chrome.runtime.onMessage.addListener(
         .then(data => {
           localStorage['bearer_token'] = data.data.token;
           if(localStorage['bearer_token']){
-            userloggedin();
-            checkProject() // we have to check i project exists or not
+            userloggedin()
+            checkProject()
+            // setTimeout(function(){ userloggedin() }, 1000);
+            // setTimeout(function(){ checkProject() }, 1000); // we have to check i project exists or not
           }
           sendResponse({
             farewell: data.data.token
@@ -594,6 +596,7 @@ function userloggedin() {
     active: true,
     currentWindow: true
   }, function (tabs) {
+    console.log(tabs)
     chrome.tabs.sendMessage(tabs[0].id, {
       action: "logged"
     }, function (response) {
@@ -603,6 +606,8 @@ function userloggedin() {
         // 'Could not establish connection. Receiving end does not exist.'
         return;
       }
+
+      
     });
   });
 }
@@ -641,11 +646,12 @@ function checkProject() {
     active: true,
     currentWindow: true
   }, function (tabs) {
+
     chrome.tabs.sendMessage(tabs[0].id, {
       action: "getDomain"
     }, function (response) {
       localStorage['domain'] = response.domainName
-
+      
       var url = 'http://bugshot.view4all.de/api/check-project'
       
       var clientId = 5
@@ -676,7 +682,22 @@ function checkProject() {
           }else {
             countRequest++
             if(countRequest == 6) { // here is made 6 request on error dont know why but solved with one counter
-              setTimeout(function(){ sendFail() }, 1000);
+              // setTimeout(function(){ sendFail() }, 1000);
+              window.localStorage.removeItem('bearer_token');
+              window.localStorage.removeItem('domain');
+
+              chrome.tabs.sendMessage(tabs[0].id, {
+                action: "projectNotExists"
+              }, function (response) {
+                var lastError = chrome.runtime.lastError;
+                if (lastError) {
+                  console.log(lastError.message);
+                  // 'Could not establish connection. Receiving end does not exist.'
+                  return;
+                }
+                console.log(response)
+              });
+              
             }
             // chrome.runtime.sendMessage({action: 'errorLogin'})
           }
