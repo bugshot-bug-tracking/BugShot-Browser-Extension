@@ -21,9 +21,11 @@ div.style.borderRadius = '10px';
 
 log.style.width = "calc(50% - (5px * 2))";
 log.style.padding = "5px";
-log.style.textAlign = "center";
+log.style.textAlign = "left";
 log.style.display = 'inline-block';
 log.style.color = '#fff';
+log.style.fontSize = 'medium';
+log.style.fontWeight = '700';
 log.style.cursor = 'pointer';
 log.id = 'login';
 log.innerHTML = 'login';
@@ -46,6 +48,8 @@ out.style.display = 'block';
 out.style.color = '#fff';
 out.style.cursor = 'pointer';
 out.id = 'logout';
+out.style.fontSize = 'medium';
+out.style.fontWeight = '700';
 out.innerHTML = 'logout';
 
 
@@ -71,6 +75,8 @@ out.onclick = function(){
 	loginForm.style.display = 'block';
   registerForm.style.display = 'none';
   loginForm.innerHTML = "Successfully logged out!";
+  loginForm.style.fontSize = 'medium';
+  loginForm.style.fontWeight = '700';
 };
 
 // hide register form and show login form
@@ -91,27 +97,27 @@ log.onclick = function(){
 
 // create some variables for styling
 var inputStyles = "background:none;border-color:#888;border-width:0 0 1px 0;width:100%;color:#fff;padding:5px;margin:5px;",
-    btnStyles = "background:red;border:none;width:100%;color:#fff;padding:5px;margin:5px;",
+    btnStyles = "background-color:#18D992;border-radius:8px;border:none;width:50%;color:#fff;padding:5px;margin:0 auto;display:block;margin-top: 20px;justify-content:center;",
     forgetStyles = "color:#fff;",
     startYears = 10,
     endYears = 70,
     i;
 
 // set loginForm styles
-loginForm.style.margin = '50px 20px 20px 20px';
+loginForm.style.margin = '20px 20px 20px 20px';
 loginForm.id = 'loginForm';
 
 // set the elements and styles on the form
-loginForm.innerHTML = "<label>username</label><br/>" + 
-                 "<input type='text' name='username' id='username' placeholder='type username' style='"+ inputStyles +"' required/><br/>" + 
-                 "<label>password</label><br/>" + 
-                 "<input type='password' name='pw' id='pw' placeholder='*************' style='"+ inputStyles +"' required/><br/>" + 
+loginForm.innerHTML = "<br/>" + 
+                 "<input type='text' name='username' id='username' placeholder='username' style='"+ inputStyles +"' required/><br/>" + 
+                 "<br/>" + 
+                 "<input type='password' name='pw' id='pw' placeholder='password' style='"+ inputStyles +"' required/><br/>" + 
                  "<input type='submit' id='loginb' value='Login' style='"+ btnStyles +"' />" + 
                 //  "<p><a style='"+ forgetStyles +"' href='#'>forget password ?</a></p><br/>"; suspended
                 "<br/>";
 
 // set registerForm styles
-registerForm.style.margin = '50px 20px 20px 20px';
+registerForm.style.margin = '20px 20px 20px 20px';
 registerForm.style.display = 'none';
 registerForm.id = 'registerForm';
 
@@ -155,6 +161,8 @@ document.querySelector('#loginb').addEventListener('click', function (e) {
     {
       // loginForm.style.display = 'none';
       loginForm.innerHTML = "Successfully logged in!";
+      loginForm.style.fontSize = 'medium';
+      loginForm.style.fontWeight = '700';
       out.style.display = 'block';
     }
     else if (response.error)
