@@ -1,98 +1,106 @@
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-        if (request.action == "taken") {
-            docReady(function() {
 
-                grey = document.createElement('div');
-                grey.id = "overlayxy";
-                document.body.appendChild(grey);
+        switch (request.action) {
 
-                document.documentElement.addEventListener("click", findDocumentCoords, {
-                    once: true
-                })
+            case "taken":
+                docReady(function() {
+                    grey = document.createElement('div');
+                    grey.id = "overlayxy";
+                    document.body.appendChild(grey);
 
-            });
-            sendResponse({
-                confirmation: "oke"
-            });
-        }
-        if (request.action == "logged") {
-            docReady(function() {
-                main();
-            });
-            sendResponse({
-                confirmation: "oke"
-            });
-        }
-        if (request.action == "projectNotExists") {
-            docReady(function() {
-                if (document.getElementById("sidecont")) {
-                    sidecont.style.display = 'none';
+                    document.documentElement.addEventListener("click", findDocumentCoords, {
+                        once: true
+                    })
+                });
+                sendResponse({
+                    confirmation: "oke"
+                });
+                break;
+
+            case "logged":
+                docReady(function() {
+                    main();
+                });
+                sendResponse({
+                    confirmation: "oke"
+                });
+                break;
+
+            case "projectNotExists":
+                docReady(function() {
+                    if (document.getElementById("sidecont")) {
+                        sidecont.style.display = 'none';
+                    }
+                });
+                alert("Project with this domain name does not exists on you admin pannel")
+                sendResponse({
+                    confirmation: "oke"
+                });
+                break;
+
+            case "logout":
+                docReady(function() {
+                    if (document.getElementById("sidecont")) {
+                        sidecont.style.display = 'none';
+                    }
+                });
+                sendResponse({
+                    confirmation: "oke"
+                });
+                break;
+
+            case "getDomain":
+                var domainName = window.location.hostname
+                sendResponse({
+                    domainName: domainName
+                });
+                break;
+
+            case "errorLogin":
+                alert("You are logged in, but project dont exist, create it from admin panel and relog!")
+                break;
+
+            case "resultFail":
+                alert("ERROR")
+                sendResponse({
+                    confirmation: 'done'
+                });
+                break;
+
+            case "remvoeMarkerSign":
+                var markerSign = document.getElementById("svgdiv");
+                document.body.removeChild(markerSign);
+
+                // here will come the final confirmation section
+                // here was moved the success section which is display after the data is returned
+                // some time is with delay after server time  
+                // remove pending message
+                pendingRsp = document.getElementById('pending-response')
+                pendingRsp.remove()
+                    // add success message
+                addnew = document.getElementById('addnew')
+                addnew.innerHTML = '<div id="success"><img src="https://bugshot.view4all.de/images/bug_confirmation.gif" style="width: 250px;height: 250px;margin-top: 8rem;margin-right: 1.5rem;"><a href="#" id="ok">Ok</a></div>';
+                if (document.getElementById("success")) {
+                    setTimeout(timer, 4000);
+
+                    function timer() {
+                        addnew.remove()
+                        enableScroll();
+                    };
                 }
-            });
-            alert("Project with this domain name does not exists on you admin pannel")
-            sendResponse({
-                confirmation: "oke"
-            });
-        }
-        if (request.action == "logout") {
-            docReady(function() {
-                if (document.getElementById("sidecont")) {
-                    sidecont.style.display = 'none';
-                }
-            });
-            sendResponse({
-                confirmation: "oke"
-            });
-        }
+                document.querySelector('#ok').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (document.getElementById("addnew")) {
+                        enableScroll();
+                        addnew.remove();
+                    }
+                }, false);
 
-        if (request.action == "getDomain") {
-            var domainName = window.location.hostname
-            sendResponse({
-                domainName: domainName
-            });
-        }
-        if (request.action == "errorLogin") {
-            alert("You are logged in, but project dont exist, create it from admin panel and relog!")
-        }
-        if (request.action == "resultFail") {
-            alert("ERROR")
-            sendResponse({
-                confirmation: 'done'
-            });
-        }
-        if (request.action == "remvoeMarkerSign") {
-            var markerSign = document.getElementById("svgdiv");
-            document.body.removeChild(markerSign);
-
-            // here will come the final confirmation section
-            // here was moved the success section which is display after the data is returned
-            // some time is with delay after server time  
-            // remove pending message
-            pendingRsp = document.getElementById('pending-response')
-            pendingRsp.remove()
-                // add success message
-            addnew = document.getElementById('addnew')
-            addnew.innerHTML = '<div id="success"><img src="https://bugshot.view4all.de/images/bug_confirmation.gif" style="width: 250px;height: 250px;margin-top: 8rem;margin-right: 1.5rem;"><a href="#" id="ok">Ok</a></div>';
-            if (document.getElementById("success")) {
-                setTimeout(timer, 4000);
-
-                function timer() {
-                    addnew.remove()
-                    enableScroll();
-                };
-            }
-            document.querySelector('#ok').addEventListener('click', function(e) {
-                e.preventDefault();
-                if (document.getElementById("addnew")) {
-                    enableScroll();
-                    addnew.remove();
-                }
-            }, false);
-
-            sendResponse({
-                confirmation: 'done'
-            });
+                sendResponse({
+                    confirmation: 'done'
+                });
+                break;
         }
 
     });
