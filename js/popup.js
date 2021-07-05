@@ -2,10 +2,10 @@
 // create the elements
 var div = document.createElement('div'),
     out = document.createElement('div'),
-		log = document.createElement('div'),
-		reg = document.createElement('div'),
-		loginForm = document.createElement('form'),
-		registerForm = document.createElement('form');
+    log = document.createElement('div'),
+    reg = document.createElement('div'),
+    loginForm = document.createElement('form'),
+    registerForm = document.createElement('form');
 
 // set body styles
 document.body.style.color = '#fff';
@@ -53,46 +53,43 @@ out.style.fontWeight = '700';
 out.innerHTML = 'logout';
 
 
-out.onclick = function(){
+out.onclick = function() {
 
-  chrome.runtime.sendMessage({
-    greeting: "logout",
-  }, function (response) {
-    if (response.farewell = "logout")
-    {
-      loginForm.style.display = 'block';
-      registerForm.style.display = 'none';
-      out.style.display = 'none';
-    }
-    else
-    {
+    chrome.runtime.sendMessage({
+        greeting: "logout",
+    }, function(response) {
+        if (response.farewell = "logout") {
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+            out.style.display = 'none';
+        } else {
 
-    }
-  });
+        }
+    });
 
-	this.style.color = '#fff';
-	log.style.color = '#888';
-	loginForm.style.display = 'block';
-  registerForm.style.display = 'none';
-  loginForm.innerHTML = "Successfully logged out!";
-  loginForm.style.fontSize = 'medium';
-  loginForm.style.fontWeight = '700';
+    this.style.color = '#fff';
+    log.style.color = '#888';
+    loginForm.style.display = 'block';
+    registerForm.style.display = 'none';
+    loginForm.innerHTML = "Successfully logged out!";
+    loginForm.style.fontSize = 'medium';
+    loginForm.style.fontWeight = '700';
 };
 
 // hide register form and show login form
-reg.onclick = function(){
-	this.style.color = '#fff';
-	log.style.color = '#888';
-	loginForm.style.display = 'none';
-	registerForm.style.display = 'block';
+reg.onclick = function() {
+    this.style.color = '#fff';
+    log.style.color = '#888';
+    loginForm.style.display = 'none';
+    registerForm.style.display = 'block';
 };
 
 // hide login form and show register form
-log.onclick = function(){
-	this.style.color = '#fff';
-	reg.style.color = '#888';
-	loginForm.style.display = 'block';
-	registerForm.style.display = 'none';
+log.onclick = function() {
+    this.style.color = '#fff';
+    reg.style.color = '#888';
+    loginForm.style.display = 'block';
+    registerForm.style.display = 'none';
 };
 
 // create some variables for styling
@@ -108,13 +105,13 @@ loginForm.style.margin = '20px 20px 20px 20px';
 loginForm.id = 'loginForm';
 
 // set the elements and styles on the form
-loginForm.innerHTML = "<br/>" + 
-                 "<input type='text' name='username' id='username' placeholder='username' style='"+ inputStyles +"' required/><br/>" + 
-                 "<br/>" + 
-                 "<input type='password' name='pw' id='pw' placeholder='password' style='"+ inputStyles +"' required/><br/>" + 
-                 "<input type='submit' id='loginb' value='Login' style='"+ btnStyles +"' />" + 
-                //  "<p><a style='"+ forgetStyles +"' href='#'>forget password ?</a></p><br/>"; suspended
-                "<br/>";
+loginForm.innerHTML = "<br/>" +
+    "<input type='text' name='username' id='username' placeholder='username' style='" + inputStyles + "' required/><br/>" +
+    "<br/>" +
+    "<input type='password' name='pw' id='pw' placeholder='password' style='" + inputStyles + "' required/><br/>" +
+    "<input type='submit' id='loginb' value='Login' style='" + btnStyles + "' />" +
+    //  "<p><a style='"+ forgetStyles +"' href='#'>forget password ?</a></p><br/>"; suspended
+    "<br/>";
 
 // set registerForm styles
 registerForm.style.margin = '20px 20px 20px 20px';
@@ -122,17 +119,17 @@ registerForm.style.display = 'none';
 registerForm.id = 'registerForm';
 
 // set the elements and styles on the form
-registerForm.innerHTML = "<label>first name</label><br/>" + 
-			                 "<input type='text' id='first_name' placeholder='first name' style='"+ inputStyles +"' required/><br/>" + 
-			                 "<label>last name</label><br/>" + 
-			                 "<input type='text' id='last_name' placeholder='last name' style='"+ inputStyles +"' required/><br/>" + 
-			                 "<label>e-mail</label><br/>" + 
-			                 "<input type='email' id='email' placeholder='your email' style='"+ inputStyles +"' required/><br/>" + 
-			                 "<label>password</label><br/>" + 
-			                 "<input type='password' id='password' placeholder='*************' style='"+ inputStyles +"' required/><br/>" + 
-			                 "<label>confirm password</label><br/>" + 
-			                 "<input type='password' id='c_password' placeholder='*************' style='"+ inputStyles +"' required/><br/>" + 
-			                 "<input type='submit' id='registerb' value='Register' style='"+ btnStyles +"' />";
+registerForm.innerHTML = "<label>first name</label><br/>" +
+    "<input type='text' id='first_name' placeholder='first name' style='" + inputStyles + "' required/><br/>" +
+    "<label>last name</label><br/>" +
+    "<input type='text' id='last_name' placeholder='last name' style='" + inputStyles + "' required/><br/>" +
+    "<label>e-mail</label><br/>" +
+    "<input type='email' id='email' placeholder='your email' style='" + inputStyles + "' required/><br/>" +
+    "<label>password</label><br/>" +
+    "<input type='password' id='password' placeholder='*************' style='" + inputStyles + "' required/><br/>" +
+    "<label>confirm password</label><br/>" +
+    "<input type='password' id='c_password' placeholder='*************' style='" + inputStyles + "' required/><br/>" +
+    "<input type='submit' id='registerb' value='Register' style='" + btnStyles + "' />";
 
 // append the bottons and form on main-div
 
@@ -147,84 +144,70 @@ document.body.appendChild(div);
 
 
 // document.getElementById("prospects_form").addEventListener('submit', function(event){event.preventDefault();});
-document.querySelector('#loginb').addEventListener('click', function (e) {
-  e.preventDefault();
-  var username = document.getElementById("username").value;
-  var pw = document.getElementById("pw").value;
-  chrome.runtime.sendMessage({
-    greeting: "login",
-    username,
-    pw
-  }, function (response) {
-    console.log(response.farewell);
-    if (response.farewell)
-    {
-      // loginForm.style.display = 'none';
-      loginForm.innerHTML = "Successfully logged in!";
-      loginForm.style.fontSize = 'medium';
-      loginForm.style.fontWeight = '700';
-      out.style.display = 'block';
-    }
-    else if (response.error)
-    {
-      loginForm.innerHTML += "Something went wrong, try again!";
-    }
-    else
-    {
-      loginForm.innerHTML += "Something went wrong, try again!";
-    }
-  });
+document.querySelector('#loginb').addEventListener('click', function(e) {
+    e.preventDefault();
+    var username = document.getElementById("username").value;
+    var pw = document.getElementById("pw").value;
+    chrome.runtime.sendMessage({
+        greeting: "login",
+        username,
+        pw
+    }, function(response) {
+        console.log(response.farewell);
+        if (response.farewell) {
+            // loginForm.style.display = 'none';
+            loginForm.innerHTML = "Successfully logged in!";
+            loginForm.style.fontSize = 'medium';
+            loginForm.style.fontWeight = '700';
+            out.style.display = 'block';
+        } else if (response.error) {
+            loginForm.innerHTML += "Something went wrong, try again!";
+        } else {
+            loginForm.innerHTML += "Something went wrong, try again!";
+        }
+    });
 }, false);
 
-document.querySelector('#registerForm').addEventListener('submit', function (e) {
-  e.preventDefault();
-  var first_name = document.getElementById("first_name").value;
-  var last_name = document.getElementById("last_name").value;
-  var email = document.getElementById("email").value;
-  var password = document.getElementById("password").value;
-  var c_password = document.getElementById("c_password").value;
-  chrome.runtime.sendMessage({
-    greeting: "register",
-    first_name,
-    last_name,
-    email,
-    password,
-    c_password
-  }, function (response) {
-    console.log(response.farewell);
-    if (response.farewell)
-    {
-      // registerForm.style.display = 'none';
-      registerForm.innerHTML = "Account successfully created!";
-      out.style.display = 'block';      
-    }
-    else if (response.error)
-    {
-      registerForm.innerHTML += "Something went wrong, try again!";
-    }
-    else
-    {
-      registerForm.innerHTML += "Something went wrong, try again!";
-    }
-  });
+document.querySelector('#registerForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var first_name = document.getElementById("first_name").value;
+    var last_name = document.getElementById("last_name").value;
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var c_password = document.getElementById("c_password").value;
+    chrome.runtime.sendMessage({
+        greeting: "register",
+        first_name,
+        last_name,
+        email,
+        password,
+        c_password
+    }, function(response) {
+        console.log(response.farewell);
+        if (response.farewell) {
+            // registerForm.style.display = 'none';
+            registerForm.innerHTML = "Account successfully created!";
+            out.style.display = 'block';
+        } else if (response.error) {
+            registerForm.innerHTML += "Something went wrong, try again!";
+        } else {
+            registerForm.innerHTML += "Something went wrong, try again!";
+        }
+    });
 }, false);
 
 
 
 chrome.runtime.sendMessage({
-  greeting: "logged",
-}, function (response) {
-  console.log(response.farewell);
-  if (response.farewell == "logged")
-  {
-    // registerForm.style.display = 'none';
-    loginForm.innerHTML = "your are logged in!";
-    registerForm.innerHTML = "your are logged in!";
-    out.style.display = 'block';
-  }
-  else
-  {
-    out.style.display = 'none';
-  }
+    greeting: "logged",
+}, function(response) {
+    console.log(response.farewell);
+    if (response.farewell == "logged") {
+        // registerForm.style.display = 'none';
+        loginForm.innerHTML = "your are logged in!";
+        registerForm.innerHTML = "your are logged in!";
+        out.style.display = 'block';
+    } else {
+        out.style.display = 'none';
+    }
 });
-
