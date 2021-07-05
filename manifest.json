@@ -4,26 +4,26 @@
     "description": "Make a Screenshot",
     "permissions": ["activeTab", "declarativeContent", "storage", "tabs", "<all_urls>"],
     "background": {
-        "scripts": ["background.js"],
+        "scripts": ["js/background.js"],
         "persistent": false
     },
     "browser_action": {
-        "default_popup": "popup.html",
+        "default_popup": "html/popup.html",
         "default_icon": "images/get_started16.png",
         "default_title": "Screenshot this",
         "matches": ["<all_urls>"]
     },
     "content_scripts": [{
-            "js": ["content.js"],
-            "css": ["content.css"],
+            "js": ["js/content.js"],
+            "css": ["css/content.css"],
             "matches": ["<all_urls>"],
-            "html": ["add.html"]
+            "html": ["html/add.html"]
         }
 
     ],
     "web_accessible_resources": [
-        "bugshot.js",
-        "add.html"
+        "js/bugshot.js",
+        "html/add.html"
     ],
 
     "icons": {
