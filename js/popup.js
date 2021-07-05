@@ -18,7 +18,7 @@ loginForm.id = 'loginForm';
 loginForm.innerHTML =
     "<input type='text' name='username' id='username' class='input' placeholder='username' required/>" +
     "<input type='password' name='password' id='password' placeholder='password' class='input' required/>" +
-    "<input type='submit' id='loginb' value='Login' />";
+    "<input type='submit' id='loginButton' value='Login' />";
 
 
 // append the buttons and form on main-div
@@ -30,15 +30,15 @@ document.body.appendChild(out);
 document.body.appendChild(div);
 
 
-document.querySelector('#loginb').addEventListener('click', function(e) {
+document.querySelector('#loginButton').addEventListener('click', function(e) {
     e.preventDefault();
     var username = document.getElementById("username").value;
-    var pw = document.getElementById("password").value;
+    var password = document.getElementById("password").value;
 
     chrome.runtime.sendMessage({
         greeting: "login",
         username,
-        pw
+        password
     }, function(response) {
         console.log(response.farewell);
         if (response.farewell) {
