@@ -52,284 +52,294 @@ function get_browser() {
 
 
 
-chrome.runtime.onMessage.addListener(
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
-    function(request, sender, sendResponse) {
+    switch (request.message) {
 
-        switch (request.greeting) {
+        case "login": //TODO validate inputs
+            logIn(request.payload)
+                .then(response => {
+                    /*
+                        response data structure
 
-            case "login":
-                var url = "https://bugshot.view4all.de/api/user/login";
 
-                fetch(url, {
-                        method: 'POST',
-                        redirect: 'follow',
-                        headers: {
-                            'Content-type': 'application/json',
-                            'clientId': "5",
-                            'version': "1.0.0",
-                        },
-                        body: JSON.stringify({
-                            email: request.username,
-                            password: request.password
-                        })
-                    }).then(response => {
-
-                        return response.json()
-                    })
-                    .then(data => {
-                        localStorage['bearer_token'] = data.data.token;
-                        if (localStorage['bearer_token']) {
-                            userloggedin()
-                            checkProject()
+                        response.data {
+                            token: string,
+                            user_id: int
                         }
-                        sendResponse({
-                            farewell: data.data.token
-                        });
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        sendResponse({
-                            error: err
-                        });
-                    })
-                return true;
-                break;
+                        response.message: string
+                        response.success: boolean
+                    */
 
-            case "register":
-                return register(request, response, sendResponse);
+                    //TODO save the relevant info for other API calls
 
-            case "logged":
+                    chrome.storage.sync.set({ user_id: response.data.user_id });
 
-                if (localStorage['bearer_token']) {
-                    request.url
                     sendResponse({
-                        farewell: "logged"
+                        message: "login"
                     });
-                } else {
+
+                })
+                .catch(err => {
+                    console.log(err);
+
                     sendResponse({
-                        farewell: "not"
+                        message: "error",
+                        error: err
                     });
 
-                }
-                return true;
 
-            case "logout":
-                if (localStorage['bearer_token']) {
-                    window.localStorage.removeItem('bearer_token');
-                    window.localStorage.removeItem('domain');
-                    window.localStorage.removeItem('project');
-                    window.localStorage.removeItem('canvas');
-                    window.localStorage.removeItem('screenshot');
-                    window.localStorage.removeItem('bugId');
-                    window.localStorage.removeItem('screen');
-                    sendResponse({
-                        farewell: "logout"
-                    });
-
-                    chrome.tabs.query({
-                        active: true,
-                        currentWindow: true
-                    }, function(tabs) {
-                        chrome.tabs.sendMessage(tabs[0].id, {
-                            action: "logout"
-                        }, function(response) {
-                            var lastError = chrome.runtime.lastError;
-                            if (lastError) {
-                                console.log(lastError.message);
-                                // 'Could not establish connection. Receiving end does not exist.'
-                                return;
-                            }
-                        });
-                    });
-
-                } else {
-                    sendResponse({
-                        farewell: "not"
-                    });
-                }
-                return true;
-
-
-
-
-            case "attachment":
-                var project = JSON.parse(localStorage['project'])
-                var bugId = localStorage['bugId']
-                var url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs/${bugId}/attachments`;
-                var bearer = 'Bearer ' + localStorage['bearer_token'];
-                fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': bearer,
-                            'Content-type': 'application/json',
-                            'clientId': "5",
-                            'version': "1.0.0",
-                        },
-                        body: JSON.stringify({
-                            designation: request.name,
-                            base64: request.b64,
-
-                        })
-                    }).then(response => {
-                        // return response.json()
-                        console.log(response)
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    })
-                return true; // Will respond asynchronously.
-
-            case "capture":
-                pageurl = request.url;
-                comment = request.comment;
-                title = request.title;
-                pageid = 33;
-                prioid = request.prio;
-                // refactor this section to be async because we need to know if data was saved or not
-                // if (sendbug()){
-                //   addmarker();
-                // }
-                sendbug().then((response) => {
-                        // console.log(response)
-                        if (response.success) {
-                            addmarker()
-                            return true
-                        } else {
-                            sendFail()
-                                // chrome.tabs.sendMessage(tabs[0].id, {action:'bugresult', error: 'SUCCESS'})
-                            return false
-
-                        }
-                    })
-                    // maybe this will be suspended
-                break;
-
-            case "screen": // save the screenshot to storage            
-                makeShot();
-                sendResponse({
-                    farewell: "saved"
                 });
-                break;
-            case "capturepos": // capture mouse position 
-                xxpos = request.xpos;
-                yypos = request.ypos;
-                selector = request.tagPath;
-                xpos1 = request.xpos1;
-                ypos1 = request.ypos1;
-                sendResponse({
-                    farewell: "saved"
+
+            return true; // needed to keep the conection alive while the function runs asyncronus
+            break;
+
+        case "logout":
+            logOut()
+                .then(() => {
+                    sendResponse({
+                        message: "logout"
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                    sendResponse({
+                        message: "error",
+                        error: err
+                    });
                 });
-                break;
-            case "fetchpro":
-                // HERE WE NEED TO PICK NOT THE PROJECT BUT THE BUGS AND LIST THEM IN TEMPLATE NOT IN THE SELECT DROPDOWN LIKE HOW IS NOW ON THE TEMPLATE ON MY TASK
-                var project = JSON.parse(localStorage['project'])
-                var url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects`;
-                var bearer = 'Bearer ' + localStorage['bearer_token'];
 
-                fetch(url, {
-                        method: 'GET',
-                        withCredentials: true,
-                        credentials: 'include',
-                        headers: {
-                            'Authorization': bearer,
-                            'clientId': "5",
-                            'version': "1.0.0",
-                        }
-                    }).then(response => {
-                        return response.json()
+            return true; // needed to keep the conection alive while the function runs asyncronus
+
+            break;
+
+        case "logged": //TODO somehow extract method from this
+            chrome.storage.sync.get("user_id", data => {
+                if (chrome.runtime.lastError) {
+                    sendResponse({
+                        message: 'error',
+                        error: chrome.runtime.lastError
+                    });
+                    return;
+                }
+
+                if (data.user_id > 0)
+                    sendResponse({
+                        message: "logged"
+                    });
+                sendResponse({});
+            })
+
+            return true;
+            break;
+
+
+
+        case "attachment":
+            var project = JSON.parse(localStorage['project'])
+            var bugId = localStorage['bugId']
+            var url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs/${bugId}/attachments`;
+            var bearer = 'Bearer ' + localStorage['bearer_token'];
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': bearer,
+                        'Content-type': 'application/json',
+                        'clientId': "5",
+                        'version': "1.0.0",
+                    },
+                    body: JSON.stringify({
+                        designation: request.name,
+                        base64: request.b64,
+
                     })
-                    .then(data => sendResponse(data))
-                    .catch(err => {
-                        console.log(err);
-                    })
-                return true; // Will respond asynchronously.
+                }).then(response => {
+                    // return response.json()
+                    console.log(response)
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+            return true; // Will respond asynchronously.
 
-            case "fetchbug":
+        case "capture":
+            pageurl = request.url;
+            comment = request.comment;
+            title = request.title;
+            pageid = 33;
+            prioid = request.prio;
+            // refactor this section to be async because we need to know if data was saved or not
+            // if (sendbug()){
+            //   addmarker();
+            // }
+            sendbug().then((response) => {
+                    // console.log(response)
+                    if (response.success) {
+                        addmarker()
+                        return true
+                    } else {
+                        sendFail()
+                            // chrome.tabs.sendMessage(tabs[0].id, {action:'bugresult', error: 'SUCCESS'})
+                        return false
 
-                var project = JSON.parse(localStorage['project'])
-                var url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs`;
-                var bearer = 'Bearer ' + localStorage['bearer_token'];
+                    }
+                })
+                // maybe this will be suspended
+            break;
 
-                fetch(url, {
-                        method: 'GET',
-                        withCredentials: true,
-                        credentials: 'include',
-                        headers: {
-                            'Authorization': bearer,
-                            'clientId': "5",
-                            'version': "1.0.0",
-                        }
-                    }).then(response => {
-                        return response.json()
-                    })
-                    .then(data => sendResponse(data))
-                    .catch(err => {
-                        console.log(err);
-                    })
-                return true; // Will respond asynchronously.
+        case "screen": // save the screenshot to storage            
+            makeShot();
+            sendResponse({
+                farewell: "saved"
+            });
+            break;
+        case "capturepos": // capture mouse position 
+            xxpos = request.xpos;
+            yypos = request.ypos;
+            selector = request.tagPath;
+            xpos1 = request.xpos1;
+            ypos1 = request.ypos1;
+            sendResponse({
+                farewell: "saved"
+            });
+            break;
+        case "fetchpro":
+            // HERE WE NEED TO PICK NOT THE PROJECT BUT THE BUGS AND LIST THEM IN TEMPLATE NOT IN THE SELECT DROPDOWN LIKE HOW IS NOW ON THE TEMPLATE ON MY TASK
+            var project = JSON.parse(localStorage['project'])
+            var url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects`;
+            var bearer = 'Bearer ' + localStorage['bearer_token'];
 
-            case "fetchscreenshots":
+            fetch(url, {
+                    method: 'GET',
+                    withCredentials: true,
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': bearer,
+                        'clientId': "5",
+                        'version': "1.0.0",
+                    }
+                }).then(response => {
+                    return response.json()
+                })
+                .then(data => sendResponse(data))
+                .catch(err => {
+                    console.log(err);
+                })
+            return true; // Will respond asynchronously.
 
-                // var bearer_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGJmMmE0YTdkODNiMWIyZTk5YmU2NzY0YzA5ZDJiZDI1YTc2OWRiYWNlMWJlMDAxMDJiOTNkOTc2YjU0NWY2MGY1ZGZiMTAyMjkwYTliOWEiLCJpYXQiOjE1OTI4OTYzOTEsIm5iZiI6MTU5Mjg5NjM5MSwiZXhwIjoxNjI0NDMyMzkxLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.t6zyqsg8MfFVRsf3NEGl1XmC7Ewu__Tiwq4NGL4Tkbl3u4WvKlJHVE59WMdzr1-58fOoyz-eh16S0Uvk_di1wglX_ebJBBDpLsbcxXuBFKXnJdSSjoCmJiAtQi-Nf7aOwb0lYJK5b8_MW_ey8PpVzop4bm1npAt-T9bznYNUd31SMHZeAggHDHz0GTfE4xuwghTmJQtVlgM2WcuCO2_GFSxpOJbdqA7TSZFcCjf_qfLadKlXQq6Y-l2wfRQgyeqU8M70vgBnSvAJGaLmquGt9aB963Ne9eybBpOdgvXrsJnjVKdHlNglm5O9xY7c3lZASFYjMxvbLwkA2ksBihxz1zZSymPKvE3Jbois7bul4sn4DQJZiQ_61HPyVYsfznC-L0kFFEQRjlq2UllhkR8qhxqGubEfGHTETdYk1BKEFOurRUEH5t504mzyQcwnukld2IvdUq4Ijn286usCn31uzgfPVEIVKEqK5gYgUcHzg3o5_mNOlaEpVIktdxWGW9KtCxursWcXxkyqar2q-1VTNFXU-PioEKMh6hsSgTc8WhnbeIGUEQcuHKPEELoVcfjTuafGHZAgY5lS4Zg0MjXYLHzxW0GXxXCx5NPMOdavF-EX0MMcVp93tDWAJvlfhp2IBB2kXseuQ6DZsjgbIkvTkU1EBYsM45B3JtofkBYKCHU';
-                var url = "https://bugshot.view4all.de/api/companies/ed76dad0-d009-11eb-a6b2-6dc45fd46f39/projects/" + request.project + "/bugs/" + request.bugid + "/screenshots";
-                var bearer = 'Bearer ' + localStorage['bearer_token'];
-                console.log(url);
-                fetch(url, {
-                        method: 'GET',
-                        withCredentials: true,
-                        credentials: 'include',
-                        headers: {
-                            'Authorization': bearer,
-                            'clientId': "5",
-                            'version': "1.0.0",
-                        }
-                    }).then(response => {
-                        return response.json()
-                    })
-                    .then(data => sendResponse(data))
-                    .catch(err => {
-                        console.log(err);
-                    })
-                return true; // Will respond asynchronously.
+        case "fetchbug":
 
-            case "fetchbase64":
+            var project = JSON.parse(localStorage['project'])
+            var url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs`;
+            var bearer = 'Bearer ' + localStorage['bearer_token'];
 
-                // var bearer_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGJmMmE0YTdkODNiMWIyZTk5YmU2NzY0YzA5ZDJiZDI1YTc2OWRiYWNlMWJlMDAxMDJiOTNkOTc2YjU0NWY2MGY1ZGZiMTAyMjkwYTliOWEiLCJpYXQiOjE1OTI4OTYzOTEsIm5iZiI6MTU5Mjg5NjM5MSwiZXhwIjoxNjI0NDMyMzkxLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.t6zyqsg8MfFVRsf3NEGl1XmC7Ewu__Tiwq4NGL4Tkbl3u4WvKlJHVE59WMdzr1-58fOoyz-eh16S0Uvk_di1wglX_ebJBBDpLsbcxXuBFKXnJdSSjoCmJiAtQi-Nf7aOwb0lYJK5b8_MW_ey8PpVzop4bm1npAt-T9bznYNUd31SMHZeAggHDHz0GTfE4xuwghTmJQtVlgM2WcuCO2_GFSxpOJbdqA7TSZFcCjf_qfLadKlXQq6Y-l2wfRQgyeqU8M70vgBnSvAJGaLmquGt9aB963Ne9eybBpOdgvXrsJnjVKdHlNglm5O9xY7c3lZASFYjMxvbLwkA2ksBihxz1zZSymPKvE3Jbois7bul4sn4DQJZiQ_61HPyVYsfznC-L0kFFEQRjlq2UllhkR8qhxqGubEfGHTETdYk1BKEFOurRUEH5t504mzyQcwnukld2IvdUq4Ijn286usCn31uzgfPVEIVKEqK5gYgUcHzg3o5_mNOlaEpVIktdxWGW9KtCxursWcXxkyqar2q-1VTNFXU-PioEKMh6hsSgTc8WhnbeIGUEQcuHKPEELoVcfjTuafGHZAgY5lS4Zg0MjXYLHzxW0GXxXCx5NPMOdavF-EX0MMcVp93tDWAJvlfhp2IBB2kXseuQ6DZsjgbIkvTkU1EBYsM45B3JtofkBYKCHU';
-                var url = "https://bugshot.view4all.de/api/companies/ed76dad0-d009-11eb-a6b2-6dc45fd46f39/projects/" + request.project + "/bugs/" + request.bugid + "/screenshots/" + request.screenid;
-                var bearer = 'Bearer ' + localStorage['bearer_token'];
-                console.log(url);
-                fetch(url, {
-                        method: 'GET',
-                        withCredentials: true,
-                        credentials: 'include',
-                        headers: {
-                            'Authorization': bearer,
-                            'clientId': "5",
-                            'version': "1.0.0",
-                        }
-                    }).then(response => {
-                        return response.json()
-                    })
-                    .then(data => sendResponse(data))
-                    .catch(err => {
-                        console.log(err);
-                    })
-                return true; // Will respond asynchronously.
+            fetch(url, {
+                    method: 'GET',
+                    withCredentials: true,
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': bearer,
+                        'clientId': "5",
+                        'version': "1.0.0",
+                    }
+                }).then(response => {
+                    return response.json()
+                })
+                .then(data => sendResponse(data))
+                .catch(err => {
+                    console.log(err);
+                })
+            return true; // Will respond asynchronously.
 
-            case "openAdminPannel":
-                window.open('http://bugshot.view4all.de/', '_blank');
-                sendResponse('done')
-                break;
-            case "openProjectPannel":
-                var project = JSON.parse(localStorage['project'])
-                window.open(`http://bugshot.view4all.de/companies/${project.company_id}/projects/${project.id}/statuses`, '_blank');
-                sendResponse('done')
-                break;
-        }
+        case "fetchscreenshots":
 
+            // var bearer_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGJmMmE0YTdkODNiMWIyZTk5YmU2NzY0YzA5ZDJiZDI1YTc2OWRiYWNlMWJlMDAxMDJiOTNkOTc2YjU0NWY2MGY1ZGZiMTAyMjkwYTliOWEiLCJpYXQiOjE1OTI4OTYzOTEsIm5iZiI6MTU5Mjg5NjM5MSwiZXhwIjoxNjI0NDMyMzkxLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.t6zyqsg8MfFVRsf3NEGl1XmC7Ewu__Tiwq4NGL4Tkbl3u4WvKlJHVE59WMdzr1-58fOoyz-eh16S0Uvk_di1wglX_ebJBBDpLsbcxXuBFKXnJdSSjoCmJiAtQi-Nf7aOwb0lYJK5b8_MW_ey8PpVzop4bm1npAt-T9bznYNUd31SMHZeAggHDHz0GTfE4xuwghTmJQtVlgM2WcuCO2_GFSxpOJbdqA7TSZFcCjf_qfLadKlXQq6Y-l2wfRQgyeqU8M70vgBnSvAJGaLmquGt9aB963Ne9eybBpOdgvXrsJnjVKdHlNglm5O9xY7c3lZASFYjMxvbLwkA2ksBihxz1zZSymPKvE3Jbois7bul4sn4DQJZiQ_61HPyVYsfznC-L0kFFEQRjlq2UllhkR8qhxqGubEfGHTETdYk1BKEFOurRUEH5t504mzyQcwnukld2IvdUq4Ijn286usCn31uzgfPVEIVKEqK5gYgUcHzg3o5_mNOlaEpVIktdxWGW9KtCxursWcXxkyqar2q-1VTNFXU-PioEKMh6hsSgTc8WhnbeIGUEQcuHKPEELoVcfjTuafGHZAgY5lS4Zg0MjXYLHzxW0GXxXCx5NPMOdavF-EX0MMcVp93tDWAJvlfhp2IBB2kXseuQ6DZsjgbIkvTkU1EBYsM45B3JtofkBYKCHU';
+            var url = "https://bugshot.view4all.de/api/companies/ed76dad0-d009-11eb-a6b2-6dc45fd46f39/projects/" + request.project + "/bugs/" + request.bugid + "/screenshots";
+            var bearer = 'Bearer ' + localStorage['bearer_token'];
+            console.log(url);
+            fetch(url, {
+                    method: 'GET',
+                    withCredentials: true,
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': bearer,
+                        'clientId': "5",
+                        'version': "1.0.0",
+                    }
+                }).then(response => {
+                    return response.json()
+                })
+                .then(data => sendResponse(data))
+                .catch(err => {
+                    console.log(err);
+                })
+            return true; // Will respond asynchronously.
+
+        case "fetchbase64":
+
+            // var bearer_token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiOGJmMmE0YTdkODNiMWIyZTk5YmU2NzY0YzA5ZDJiZDI1YTc2OWRiYWNlMWJlMDAxMDJiOTNkOTc2YjU0NWY2MGY1ZGZiMTAyMjkwYTliOWEiLCJpYXQiOjE1OTI4OTYzOTEsIm5iZiI6MTU5Mjg5NjM5MSwiZXhwIjoxNjI0NDMyMzkxLCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.t6zyqsg8MfFVRsf3NEGl1XmC7Ewu__Tiwq4NGL4Tkbl3u4WvKlJHVE59WMdzr1-58fOoyz-eh16S0Uvk_di1wglX_ebJBBDpLsbcxXuBFKXnJdSSjoCmJiAtQi-Nf7aOwb0lYJK5b8_MW_ey8PpVzop4bm1npAt-T9bznYNUd31SMHZeAggHDHz0GTfE4xuwghTmJQtVlgM2WcuCO2_GFSxpOJbdqA7TSZFcCjf_qfLadKlXQq6Y-l2wfRQgyeqU8M70vgBnSvAJGaLmquGt9aB963Ne9eybBpOdgvXrsJnjVKdHlNglm5O9xY7c3lZASFYjMxvbLwkA2ksBihxz1zZSymPKvE3Jbois7bul4sn4DQJZiQ_61HPyVYsfznC-L0kFFEQRjlq2UllhkR8qhxqGubEfGHTETdYk1BKEFOurRUEH5t504mzyQcwnukld2IvdUq4Ijn286usCn31uzgfPVEIVKEqK5gYgUcHzg3o5_mNOlaEpVIktdxWGW9KtCxursWcXxkyqar2q-1VTNFXU-PioEKMh6hsSgTc8WhnbeIGUEQcuHKPEELoVcfjTuafGHZAgY5lS4Zg0MjXYLHzxW0GXxXCx5NPMOdavF-EX0MMcVp93tDWAJvlfhp2IBB2kXseuQ6DZsjgbIkvTkU1EBYsM45B3JtofkBYKCHU';
+            var url = "https://bugshot.view4all.de/api/companies/ed76dad0-d009-11eb-a6b2-6dc45fd46f39/projects/" + request.project + "/bugs/" + request.bugid + "/screenshots/" + request.screenid;
+            var bearer = 'Bearer ' + localStorage['bearer_token'];
+            console.log(url);
+            fetch(url, {
+                    method: 'GET',
+                    withCredentials: true,
+                    credentials: 'include',
+                    headers: {
+                        'Authorization': bearer,
+                        'clientId': "5",
+                        'version': "1.0.0",
+                    }
+                }).then(response => {
+                    return response.json()
+                })
+                .then(data => sendResponse(data))
+                .catch(err => {
+                    console.log(err);
+                })
+            return true; // Will respond asynchronously.
+
+
+
+
+
+
+        case "openAdminPannel":
+            chrome.tabs.create({
+                url: `http://bugshot.view4all.de/`
+            });
+
+            sendResponse({
+                message: "ok"
+            });
+            break;
+
+        case "openProjectPannel":
+            let domain = (new URL(sender.url)).hostname; // Get domain name of the sender 
+
+            chrome.storage.sync.get(domain, data => {
+                let project = Object.values(data)[0];
+                chrome.tabs.create({
+                    url: `http://bugshot.view4all.de/companies/${project.company_id}/projects/${project.id}/statuses`
+                });
+
+                sendResponse({
+                    message: "ok"
+                });
+            });
+
+            return true;
+            break;
+
+
+        default:
+            sendResponse({
+                message: "Message not recognized as a command!"
+            });
+            break;
     }
-);
+
+});
 
 
 
@@ -539,27 +549,7 @@ async function sendbug() {
 
 };
 
-function userloggedin() {
 
-    chrome.tabs.query({
-        active: true,
-        currentWindow: true
-    }, function(tabs) {
-        console.log(tabs)
-        chrome.tabs.sendMessage(tabs[0].id, {
-            action: "logged"
-        }, function(response) {
-            var lastError = chrome.runtime.lastError;
-            if (lastError) {
-                console.log(lastError.message);
-                // 'Could not establish connection. Receiving end does not exist.'
-                return;
-            }
-
-
-        });
-    });
-}
 
 function removeMarkerSign() {
     chrome.tabs.query({
@@ -587,6 +577,76 @@ function sendFail() {
     });
 }
 
+
+
+/**
+ * Authenticate user and get coocies for communication
+ * @param  {{username, password}} credentials The credentials for authentication
+ * @return {Promise} All info regarding the user or 'undefined' if not found
+ * @throws Will throw an error messaje in case of non-existance (codes >=500)
+ */
+async function logIn(credentials) {
+    let url = "https://bugshot.view4all.de/api/user/login";
+
+    return new Promise(function(resolve, reject) {
+
+        fetch(url, {
+            method: "POST",
+            redirect: 'follow',
+            headers: {
+                'Content-type': 'application/json',
+                'clientId': "5",
+                'version': "1.0.0",
+            },
+            body: JSON.stringify({
+                email: credentials.username,
+                password: credentials.password
+            })
+
+        }).then(response => {
+
+            if (response.status >= 200 && response.status < 300)
+                resolve(response.json());
+
+            if (response.status >= 500)
+                reject(`Server error code: ${response.status}!`);
+        }).catch(err => { throw err });
+
+    }).catch(err => {
+        throw err;
+    });
+}
+
+/**
+ * Reset the environment to default
+ */
+async function logOut() {
+    //TODO Implement the cleanup of localStorage after saving something in it
+    chrome.storage.sync.clear();
+}
+
+/**
+ * Check to see if the apropriate informations are available for comunication to consider the state as logged in
+ * @return {Boolean} True if everything is ok, false otherwise
+ */
+async function logged() {
+    // return new Promise((resolve, reject) => {
+    //     chrome.storage.local.get("user_id", item => {
+    //         if (chrome.runtime.lastError)
+    //             console.log('Error getting');
+
+    //         if (Object.values(item) != undefined) {
+    //             resolve(Object.values(item).val);
+    //         } else {
+    //             reject();
+    //         }
+
+    //         console.log(item);
+    //     })
+    // })
+    return true;
+
+}
 
 
 function checkProject() {
