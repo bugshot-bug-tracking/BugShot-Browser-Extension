@@ -301,6 +301,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 
 
+        case "test":
+            console.log(`I arrived from foreground.js!`);
+            sendResponse({ message: "ok" })
+            break;
 
         case "checkProject": //TODO validate inputs //** determine if necessary or use direct calls on actions */
             console.log({ request, sender })
