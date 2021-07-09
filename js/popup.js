@@ -30,59 +30,90 @@ document.body.appendChild(out);
 document.body.appendChild(div);
 
 
-document.querySelector('#loginButton').addEventListener('click', function(e) {
-    e.preventDefault();
-    var username = document.getElementById("username").value;
-    var password = document.getElementById("password").value;
+// On button click send a message to the service worker for login and update popup interface
+document.querySelector('#loginButton').addEventListener('click', event => {
+    event.preventDefault();
+
+    var uname = document.getElementById("username").value;
+    var pass = document.getElementById("password").value;
 
     chrome.runtime.sendMessage({
-        greeting: "login",
-        username,
-        password
-    }, function(response) {
-        console.log(response.farewell);
-        if (response.farewell) {
-
-            loginForm.innerHTML = "Successfully logged in!";
-            out.style.display = 'block';
-            log.style.display = "none"
-
-        } else if (response.error) {
-            loginForm.innerHTML += "Something went wrong, try again!";
-        } else {
-            loginForm.innerHTML += "Something went wrong, try again!";
+        message: "login",
+        payload: {
+            username: uname,
+            password: pass
         }
-    });
-}, false);
+    }, response => {
 
+        switch (response.message) {
 
+            case "login":
+                loginForm.innerHTML = "Successfully logged in!";
+                out.style.display = 'block';
+                log.style.display = "none";
+                break;
 
-out.onclick = function() {
+            case "error":
+                loginForm.innerHTML += `Error: ${response.error}.`;
+                break;
 
-    chrome.runtime.sendMessage({
-        greeting: "logout",
-    }, function(response) {
-        if (response.farewell = "logout") {
-            out.style.display = 'none';
+            default:
+                loginForm.innerHTML += "Something went wrong, try again!";
+                break;
         }
+
     });
 
-    log.style.color = '#888';
-    loginForm.innerHTML = "Successfully logged out!";
-    location.reload();
-};
 
-
-
-chrome.runtime.sendMessage({
-    greeting: "logged",
-}, function(response) {
-    console.log(response.farewell);
-    if (response.farewell == "logged") {
-        loginForm.innerHTML = "You are logged in!";
-        out.style.display = 'block';
-        log.style.display = "none"
-    } else {
-        out.style.display = 'none';
-    }
 });
+
+
+// On button click send a message to the service worker for logout and update popup interface
+document.querySelector('#logout').addEventListener('click', () => {
+
+    chrome.runtime.sendMessage({
+        message: "logout"
+    }, response => {
+
+        switch (response.message) {
+
+            case "logout":
+                out.style.display = 'none';
+                break;
+
+            case "error":
+                loginForm.innerHTML += `Error: ${response.error}.`;
+                break;
+        }
+
+        log.style.color = '#888';
+        loginForm.innerHTML = "Successfully logged out!";
+        location.reload();
+
+    });
+
+});
+
+// Check the status of login, if a session is active modify the interface otherwise do nothing
+chrome.runtime.sendMessage({
+        message: "logged"
+    },
+    response => {
+        switch (response.message) {
+
+            case "logged":
+                loginForm.innerHTML = "You are logged in!";
+                out.style.display = 'block';
+                log.style.display = "none";
+                return;
+                break;
+
+            case "error":
+                loginForm.innerHTML += `Error ${response.error}.`;
+                break;
+
+            default:
+                out.style.display = 'none';
+                break;
+        }
+    });

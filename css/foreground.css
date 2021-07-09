@@ -65,17 +65,17 @@ a {
     padding: 0 0 0 0;
 }
 
-#dark {
+#bugshot-logo {
     z-index: 2000;
     text-align: center;
     padding: 16px;
 }
 
-#dark svg {
+#bugshot-logo svg {
     margin: unset;
 }
 
-#dark svg:hover {
+#bugshot-logo svg:hover {
     cursor: pointer;
 }
 
