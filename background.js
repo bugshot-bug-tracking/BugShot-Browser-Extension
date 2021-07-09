@@ -667,6 +667,53 @@ async function logged() {
 }
 
 
+
+/** Event listener on page update; injects foreground.js and .css if there is a project for it */
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+
+    logged().then(response => {
+
+        if (!response) return; // If not logged in exit
+
+        if (changeInfo.status === 'complete' && /^http/.test(tab.url)) { // When tab finished loading and it's a legit one (http/https)
+
+            let domain = (new URL(tab.url)).hostname; // Get domain name of the current page
+
+            getProjectWithCache(tab.url) // Get the project info from storage or remote with cacheing if from remote
+                .then(response => {
+                    console.log({ domain, response });
+
+                    if (!response) return; // If no project exit
+                    //if (!response[domain]) return; // If no info about project exit
+
+                    chrome.scripting.insertCSS({ // Inject the css of the foreground script into the page
+                            target: { tabId: tabId },
+                            files: ["css/foreground.css"]
+                        })
+                        .then(() => {
+                            console.log(`Injected stylesheet for foreground in "${domain}".`);
+
+                            chrome.scripting.executeScript({ // Inject the script 
+                                    target: { tabId: tabId },
+                                    files: ["js/foreground.js"]
+                                })
+                                .then(() => {
+                                    console.log(`Injected foreground script in "${domain}".`);
+                                });
+                        })
+                        .catch(err => console.log(err));
+
+                })
+                .catch(err => {
+                    console.log({ domain, result: err, location: "getProjectWithCacheing" });
+                });
+        }
+    });
+
+});
+
+
+
 /**
  * Check if the URL belong to a project and return the details
  * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/)
