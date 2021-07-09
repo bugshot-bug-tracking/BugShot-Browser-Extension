@@ -302,7 +302,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 
 
+        case "checkProject": //TODO validate inputs //** determine if necessary or use direct calls on actions */
+            console.log({ request, sender })
+            getProject(sender.url)
+                .then(response => {
+                    sendResponse({
+                        message: "ok",
+                        project: response
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                    sendResponse({
+                        message: "error",
+                        error: err
+                    });
+                });
 
+            return true;
+            break;
 
         case "openAdminPannel":
             chrome.tabs.create({
@@ -649,68 +667,108 @@ async function logged() {
 }
 
 
-function checkProject() {
-    var countRequest = 0
-    chrome.tabs.query({
-        active: true,
-        currentWindow: true
-    }, function(tabs) {
+/**
+ * Check if the URL belong to a project and return the details
+ * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/)
+ * @return {Promise} All info regarding current project or 'undefined' if not found
+ * @throws Will throw an error messaje in case of non-existance (codes >= 500)
+ */
+function getProject(projectURL) {
 
-        chrome.tabs.sendMessage(tabs[0].id, {
-            action: "getDomain"
-        }, function(response) {
-            localStorage['domain'] = response.domainName
+    let domain = (new URL(projectURL)).hostname; // Get domain name of the URL
 
-            var url = 'http://bugshot.view4all.de/api/check-project'
+    let requestURL = 'http://bugshot.view4all.de/api/check-project'
+    let clientId = 5
+    let verison = '1.0.0'
 
-            var clientId = 5
-            var verison = '1.0.0'
+    return new Promise(function(resolve, reject) {
 
-            var http = new XMLHttpRequest();
-            http.open('GET', url, true);
-            //Send the proper header information along with the request
-            http.setRequestHeader('Content-type', 'application/json');
-            http.setRequestHeader('clientId', clientId);
-            http.setRequestHeader('version', verison);
-            http.setRequestHeader('projectUrl', localStorage['domain']);
-            http.setRequestHeader('Access-Control-Allow-Headers', '*');
-            http.setRequestHeader('Access-Control-Allow-Origin', '*');
-            http.setRequestHeader('Access-Control-Allow-Methods', '*');
-            http.setRequestHeader('Authentication', `Bearer ${localStorage['bearer_token']}`);
-
-            http.send();
-            http.onreadystatechange = function() { //Call a function when the state changes.
-                if (http.status == 200) {
-                    if (http.status == 200) {
-                        // call is made more times
-                        countRequest++
-                        if (countRequest == 3) {
-                            localStorage['project'] = http.response // store project on local storage
-                        }
-                    }
-                } else {
-                    countRequest++
-                    if (countRequest == 6) { // here is made 6 request on error dont know why but solved with one counter
-                        // setTimeout(function(){ sendFail() }, 1000);
-                        window.localStorage.removeItem('bearer_token');
-                        window.localStorage.removeItem('domain');
-
-                        chrome.tabs.sendMessage(tabs[0].id, {
-                            action: "projectNotExists"
-                        }, function(response) {
-                            var lastError = chrome.runtime.lastError;
-                            if (lastError) {
-                                console.log(lastError.message);
-                                // 'Could not establish connection. Receiving end does not exist.'
-                                return;
-                            }
-                            console.log(response)
-                        });
-
-                    }
-                    // chrome.runtime.sendMessage({action: 'errorLogin'})
-                }
+        fetch(requestURL, {
+            method: "GET",
+            headers: {
+                'Content-type': 'application/json',
+                'clientId': clientId,
+                'version': verison,
+                'projectUrl': domain,
+                'Access-Control-Allow-Headers': '*',
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': '*',
             }
+        }).then(response => {
+
+            if (response.status >= 200 && response.status < 300)
+                resolve(response.json());
+
+            if (response.status >= 500)
+                reject(`Server error code: ${response.status}!`);
+        }).catch(err => { throw err });
+
+    }).catch(err => {
+        throw err;
+    });
+
+}
+
+/**
+ * Check if the URL belong to a project and return the details with local storage check and cache if info received from remote
+ * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/)
+ * @return {Promise} All info regarding current project or '{}' if not found
+ * @throws Will throw an error messaje in case of non-existance (codes >= 500)
+ */
+function getProjectWithCache(projectURL) { //TODO need somekind of check if the in memory data is still the same as remote(in case a project is deleted from remote but it's still in local)
+    return new Promise(function(resolve, reject) {
+
+        checkIfProjectInCache(projectURL) // Check if project in storage.sync
+            .then(response => {
+                let domain = (new URL(projectURL)).hostname; // Get domain name of the current page
+
+                // If it is return it
+                if (response[domain])
+                    return response[domain];
+
+                if (response[domain] === null)
+                    return response[domain];
+
+                // Else get the data from server
+                return getProject(projectURL).then(response => {
+                    return response;
+                });
+
+            }).then(response => {
+
+                let domain = (new URL(projectURL)).hostname; // Get domain name of the URL
+                let obj = {};
+                obj[domain] = response;
+
+                chrome.storage.sync.set(obj); // Save in memory the domain + prioject info
+
+                resolve(response);
+            }).catch(err => {
+                // cache the sites that doesn't have project info on remote
+                let domain = (new URL(projectURL)).hostname; // Get domain name of the URL
+                let obj = {};
+                obj[domain] = null;
+
+                chrome.storage.sync.set(obj); // Save in memory the domain + prioject info
+
+                reject(err)
+            });
+    }).catch(err => {
+        throw err;
+    });
+}
+
+/**
+ * Check if the project is registred in storage
+ * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/)
+ * @return {Promise} All info regarding current project from storage or '{}' if not found
+ */
+function checkIfProjectInCache(projectURL) {
+    let domain = (new URL(projectURL)).hostname; // Get domain name of the URL
+
+    return new Promise(function(resolve, reject) {
+        chrome.storage.sync.get(domain, data => {
+            resolve(data);
         });
     });
 }
