@@ -81,6 +81,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         case "test":
             console.log(`I arrived from foreground.js!`);
+            chrome.runtime.sendMessage({
+                message: "run"
+            });
             sendResponse({ message: "ok" })
             break;
 
@@ -174,24 +177,24 @@ async function logIn(credentials) {
     let url = "https://bugshot.view4all.de/api/user/login";
 
     let response = await fetch(url, {
-            method: "POST",
-            redirect: 'follow',
-            headers: {
-                'Content-type': 'application/json',
-                'clientId': "5",
-                'version': "1.0.0",
-            },
-            body: JSON.stringify({
-                email: credentials.username,
-                password: credentials.password
-            })
+        method: "POST",
+        redirect: 'follow',
+        headers: {
+            'Content-type': 'application/json',
+            'clientId': "5",
+            'version': "1.0.0",
+        },
+        body: JSON.stringify({
+            email: credentials.username,
+            password: credentials.password
+        })
 
     });
 
-            if (response.status >= 200 && response.status < 300)
+    if (response.status >= 200 && response.status < 300)
         return await response.json();
 
-            if (response.status >= 500)
+    if (response.status >= 500)
         throw `Server error code: ${response.status}!`;
 
     throw "Not a good response from server";
@@ -233,6 +236,17 @@ async function logged() {
 /** Event listener on page update; injects foreground.js and .css if there is a project for it */
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
+
+    // if (changeInfo.status === 'complete' && /^http/.test(tab.url)) { // When tab finished loading and it's a legit one (http/https)
+
+
+    //     chrome.scripting.executeScript({ // Inject the script 
+    //         target: { tabId: tabId },
+    //         files: ["js/iframe.js"]
+    //     })
+
+    // }
+
     logged().then(response => {
 
         if (!response) return; // If not logged in exit
@@ -248,22 +262,33 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                     if (!response) return; // If no project exit
                     //if (!response[domain]) return; // If no info about project exit
 
-                    chrome.scripting.insertCSS({ // Inject the css of the foreground script into the page
-                            target: { tabId: tabId },
-                            files: ["css/foreground.css"]
-                        })
-                        .then(() => {
-                            console.log(`Injected stylesheet for foreground in "${domain}".`);
 
-                            chrome.scripting.executeScript({ // Inject the script 
-                                    target: { tabId: tabId },
-                                    files: ["js/foreground.js"]
-                                })
-                                .then(() => {
-                                    console.log(`Injected foreground script in "${domain}".`);
-                                });
-                        })
-                        .catch(err => console.log(err));
+
+
+                    // chrome.scripting.insertCSS({ // Inject the css of the foreground script into the page
+                    //         target: { tabId: tabId },
+                    //         files: ["css/foreground.css"]
+                    //     })
+                    //     .then(() => {
+                    //         console.log(`Injected stylesheet for foreground in "${domain}".`);
+
+                    //         chrome.scripting.executeScript({ // Inject the script 
+                    //                 target: { tabId: tabId },
+                    //                 files: ["js/foreground.js"]
+                    //             })
+                    //             .then(() => {
+                    //                 console.log(`Injected foreground script in "${domain}".`);
+                    //             });
+                    //     })
+                    //     .catch(err => console.log(err));
+
+
+
+                    chrome.scripting.executeScript({ // Inject the script 
+                        target: { tabId: tabId },
+                        files: ["js/iframe.js"]
+                    });
+
 
                 })
                 .catch(err => {
@@ -291,24 +316,24 @@ async function getProject(projectURL) {
     let verison = '1.0.0'
 
 
-        let response = await fetch(requestURL, {
-            method: "GET",
-            headers: {
-                'Content-type': 'application/json',
-                'clientId': clientId,
-                'version': verison,
-                'projectUrl': domain,
-                'Access-Control-Allow-Headers': '*',
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': '*',
-            }
-        });
+    let response = await fetch(requestURL, {
+        method: "GET",
+        headers: {
+            'Content-type': 'application/json',
+            'clientId': clientId,
+            'version': verison,
+            'projectUrl': domain,
+            'Access-Control-Allow-Headers': '*',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*',
+        }
+    });
 
-        if (response.status >= 200 && response.status < 300)
-            return await response.json();
+    if (response.status >= 200 && response.status < 300)
+        return await response.json();
 
-        if (response.status >= 500)
-            throw `Server error code: ${response.status}!`;
+    if (response.status >= 500)
+        throw `Server error code: ${response.status}!`;
 
     throw "Not a good response from server";
 }

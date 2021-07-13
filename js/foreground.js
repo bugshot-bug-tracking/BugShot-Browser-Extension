@@ -1,59 +1,21 @@
 //TODO need to integrate in an iframe
 
-// elements needed for sidebar
-sidecont = document.createElement('div');
-sidebar = document.createElement('div');
-logo = document.createElement('div');
 
-// elements used in sidebar
-tasks = document.createElement('div');
-adminPannel = document.createElement('div')
-projectPannel = document.createElement('div')
-add = document.createElement('div');
+//** Sidebar and buttons */
 
-// initialize id for div's
-sidecont.id = "sidecont";
-sidebar.id = "sidebarbug";
-logo.id = "bugshot-logo";
-
-tasks.id = "tasks";
-adminPannel.id = "adminPannel";
-projectPannel.id = "projectPannel";
-add.id = "add";
+sidebar = document.getElementById("sidebar")
 
 
-// add each div to apropriate location
-document.body.appendChild(sidecont);
-sidecont.appendChild(sidebar);
-sidebar.appendChild(logo);
-
-
-sidebar.appendChild(tasks);
-sidebar.appendChild(adminPannel);
-sidebar.appendChild(projectPannel);
-sidebar.appendChild(add);
+add_menu = document.getElementById("add-menu")
+task_details = document.getElementById("task-details")
+task_list = document.getElementById("task-list")
+logo = document.getElementById("logo")
+task_button = document.getElementById("task-button")
+admin_button = document.getElementById("admin-button")
+project_button = document.getElementById("project-button")
+add_button = document.getElementById("add-button")
 
 closeSidebar();
-
-
-//TODO move image to css for consistency
-logo.innerHTML = `
-    <figure>
-        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
-            <defs>
-                <style>
-                    .x{fill:#18d992;}
-                </style>
-            </defs>
-            <path class="x" d="M234.3,299.068a7.225,7.225,0,0,0-5.29-5.419v3.508h-3.266v-3.508a7.224,7.224,0,0,0-5.29,5.419h3.424v3.345h-3.424a7.224,7.224,0,0,0,5.29,5.419v-3.508h3.266v3.508a7.224,7.224,0,0,0,5.29-5.419h-3.424v-3.345Z" transform="translate(-207.375 -280.741)"/>
-            <path class="x" d="M244.385,267.9A10.534,10.534,0,0,1,253,276.731h3.628v-3.907l5.644-5.782a1.7,1.7,0,0,0,0-2.365l-6.122-6.272-2.309,2.365,4.968,5.09L255,269.766l-4.968-5.09a1.612,1.612,0,0,0-1.154-.49h-4.49Z" transform="translate(-222.752 -258.404)"/>
-            <path class="x" d="M256.63,321.488v-3.907H253a10.533,10.533,0,0,1-8.617,8.828v3.717h4.49a1.613,1.613,0,0,0,1.154-.49l4.968-5.09,3.814,3.907-4.968,5.09,2.309,2.366,6.122-6.272a1.7,1.7,0,0,0,0-2.366Z" transform="translate(-222.752 -295.909)"/>
-            <path class="x" d="M202.237,326.409a10.533,10.533,0,0,1-8.617-8.828h-3.628v3.907l-5.645,5.782a1.7,1.7,0,0,0,0,2.366l6.122,6.272,2.309-2.366-4.968-5.09,3.814-3.907,4.968,5.09a1.614,1.614,0,0,0,1.155.49h4.49Z" transform="translate(-183.87 -295.909)"/>
-            <path class="x" d="M189.992,272.824v3.907h3.628a10.533,10.533,0,0,1,8.617-8.828v-3.717h-4.49a1.613,1.613,0,0,0-1.155.49l-4.968,5.09-3.814-3.907,4.968-5.09L190.47,258.4l-6.122,6.272a1.7,1.7,0,0,0,0,2.365Z" transform="translate(-183.87 -258.404)"/>
-        </svg>
-    </figure>
-    `
-
 
 //------ Event Listeners ------//
 
@@ -67,21 +29,99 @@ logo.addEventListener('click', event => {
         sidebar.classList.add("open");
         openSidebar();
     }
-
 });
 
-tasks.addEventListener('click', event => {
+task_button.addEventListener('click', event => {
+
+
+    if (task_list.classList.contains("open")) {
+        task_list.classList.remove("open");
+        return;
+    } else {
+        task_list.classList.add("open");
+    }
+
+
 
     chrome.runtime.sendMessage({
-        message: "checkProject",
+        message: "getBugs"
     }, response => {
-        console.log(response);
-        console.log("I received something!");
+        if (response.message === "error") {
+            console.log(response.error);
+            return;
+        }
+
+        if (response.message !== "ok") {
+            console.log("What was the message?");
+            return;
+        }
+
+
+        response.payload.forEach(stage => {
+            taskContainer = document.createElement('div');
+            taskContainer.classList.add("task-container");
+            task_list.appendChild(taskContainer);
+
+            taskStage = document.createElement('div');
+            taskCards = document.createElement('div');
+            taskCards.classList.add("task-cards");
+            taskStage.classList.add("task-stage");
+
+            taskContainer.appendChild(taskStage);
+            taskContainer.appendChild(taskCards);
+
+            taskStage.innerHTML = stage.designation;
+
+
+
+            console.log(stage);
+            stage.bugs.forEach(bug => {
+
+
+                taskCardTemplate = document.getElementById("task-card").content;
+
+                copyTemplate = document.importNode(taskCardTemplate, true);
+                taskTitle = copyTemplate.querySelector(".title");
+                taskDeadline = copyTemplate.querySelector(".deadline");
+                taskPriority = copyTemplate.querySelector(".priority");
+
+
+                taskTitle.innerHTML = bug.designation; // this needs to be a title
+                //taskDeadline.innerHTML = bug.deadline;
+                taskPriority.classList.add(`p${bug.priority_id}`);
+
+                taskCards.appendChild(copyTemplate);
+
+            });
+
+
+
+
+
+
+
+
+        });
+
+
+
+
+
     });
+
+
+
+
+
+
+
+
+
+
 
 })
 
-adminPannel.addEventListener('click', event => {
+admin_button.addEventListener('click', event => {
 
     chrome.runtime.sendMessage({
         message: "openAdminPannel"
@@ -91,7 +131,7 @@ adminPannel.addEventListener('click', event => {
     });
 })
 
-projectPannel.addEventListener('click', event => {
+project_button.addEventListener('click', event => {
 
     chrome.runtime.sendMessage({
         message: "openProjectPannel"
@@ -102,7 +142,7 @@ projectPannel.addEventListener('click', event => {
 
 })
 
-add.addEventListener('click', event => {
+add_button.addEventListener('click', event => {
 
     chrome.runtime.sendMessage({
         message: "test"
@@ -120,15 +160,17 @@ add.addEventListener('click', event => {
 
 
 function openSidebar() {
-    tasks.style.display = "block";
-    adminPannel.style.display = "block";
-    projectPannel.style.display = "block";
-    add.style.display = "block";
+    logo.classList.add("open");
+    task_button.classList.add("open");
+    admin_button.classList.add("open");
+    project_button.classList.add("open");
+    add_button.classList.add("open");
 }
 
 function closeSidebar() {
-    tasks.style.display = "none";
-    adminPannel.style.display = "none";
-    projectPannel.style.display = "none";
-    add.style.display = "none";
+    logo.classList.remove("open");
+    task_button.classList.remove("open");
+    admin_button.classList.remove("open");
+    project_button.classList.remove("open");
+    add_button.classList.remove("open");
 }

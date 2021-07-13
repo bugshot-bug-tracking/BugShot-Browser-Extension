@@ -29,5 +29,15 @@
     ],
     "host_permissions": [
         "*://*/*"
-    ]
+    ],
+
+
+    "web_accessible_resources": [{
+        "resources": [
+            "html/foreground.html"
+        ],
+        "matches": [
+            "*://*/*"
+        ]
+    }]
 }
