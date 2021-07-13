@@ -1,0 +1,12 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='56' height='91' viewBox='0 0 56 91'>
+    <g id='btn_project_hover' transform='translate(-10858 -6553)'>
+        <circle id='Ellipse_50' data-name='Ellipse 50' cx='28' cy='28' r='28' transform='translate(10858 6553)' fill='#7a2ee6'/>
+        <rect id='Rectangle_146' data-name='Rectangle 146' width='32' height='32' transform='translate(10870 6565)' fill='none'/>
+        <text id='Project_Panel' data-name='Project
+Panel' transform='translate(10886 6629)' fill='#f8f8fc' font-size='12' font-family='SegoeUI, Segoe UI'>
+            <tspan x='-20.514' y='0'>Project</tspan>
+            <tspan x='-16.068' y='13'>Panel</tspan>
+        </text>
+        <path id='Path_650' data-name='Path 650' d='M22.324,6.58V18.287L18.281,22.33H6.588V18.017H2.525L.994,16.486V12.424l1.531-1.531H6.588V6.58H10.9V2.517l1.53-1.53h4.063l1.53,1.53V6.58Z' transform='translate(10874.339 6569.449)' fill='none' stroke='#fff' stroke-miterlimit='9.996' stroke-width='1.999'/>
+    </g>
+</svg>

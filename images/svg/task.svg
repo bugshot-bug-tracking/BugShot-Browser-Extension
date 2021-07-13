@@ -1,0 +1,13 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'>
+    <defs>
+        <style>.a,.b{fill:none;}.b{stroke:#f8f8fc;stroke-miterlimit:10;stroke-width:2px;}</style>
+    </defs>
+    <rect class='a' width='32' height='32'/>
+    <g transform='translate(5.333 2.667)'>
+        <path class='b' d='M9.333,4H6.667L4,6.526V25.474L6.667,28h16l2.667-1.263V6.526L22.667,4H20' transform='translate(-4 -1.333)'/>
+        <path class='b' d='M18.667,5.2,16,2H10.667L8.083,5.2,8,7.333H18.667Z' transform='translate(-2.667 -2)'/>
+        <line class='b' x2='13.333' transform='translate(4 10.667)'/>
+        <line class='b' x2='13.333' transform='translate(4 16)'/>
+        <line class='b' x2='13.333' transform='translate(4 21.333)'/>
+    </g>
+</svg>
