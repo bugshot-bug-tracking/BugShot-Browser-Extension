@@ -86,7 +86,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
         case "checkProject": //TODO validate inputs //** determine if necessary or use direct calls on actions */
             console.log({ request, sender })
-            getProject(sender.url)
+            getProject(sender.tab.url)
                 .then(response => {
                     sendResponse({
                         message: "ok",
@@ -95,6 +95,27 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 })
                 .catch(err => {
                     console.log(err);
+                    sendResponse({
+                        message: "error",
+                        error: err
+                    });
+                });
+
+            return true;
+            break;
+
+        case "getBugs":
+
+            getBugs(sender.tab.url)
+                .then(response => {
+
+                    sendResponse({
+                        message: "ok",
+                        payload: response
+                    });
+
+
+                }).catch(err => {
                     sendResponse({
                         message: "error",
                         error: err
@@ -115,7 +136,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             break;
 
         case "openProjectPannel":
-            let domain = (new URL(sender.url)).hostname; // Get domain name of the sender 
+            let domain = (new URL(sender.tab.url)).hostname; // Get domain name of the sender 
 
             chrome.storage.sync.get(domain, data => {
                 let project = Object.values(data)[0];
@@ -146,15 +167,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 /**
  * Authenticate user and get coocies for communication
  * @param  {{username, password}} credentials The credentials for authentication
- * @return {Promise} All info regarding the user or 'undefined' if not found
+ * @return {Promise} All info regarding the user or '{}' if not found
  * @throws Will throw an error messaje in case of non-existance (codes >=500)
  */
 async function logIn(credentials) {
     let url = "https://bugshot.view4all.de/api/user/login";
 
-    return new Promise(function(resolve, reject) {
-
-        fetch(url, {
+    let response = await fetch(url, {
             method: "POST",
             redirect: 'follow',
             headers: {
@@ -167,18 +186,15 @@ async function logIn(credentials) {
                 password: credentials.password
             })
 
-        }).then(response => {
+    });
 
             if (response.status >= 200 && response.status < 300)
-                resolve(response.json());
+        return await response.json();
 
             if (response.status >= 500)
-                reject(`Server error code: ${response.status}!`);
-        }).catch(err => { throw err });
+        throw `Server error code: ${response.status}!`;
 
-    }).catch(err => {
-        throw err;
-    });
+    throw "Not a good response from server";
 }
 
 /**
@@ -263,7 +279,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 /**
  * Check if the URL belong to a project and return the details
  * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/)
- * @return {Promise} All info regarding current project or 'undefined' if not found
+ * @return {Promise} All info regarding current project or '{}}' if not found
  * @throws Will throw an error messaje in case of non-existance (codes >= 500)
  */
 async function getProject(projectURL) {
@@ -274,7 +290,7 @@ async function getProject(projectURL) {
     let clientId = 5
     let verison = '1.0.0'
 
-    try {
+
         let response = await fetch(requestURL, {
             method: "GET",
             headers: {
@@ -294,15 +310,13 @@ async function getProject(projectURL) {
         if (response.status >= 500)
             throw `Server error code: ${response.status}!`;
 
-    } catch (err) {
-        throw err;
-    }
+    throw "Not a good response from server";
 }
 
 /**
  * Check if the URL belong to a project and return the details with local storage check and cache if info received from remote
  * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/)
- * @return {Promise} All info regarding current project or '{}' if not found
+ * @return {Promise} All info regarding current project or 'null' if not found
  * @throws Will throw an error messaje in case of non-existance (codes >= 500)
  */
 function getProjectWithCache(projectURL) { //TODO need somekind of check if the in memory data is still the same as remote(in case a project is deleted from remote but it's still in local)
@@ -312,16 +326,17 @@ function getProjectWithCache(projectURL) { //TODO need somekind of check if the 
             .then(response => {
                 let domain = (new URL(projectURL)).hostname; // Get domain name of the current page
 
-                // If it is return it
+                // If it is in storage return it
                 if (response[domain])
                     return response[domain];
 
+                // If the URL doesn't have a project but was cached return it
                 if (response[domain] === null)
                     return response[domain];
 
                 // Else get the data from server
                 return getProject(projectURL).then(response => {
-                    return response;
+                    return response.data;
                 });
 
             }).then(response => {
@@ -339,7 +354,7 @@ function getProjectWithCache(projectURL) { //TODO need somekind of check if the 
                 let obj = {};
                 obj[domain] = null;
 
-                chrome.storage.sync.set(obj); // Save in memory the domain + prioject info
+                chrome.storage.sync.set(obj); // Save in memory the domain + prioject info (null)
 
                 reject(err)
             });
@@ -361,4 +376,39 @@ function checkIfProjectInCache(projectURL) {
             resolve(data);
         });
     });
+}
+
+
+
+
+
+
+
+/**
+ * Get the stage list and their bug list associated with a project
+ * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/)
+ * @return {Promise} Array with all the curent stages (columns) and their respective list of bugs
+ * @throws Will throw an error messaje in case of non-existance (codes >= 500) from remote, and one error if not in sorage
+ */
+async function getBugs(projectURL) {
+    project = await getProjectWithCache(projectURL); // Will throw error if project not in remote
+
+    if (project === null) throw "No project for this URL"; // In case the project was taken from storage and no info is given
+
+    var url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs`;
+
+    let response = await fetch(url, {
+        method: 'GET',
+        withCredentials: true,
+        credentials: 'include',
+        headers: {
+            'clientId': "5",
+            'version': "1.0.0",
+        }
+    });
+
+    response = await response.json();
+
+    return response.data;
+
 }
