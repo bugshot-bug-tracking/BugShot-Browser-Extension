@@ -112,10 +112,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             getBugs(sender.tab.url)
                 .then(response => {
 
-                    sendResponse({
-                        message: "ok",
-                        payload: response
-                    });
+                    if (response === null)
+                        sendResponse({
+                            message: "empty",
+                        });
+                    else
+                        sendResponse({
+                            message: "ok",
+                            payload: response
+                        });
 
 
                 }).catch(err => {
@@ -405,7 +410,7 @@ function checkIfProjectInCache(projectURL) {
 async function getBugs(projectURL) {
     project = await getProjectWithCache(projectURL); // Will throw error if project not in remote
 
-    if (project === null) throw "No project for this URL"; // In case the project was taken from storage and no info is given
+    if (project === null) return null; // In case the project was taken from storage and no info is given
 
     var url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs`;
 

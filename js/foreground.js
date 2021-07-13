@@ -51,6 +51,11 @@ task_button.addEventListener('click', event => {
             return;
         }
 
+        if (response.message === "empty") {
+            console.log("No project buggs");
+            return;
+        }
+
         if (response.message !== "ok") {
             console.log("What was the message?");
             return;
