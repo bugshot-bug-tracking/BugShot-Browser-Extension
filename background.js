@@ -304,8 +304,8 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 /**
  * Check if the URL belong to a project and return the details
  * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/)
- * @return {Promise} All info regarding current project or '{}}' if not found
- * @throws Will throw an error messaje in case of non-existance (codes >= 500)
+ * @return {Promise} All info regarding current project or 'null' if not found
+ * @throws Will throw an error messaje in case of server problems (codes >= 500) 
  */
 async function getProject(projectURL) {
 
@@ -329,8 +329,13 @@ async function getProject(projectURL) {
         }
     });
 
-    if (response.status >= 200 && response.status < 300)
-        return await response.json();
+    if (response.status >= 200 && response.status < 300) {
+        let json = await response.json();
+        if (json.success === false)
+            return null;
+        else
+            return json.data;
+    }
 
     if (response.status >= 500)
         throw `Server error code: ${response.status}!`;
@@ -342,50 +347,32 @@ async function getProject(projectURL) {
  * Check if the URL belong to a project and return the details with local storage check and cache if info received from remote
  * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/)
  * @return {Promise} All info regarding current project or 'null' if not found
- * @throws Will throw an error messaje in case of non-existance (codes >= 500)
+ * @throws Will throw an error messaje in case of server problems (codes >= 500) 
  */
-function getProjectWithCache(projectURL) { //TODO need somekind of check if the in memory data is still the same as remote(in case a project is deleted from remote but it's still in local)
-    return new Promise(function(resolve, reject) {
+async function getProjectWithCache(projectURL) { //TODO need somekind of check if the in memory data is still the same as remote(in case a project is deleted from remote but it's still in local)
 
-        checkIfProjectInCache(projectURL) // Check if project in storage.sync
-            .then(response => {
-                let domain = (new URL(projectURL)).hostname; // Get domain name of the current page
+    let domain = (new URL(projectURL)).hostname; // Get domain name of the URL
 
-                // If it is in storage return it
-                if (response[domain])
-                    return response[domain];
+    let response = await checkIfProjectInCache(projectURL);
 
-                // If the URL doesn't have a project but was cached return it
-                if (response[domain] === null)
-                    return response[domain];
+    // If it is in storage return it
+    if (response[domain])
+        return response[domain];
 
-                // Else get the data from server
-                return getProject(projectURL).then(response => {
-                    return response.data;
-                });
+    // If the URL doesn't have a project but was cached return it
+    if (response[domain] === null)
+        return response[domain];
 
-            }).then(response => {
+    // Else get the data from server
+    let project = await getProject(projectURL);
 
-                let domain = (new URL(projectURL)).hostname; // Get domain name of the URL
-                let obj = {};
-                obj[domain] = response;
+    let obj = {};
+    obj[domain] = project;
 
-                chrome.storage.sync.set(obj); // Save in memory the domain + prioject info
+    chrome.storage.sync.set(obj); // Save in memory the domain + prioject info
 
-                resolve(response);
-            }).catch(err => {
-                // cache the sites that doesn't have project info on remote
-                let domain = (new URL(projectURL)).hostname; // Get domain name of the URL
-                let obj = {};
-                obj[domain] = null;
+    return project;
 
-                chrome.storage.sync.set(obj); // Save in memory the domain + prioject info (null)
-
-                reject(err)
-            });
-    }).catch(err => {
-        throw err;
-    });
 }
 
 /**
