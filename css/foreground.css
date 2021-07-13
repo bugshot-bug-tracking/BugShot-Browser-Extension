@@ -265,3 +265,15 @@
     display: inline-block;
     vertical-align: middle;
 }
+
+#add-menu {
+    display: block;
+    background-color: #00ff00;
+    width: 384px;
+    height: 100%;
+    position: fixed;
+    right: 24%;
+    text-align: center;
+    text-decoration: none;
+    overflow: auto;
+}

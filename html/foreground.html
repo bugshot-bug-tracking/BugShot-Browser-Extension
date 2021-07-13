@@ -4,15 +4,63 @@
 <div id="sidebar">
     <div id="add-menu">
 
-        <div id="bug-details"></div>
-        <div id="bug-attach"></div>
-        <div id="bug-report-button"></div>
+        <div class="bug-form">
+
+
+            <div class="title">New bug report</div>
+
+            <div class="bug-name-div">
+                <label for="bug-name">Bug name</label>
+                <input type="text" placeholder="Add a short descriptive name for the bug." name="bug-name" access="false" maxlength="255" id="bug-name">
+            </div>
+
+            <div class="bug-description-div">
+                <label for="bug-description"></label>
+                <textarea type="textarea" placeholder="Describe the bug" name="bug-description" access="false" id="bug-description"></textarea>
+            </div>
+
+
+            <div class="bug-priority-div">
+
+                <!--<label for="bug-priority">Bug priority</label>-->
+
+                <div class="radio-group">
+                    <div>
+                        <input name="bug-priority" access="false" id="bug-priority-0" required="required" aria-required="true" value="1" type="radio">
+                        <label for="bug-priority-0">Critical</label>
+                    </div>
+
+                    <div>
+                        <input name="bug-priority" access="false" id="bug-priority-1" required="required" aria-required="true" value="2" type="radio">
+                        <label for="bug-priority-1">Important</label>
+                    </div>
+
+                    <div>
+                        <input name="bug-priority" access="false" id="bug-priority-2" required="required" aria-required="true" value="3" type="radio" checked="checked">
+                        <label for="bug-priority-2">Normal</label>
+                    </div>
+
+                    <div>
+                        <input name="bug-priority" access="false" id="bug-priority-3" required="required" aria-required="true" value="4" type="radio">
+                        <label for="bug-priority-3">Minor</label>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+        </div>
+
+
     </div>
 
 
 
     <div id="task-details"></div>
     <div id="task-list">
+
         <div id="task-menu">
             <div id="task-close-button"></div>
         </div>
