@@ -19,7 +19,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
                     //TODO save the relevant info for other API calls
 
-                    chrome.storage.sync.set({ user_id: response.data.user_id });
+                    chrome.storage.local.set({ user_id: response.data.user_id });
 
                     sendResponse({
                         message: "login"
@@ -60,7 +60,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             break;
 
         case "logged": //TODO somehow extract method from this
-            chrome.storage.sync.get("user_id", data => {
+            chrome.storage.local.get("user_id", data => {
                 if (chrome.runtime.lastError) {
                     sendResponse({
                         message: 'error',
@@ -146,7 +146,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         case "openProjectPannel":
             let domain = (new URL(sender.tab.url)).hostname; // Get domain name of the sender 
 
-            chrome.storage.sync.get(domain, data => {
+            chrome.storage.local.get(domain, data => {
                 let project = Object.values(data)[0];
                 chrome.tabs.create({
                     url: `http://bugshot.view4all.de/companies/${project.company_id}/projects/${project.id}/statuses`
@@ -160,6 +160,24 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return true;
             break;
 
+        case "takeScreenshot":
+            takeScreenshot(sender.tab.windowId)
+                .then(response => {
+                    sendResponse({
+                        message: "ok",
+                        payload: response
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+
+                    sendResponse({
+                        message: "error",
+                        error: err
+                    });
+                });
+            return true;
+            break;
 
         default:
             sendResponse({
@@ -210,7 +228,7 @@ async function logIn(credentials) {
  */
 async function logOut() {
     //TODO Implement the cleanup of localStorage after saving something in it
-    chrome.storage.sync.clear();
+    chrome.storage.local.clear();
 }
 
 /**
@@ -240,17 +258,6 @@ async function logged() {
 
 /** Event listener on page update; injects foreground.js and .css if there is a project for it */
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-
-
-    // if (changeInfo.status === 'complete' && /^http/.test(tab.url)) { // When tab finished loading and it's a legit one (http/https)
-
-
-    //     chrome.scripting.executeScript({ // Inject the script 
-    //         target: { tabId: tabId },
-    //         files: ["js/iframe.js"]
-    //     })
-
-    // }
 
     logged().then(response => {
 
@@ -374,7 +381,7 @@ async function getProjectWithCache(projectURL) { //TODO need somekind of check i
     let obj = {};
     obj[domain] = project;
 
-    chrome.storage.sync.set(obj); // Save in memory the domain + prioject info
+    chrome.storage.local.set(obj); // Save in memory the domain + prioject info
 
     return project;
 
@@ -389,23 +396,17 @@ function checkIfProjectInCache(projectURL) {
     let domain = (new URL(projectURL)).hostname; // Get domain name of the URL
 
     return new Promise(function(resolve, reject) {
-        chrome.storage.sync.get(domain, data => {
+        chrome.storage.local.get(domain, data => {
             resolve(data);
         });
     });
 }
 
-
-
-
-
-
-
 /**
  * Get the stage list and their bug list associated with a project
  * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/)
- * @return {Promise} Array with all the curent stages (columns) and their respective list of bugs
- * @throws Will throw an error messaje in case of non-existance (codes >= 500) from remote, and one error if not in sorage
+ * @return {Promise} Array with all the curent stages (columns) and their respective list of bugs, null otherwise
+ * @throws Will throw an error messaje in case of server problems (codes >= 500) from remote
  */
 async function getBugs(projectURL) {
     project = await getProjectWithCache(projectURL); // Will throw error if project not in remote
@@ -427,5 +428,22 @@ async function getBugs(projectURL) {
     response = await response.json();
 
     return response.data;
+
+}
+
+
+async function takeScreenshot(windowID) {
+    let screenshot = await chrome.tabs.captureVisibleTab(windowID, {
+        format: "jpeg",
+        quality: 100
+    });
+
+    console.log(screenshot);
+
+    let obj = {};
+    obj[windowID] = screenshot;
+    chrome.storage.local.set(obj);
+    return screenshot;
+
 
 }

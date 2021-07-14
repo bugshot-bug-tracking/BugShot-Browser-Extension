@@ -9,8 +9,7 @@ if (!location.ancestorOrigins.contains(extensionOrigin)) {
     iframe.src = chrome.runtime.getURL('html/foreground.html');
 
     // Some styles for a fancy sidebar
-    iframe.style.cssText = 'position:fixed;top:0;right:0;display:block;' +
-        'width:100%;height:100%;z-index:9990;';
-    iframe.id = "iframe-of-the-doom";
+    iframe.style.cssText = "display: block; position: fixed; overflow: hidden; background-color: transparent; top: 0; right: 0; width: 100%; height: 100%; z-index: 9990;';"
+    iframe.id = "bugshot-iframe";
     document.body.appendChild(iframe);
 }

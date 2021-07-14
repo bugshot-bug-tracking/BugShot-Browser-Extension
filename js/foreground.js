@@ -14,6 +14,7 @@ task_button = document.getElementById("task-button")
 admin_button = document.getElementById("admin-button")
 project_button = document.getElementById("project-button")
 add_button = document.getElementById("add-button")
+overlayxy = document.getElementById("overlay");
 
 closeSidebar();
 
@@ -33,6 +34,8 @@ logo.addEventListener('click', event => {
 
 task_button.addEventListener('click', event => {
 
+    console.log("This is not doen yet so i disabled it.");
+    //return;
 
     if (task_list.classList.contains("open")) {
         task_list.classList.remove("open");
@@ -124,7 +127,7 @@ task_button.addEventListener('click', event => {
 
 
 
-})
+});
 
 admin_button.addEventListener('click', event => {
 
@@ -134,7 +137,7 @@ admin_button.addEventListener('click', event => {
         if (response.message === "ok")
             console.log("Oppened admin pannel in new tab.");
     });
-})
+});
 
 project_button.addEventListener('click', event => {
 
@@ -145,37 +148,71 @@ project_button.addEventListener('click', event => {
             console.log("Oppened project pannel in new tab.");
     });
 
-})
+});
 
 add_button.addEventListener('click', event => {
 
+    if (sidebar.classList.contains("hide"))
+        sidebar.classList.remove("hide");
+    else
+        sidebar.classList.add("hide");
+
+
     chrome.runtime.sendMessage({
-        message: "test"
+        message: "takeScreenshot"
     }, response => {
-        console.log("I received something!");
+
+        if (response.message === "error") {
+            console.error(response);
+            return;
+        }
+
+        // let screenshot = response.payload;
+
+
+        overlayxy.classList.add("show");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     });
 
-    // make sidecont hidden for the screenshot
-})
+
+});
+
+overlayxy.addEventListener('click', event => {
+
+    console.log(event);
+
+});
+
 
 
 //------ Event Listeners ------//
 
 
-
-
 function openSidebar() {
     logo.classList.add("open");
-    task_button.classList.add("open");
-    admin_button.classList.add("open");
-    project_button.classList.add("open");
-    add_button.classList.add("open");
+    task_button.classList.add("show");
+    admin_button.classList.add("show");
+    project_button.classList.add("show");
+    add_button.classList.add("show");
 }
 
 function closeSidebar() {
     logo.classList.remove("open");
-    task_button.classList.remove("open");
-    admin_button.classList.remove("open");
-    project_button.classList.remove("open");
-    add_button.classList.remove("open");
+    task_button.classList.remove("show");
+    admin_button.classList.remove("show");
+    project_button.classList.remove("show");
+    add_button.classList.remove("show");
 }

@@ -1,3 +1,7 @@
+body {
+    background-color: transparent;
+}
+
 #sidebar {
     font-family: usual, sans-serif;
     font-style: normal;
@@ -22,6 +26,14 @@
     border-top-left-radius: unset;
     border-bottom-left-radius: unset;
     padding: 0 0 0 0;
+}
+
+.hide {
+    display: none !important;
+}
+
+.show {
+    display: block !important;
 }
 
 #logo {
@@ -58,10 +70,6 @@
     cursor: pointer;
 }
 
-#task-button.open {
-    display: block;
-}
-
 #admin-button {
     z-index: 9996;
     display: none;
@@ -78,10 +86,6 @@
     cursor: pointer;
 }
 
-#admin-button.open {
-    display: block;
-}
-
 #project-button {
     z-index: 9996;
     display: none;
@@ -96,10 +100,6 @@
 #project-button:hover {
     background-image: url("../images/svg/project_active.svg");
     cursor: pointer;
-}
-
-#project-button.open {
-    display: block;
 }
 
 #add-button {
@@ -122,10 +122,6 @@
     cursor: pointer;
 }
 
-#add-button.open {
-    display: block;
-}
-
 #task-list {
     display: none;
     background-color: #ff0000;
@@ -136,10 +132,6 @@
     text-align: center;
     text-decoration: none;
     overflow: auto;
-}
-
-#task-list.open {
-    display: block;
 }
 
 .task {
@@ -276,4 +268,16 @@
     text-align: center;
     text-decoration: none;
     overflow: auto;
+}
+
+#overlay {
+    display: none;
+    background-color: rgba(248, 248, 252, 0.5);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 9999;
+    top: 0px;
+    left: 0px;
+    cursor: crosshair;
 }
