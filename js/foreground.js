@@ -336,6 +336,7 @@ bug_form.addEventListener("reset", event => {
     overlayxy.className = "";
     overlayxy.innerHTML = "";
     bug_menu.className = "";
+    resizeIFrame();
 
 });
 
