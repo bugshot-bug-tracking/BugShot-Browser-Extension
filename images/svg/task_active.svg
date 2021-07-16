@@ -1,17 +1,1 @@
-<svg xmlns='http://www.w3.org/2000/svg' width='56' height='79' viewBox='0 0 56 79'>
-    <defs>
-        <style>.a{fill:#7a2ee6;}.b,.c{fill:none;}.c{stroke:#f8f8fc;stroke-miterlimit:10;stroke-width:2px;}.d{fill:#f8f8fc;font-size:12px;font-family:SegoeUI, Segoe UI;}</style>
-    </defs>
-    <circle class='a' cx='28' cy='28' r='28'/>
-    <rect class='b' width='32' height='32' transform='translate(12 12)'/>
-    <g transform='translate(17.333 14.667)'>
-        <path class='c' d='M9.333,4H6.667L4,6.526V25.474L6.667,28h16l2.667-1.263V6.526L22.667,4H20' transform='translate(-4 -1.333)'/>
-        <path class='c' d='M18.667,5.2,16,2H10.667L8.083,5.2,8,7.333H18.667Z' transform='translate(-2.667 -2)'/>
-        <line class='c' x2='13.333' transform='translate(4 10.667)'/>
-        <line class='c' x2='13.333' transform='translate(4 16)'/>
-        <line class='c' x2='13.333' transform='translate(4 21.333)'/>
-    </g>
-    <text class='d' transform='translate(28 76)'>
-        <tspan x='-23.531' y='0'>Bugs List</tspan>
-    </text>
-</svg>
+<svg id="ac34a755-8a7b-490f-85ee-3dcfe8904b5b" data-name="baca2299-15b7-45f2-876a-266d4ecb3a9d" xmlns="http://www.w3.org/2000/svg" width="56" height="80" viewBox="0 0 56 80"><circle cx="28" cy="28" r="28" fill="#7a2ee6"/><rect x="12" y="12" width="32" height="32" fill="none"/><path d="M22.67,17.33H20l-2.67,2.53v19L20,41.33H36l2.67-1.26V19.86L36,17.33H33.33" fill="none" stroke="#f8f8fc" stroke-miterlimit="10" stroke-width="2"/><path d="M33.33,17.87l-2.66-3.2H25.33l-2.58,3.2L22.67,20H33.33Z" fill="none" stroke="#f8f8fc" stroke-miterlimit="10" stroke-width="2"/><line x1="21.33" y1="25.33" x2="34.67" y2="25.33" fill="none" stroke="#f8f8fc" stroke-miterlimit="10" stroke-width="2"/><line x1="21.33" y1="30.67" x2="34.67" y2="30.67" fill="none" stroke="#f8f8fc" stroke-miterlimit="10" stroke-width="2"/><line x1="21.33" y1="36" x2="34.67" y2="36" fill="none" stroke="#f8f8fc" stroke-miterlimit="10" stroke-width="2"/><g style="isolation:isolate"><text transform="translate(4.47 76)" font-size="12" fill="#f8f8fc" font-family="SegoeUI, Segoe UI" style="isolation:isolate">Bugs List</text></g></svg>

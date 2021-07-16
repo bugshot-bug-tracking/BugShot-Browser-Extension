@@ -1,11 +1,1 @@
-<svg xmlns='http://www.w3.org/2000/svg' width='32.001' height='32' viewBox='0 0 32.001 32'>
-    <g id='btn_admin_panel' transform='translate(-10870 -6681)'>
-        <rect id='Rectangle_146' data-name='Rectangle 146' width='32' height='32' transform='translate(10870 6681)' fill='none'/>
-        <g id='Group_1779' data-name='Group 1779' transform='translate(10857.994 6669)'>
-            <rect id='Rectangle_2524' data-name='Rectangle 2524' width='32' height='32' transform='translate(12.006 12)' fill='none'/>
-            <path id='Path_651' data-name='Path 651' d='M20.173,35.588H17.5L15.806,33.9V24.36l6.06-6.06h9.446l6.06,6.06V33.9l-1.693,1.693H33' transform='translate(1.317 1.056)' fill='none' stroke='#f8f8fc' stroke-miterlimit='10' stroke-width='2'/>
-            <path id='Path_652' data-name='Path 652' d='M26.412,34.862l-2.406-2.317V30.317L26.323,28h2.228l2.317,2.317v2.228l-2.317,2.317Z' transform='translate(0.425 0)' fill='none' stroke='#f8f8fc' stroke-miterlimit='10' stroke-width='2'/>
-            <line id='Line_153' data-name='Line 153' y1='3.743' x2='3.832' transform='translate(30.223 25.327)' fill='none' stroke='#f8f8fc' stroke-miterlimit='10' stroke-width='2'/>
-        </g>
-    </g>
-</svg>
+<svg id="baedf855-1976-4666-8fb8-e510ae502790" data-name="baca2299-15b7-45f2-876a-266d4ecb3a9d" xmlns="http://www.w3.org/2000/svg" width="56" height="80" viewBox="0 0 56 80"><path d="M20.71,37.7h-3l-1.9-1.9V25.1l6.8-6.8h10.6L40,25.1V35.8l-1.9,1.9h-3" fill="none" stroke="#f8f8fc" stroke-miterlimit="10" stroke-width="2"/><path d="M26.71,35.7,24,33.1V30.6L26.6,28h2.5l2.6,2.6v2.5l-2.6,2.6Z" fill="none" stroke="#f8f8fc" stroke-miterlimit="10" stroke-width="2"/><line x1="30.51" y1="29.2" x2="34.81" y2="25" fill="none" stroke="#f8f8fc" stroke-miterlimit="10" stroke-width="2"/></svg>
