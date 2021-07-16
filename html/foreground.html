@@ -2,73 +2,67 @@
 <link rel="stylesheet" href="../css/foreground.css">
 <script defer src="../js/foreground.js"></script>
 
-<div>
+<div id="bugshot-container">
+    <div id="overlay"></div>
+
+    <div id="bug-menu">
+
+        <form id="bug-form">
+
+            <div class="form-group">
+                <label for="bug-name">Bug Name</label>
+                <input type="text" class="form-control" id="bug-name" placeholder="Add a short descriptive name for the bug." required>
+            </div>
+
+
+            <div class="form-group">
+                <label for="bug-description">Example textarea</label>
+                <textarea class="form-control" id="bug-description" rows="3" placeholder="Describe the bug."></textarea>
+            </div>
+
+            <div class="form-group">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="critical-option" value="4">
+                    <label class="form-check-label" for="critical-option">Critical</label>
+                </div>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="important-option" value="3">
+                    <label class="form-check-label" for="important-option">Important</label>
+                </div>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="normal-option" value="2" checked>
+                    <label class="form-check-label" for="normal-option">Normal</label>
+                </div>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="minoir-option" value="1">
+                    <label class="form-check-label" for="minoir-option">Minoir</label>
+                </div>
+
+            </div>
+
+            <button type="submit" class="btn btn-primary mb-2">Report Bug!</button>
+            <button type="reset" class="btn btn-secondary mb-2">Cancel</button>
+
+        </form>
+
+
+
+
+
+    </div>
+
+    <div id="task-list">
+
+        <div id="task-menu">
+            <div id="task-close-button"></div>
+        </div>
+
+    </div>
 
     <div id="sidebar">
-        <div id="add-menu">
-
-            <div class="bug-form">
-
-
-                <div class="title">New bug report</div>
-
-                <div class="bug-name-div">
-                    <label for="bug-name">Bug name</label>
-                    <input type="text" placeholder="Add a short descriptive name for the bug." name="bug-name" access="false" maxlength="255" id="bug-name">
-                </div>
-
-                <div class="bug-description-div">
-                    <label for="bug-description"></label>
-                    <textarea type="textarea" placeholder="Describe the bug" name="bug-description" access="false" id="bug-description"></textarea>
-                </div>
-
-
-                <div class="bug-priority-div">
-
-                    <!--<label for="bug-priority">Bug priority</label>-->
-
-                    <div class="radio-group">
-                        <div>
-                            <input name="bug-priority" access="false" id="bug-priority-0" required="required" aria-required="true" value="1" type="radio">
-                            <label for="bug-priority-0">Critical</label>
-                        </div>
-
-                        <div>
-                            <input name="bug-priority" access="false" id="bug-priority-1" required="required" aria-required="true" value="2" type="radio">
-                            <label for="bug-priority-1">Important</label>
-                        </div>
-
-                        <div>
-                            <input name="bug-priority" access="false" id="bug-priority-2" required="required" aria-required="true" value="3" type="radio" checked="checked">
-                            <label for="bug-priority-2">Normal</label>
-                        </div>
-
-                        <div>
-                            <input name="bug-priority" access="false" id="bug-priority-3" required="required" aria-required="true" value="4" type="radio">
-                            <label for="bug-priority-3">Minor</label>
-                        </div>
-                    </div>
-
-                </div>
-
-
-
-
-            </div>
-
-
-        </div>
-
-
-
-        <div id="task-details"></div>
-        <div id="task-list">
-
-            <div id="task-menu">
-                <div id="task-close-button"></div>
-            </div>
-
-        </div>
         <div id="logo"></div>
         <div id="task-button"></div>
         <div id="admin-button"></div>
@@ -76,7 +70,6 @@
         <div id="add-button"></div>
     </div>
 
-    <div id="overlay"></div>
 
 </div>
 

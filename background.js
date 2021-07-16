@@ -179,6 +179,44 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return true;
             break;
 
+
+        case "sendBug":
+            bug_details = {
+                screenshot: request.payload.screenshot,
+                designation: request.payload.designation,
+                description: request.payload.description,
+                url: sender.tab.url,
+                priority_id: request.payload.priority_id,
+                selector: request.payload.selector,
+                resolution: request.payload.resolution, // this is an object {width, height}
+                mark_coords: request.payload.mark_coords // this is an object {x, y}
+            };
+
+            console.log({ bug_details_from_back: bug_details });
+
+            sendBugDetails(bug_details).then(response => {
+
+                    sendBugScreenshot(bug_details, response.id).then(() => {
+                        sendResponse({
+                            message: "ok"
+                        });
+                    });
+
+                })
+                .catch(err => {
+                    console.log(err);
+
+                    sendResponse({
+                        message: "error",
+                        error: err
+                    });
+
+                });
+
+            return true;
+            break;
+
+
         default:
             sendResponse({
                 message: "Message not recognized as a command!"
@@ -443,7 +481,102 @@ async function takeScreenshot(windowID) {
     let obj = {};
     obj[windowID] = screenshot;
     chrome.storage.local.set(obj);
+
     return screenshot;
+}
+
+async function sendBugDetails(bug_details) {
+
+    let project = await getProjectWithCache(bug_details.url);
+
+    let url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs`;
+
+    let osInfo = await getOS();
+    let browser = getBrowser();
 
 
+    let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json',
+            'clientId': "5",
+            'version': "1.0.0",
+        },
+        body: JSON.stringify({
+            designation: bug_details.designation,
+            description: bug_details.description,
+            url: bug_details.url,
+            priority_id: bug_details.priority_id,
+            operating_system: `${osInfo.os} ${osInfo.arch}`,
+            browser: `${browser.name} ${browser.version}`,
+            selector: bug_details.selector,
+            resolution: `${bug_details.resolution.width}x${bug_details.resolution.height}`
+        })
+    });
+
+    let json = await response.json();
+
+    console.log({ bugDetails: json });
+
+    return json.data;
+}
+
+async function sendBugScreenshot(bug_details, bugID) {
+
+    let project = await getProjectWithCache(bug_details.url);
+
+    let url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs/${bugID}/screenshots`;
+
+    let today = new Date();
+    let timestamp = today.toISOString();
+    timestamp += '.jpg';
+
+    let response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-type': 'application/json',
+            'clientId': "5",
+            'version': "1.0.0",
+        },
+        body: JSON.stringify({
+            base64: bug_details.screenshot.replace(/^data:image\/[a-z]+;base64,/, ""),
+            designation: timestamp,
+            position_x: bug_details.mark_coords.x,
+            position_y: bug_details.mark_coords.y
+        })
+    });
+
+    let json = await response.json();
+    console.log({ bugScreen: json });
+
+    console.log(json);
+
+}
+
+
+function getOS() {
+    return new Promise((resolve, reject) => {
+        chrome.runtime.getPlatformInfo(function(info) {
+            resolve({ os: info.os, arch: info.arch })
+        });
+    });
+}
+
+function getBrowser() {
+    var ua = navigator.userAgent,
+        tem, M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+    if (/trident/i.test(M[1])) {
+        tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
+        return { name: 'IE', version: (tem[1] || '') };
+    }
+    if (M[1] === 'Chrome') {
+        tem = ua.match(/\bOPR|Edge\/(\d+)/)
+        if (tem != null) { return { name: 'Opera', version: tem[1] }; }
+    }
+    M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
+    if ((tem = ua.match(/version\/(\d+)/i)) != null) { M.splice(1, 1, tem[1]); }
+    return {
+        name: M[0],
+        version: M[1]
+    };
 }
