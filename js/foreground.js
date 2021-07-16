@@ -288,6 +288,23 @@ bug_form.addEventListener("submit", event => {
 
 
             console.log("Screenshot saved!");
+
+            // Default state
+
+            bug_details = {
+                screenshot: "",
+                designation: "",
+                description: "",
+                priority_id: "",
+                selector: "",
+                resolution: "",
+                mark_coords: ""
+            };
+
+            sidebar.className = "open";
+            overlayxy.className = "";
+            overlayxy.innerHTML = "";
+            bug_menu.className = "";
         });
 
     } catch (error) {
