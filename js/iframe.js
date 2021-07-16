@@ -1,10 +1,10 @@
 /** This script is only for injecting an iframe into the page 
     and link it to the foreground.html
 */
+iframe = document.createElement('iframe');
 
 var extensionOrigin = 'chrome-extension://' + chrome.runtime.id;
 if (!location.ancestorOrigins.contains(extensionOrigin)) {
-    var iframe = document.createElement('iframe');
     // Must be declared at web_accessible_resources in manifest.json
     iframe.src = chrome.runtime.getURL('html/foreground.html');
 
@@ -13,3 +13,9 @@ if (!location.ancestorOrigins.contains(extensionOrigin)) {
     iframe.id = "bugshot-iframe";
     document.body.appendChild(iframe);
 }
+
+window.addEventListener("message", function(event) {
+    var size = JSON.parse(event.data);
+    iframe.style.height = size.height;
+    iframe.style.width = size.width;
+});

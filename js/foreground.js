@@ -2,7 +2,6 @@
 
 sidebar = document.getElementById("sidebar")
 
-
 bug_menu = document.getElementById("bug-menu")
 task_details = document.getElementById("task-details")
 task_list = document.getElementById("task-list")
@@ -26,8 +25,8 @@ bug_details = {
     description: "", // Description of the bug
     priority_id: "", // priority value of the bug 1 -> 4
     selector: "", // Path from doc root to the element where the marker was placed "1 > 2 > 3"
-    resolution: "", // Client display resolution
-    mark_coords: "" // Coordonates of the mark made by the user
+    resolution: "", // Client display resolution {width, height}
+    mark_coords: "" // Coordonates of the mark made by the user {x, y}
 };
 
 
@@ -42,7 +41,7 @@ bug_details = {
 
 
 closeSidebar();
-
+resizeIFrame()
 
 
 
@@ -51,7 +50,6 @@ closeSidebar();
 
 // add a click event listener on the logo for closing and opening the sidebar
 logo.addEventListener('click', event => {
-
     if (sidebar.classList.contains("open")) {
         sidebar.classList.remove("open");
         closeSidebar();
@@ -59,6 +57,8 @@ logo.addEventListener('click', event => {
         sidebar.classList.add("open");
         openSidebar();
     }
+    resizeIFrame();
+
 });
 
 task_button.addEventListener('click', event => {
@@ -190,6 +190,8 @@ add_button.addEventListener('click', event => {
             bug_details.screenshot = response.payload;
 
             overlayxy.classList.add("show"); // start to get mark details process
+            resizeIFrame();
+
         });
 
     } catch (error) {
@@ -305,6 +307,8 @@ bug_form.addEventListener("submit", event => {
             overlayxy.className = "";
             overlayxy.innerHTML = "";
             bug_menu.className = "";
+            resizeIFrame();
+
         });
 
     } catch (error) {
@@ -382,5 +386,22 @@ function getSelector(pageCoord) {
     return "/";
     // post a message to the current tab and as response get the selector postMessage()
 
+
+}
+
+function resizeIFrame(params) {
+    let size;
+    if (sidebar.classList.contains("open")) {
+        size = { height: "100%", width: "88px" };
+    } else {
+        size = { height: "72px", width: "88px" };
+    }
+
+    if (overlayxy.classList.contains("show"))
+        size = { height: "100%", width: "100%" };
+
+    //var size = { height: "100", width: "88" };
+    console.log(size);
+    top.postMessage(JSON.stringify(size), "*");
 
 }
