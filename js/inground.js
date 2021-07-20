@@ -56,7 +56,6 @@ closeSidebar();
 
 // add a click event listener on the logo for closing and opening the sidebar
 logo.addEventListener('click', event => {
-
     if (sidebar.classList.contains("open")) {
         sidebar.classList.remove("open");
         closeSidebar();
