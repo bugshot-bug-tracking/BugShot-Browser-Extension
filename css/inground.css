@@ -1,0 +1,123 @@
+body {
+    background: transparent;
+}
+
+#bugshot-container {
+    display: flex;
+    flex-direction: row-reverse;
+    height: 100%;
+    align-items: center;
+}
+
+#bugshot-container>* {
+    z-index: 9500;
+}
+
+#sidebar {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(26, 32, 64, 1);
+    width: 4%;
+    height: 7%;
+    transition: 0.1s;
+    transition-timing-function: ease-in;
+    border-top-left-radius: 13px;
+    border-bottom-left-radius: 13px;
+}
+
+#sidebar>div {
+    flex: 1;
+}
+
+#logo {
+    height: 100%;
+    background-image: url("../images/svg/bug.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#logo:hover {
+    cursor: pointer;
+}
+
+#bug-list-button {
+    background-image: url("../images/svg/buglist_icn_default.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#bug-list-button:hover {
+    background-image: url("../images/svg/buglist_icn_hover.svg");
+    cursor: pointer;
+}
+
+#admin-button {
+    background-image: url("../images/svg/admin_icn_default.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#admin-button:hover {
+    background-image: url("../images/svg/admin_icn_hover.svg");
+    cursor: pointer;
+}
+
+#project-button {
+    background-image: url("../images/svg/project_icn_default.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#project-button:hover {
+    background-image: url("../images/svg/project_icn_hover.svg");
+    cursor: pointer;
+}
+
+#add-button {
+    flex: 1;
+    background-image: url("../images/svg/new_bug_default.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#add-button:hover {
+    background-image: url("../images/svg/new_bug_hover.svg");
+    cursor: pointer;
+}
+
+#bug-list {
+    background-color: #ff0000;
+    height: 100%;
+    width: 17%;
+    overflow: auto;
+    padding: 0.6rem;
+}
+
+#bug-list::-webkit-scrollbar {
+    display: none;
+}
+
+#bug-menu {
+    background-color: #00ff00;
+    height: 100%;
+    width: 20%;
+}
+
+#overlay {
+    background-color: rgba(248, 248, 252, 0.5);
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    position: fixed;
+    cursor: crosshair;
+}
+
+#mark {
+    z-index: 9101;
+    position: absolute;
+    display: block;
+    width: 38px;
+    height: 55px;
+    background-position: center center;
+    background-repeat: no-repeat;
+}

@@ -1,0 +1,133 @@
+#sidebar.open {
+    height: 100%;
+    border-top-left-radius: unset;
+    border-bottom-left-radius: unset;
+}
+
+#sidebar.open>div {
+    flex: 0.1;
+}
+
+.hide {
+    display: none !important;
+}
+
+.show {
+    display: block !important;
+}
+
+#overlay.mark {
+    background-color: rgba(248, 248, 252, 0.25) !important;
+    z-index: 9100 !important;
+    cursor: not-allowed !important;
+    flex: 1;
+    position: relative;
+    width: auto;
+}
+
+#mark.critical {
+    background-image: url("../images/marks/mark_crit.svg");
+}
+
+#mark.important {
+    background-image: url("../images/marks/mark_imp.svg");
+}
+
+#mark.normal {
+    background-image: url("../images/marks/mark_normal.svg");
+}
+
+#mark.minor {
+    background-image: url("../images/marks/mark_min.svg");
+}
+
+.bug-card .bug-deadline::before {
+    content: "Deadline: ";
+    font-size: 14px;
+    color: #1A2040;
+    font-weight: 500;
+}
+
+.bug-card .bug-deadline {
+    align-items: center;
+    color: #9BA5D7;
+}
+
+.bug-card .bug-priority.p4 {
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 30px;
+    padding: 3px 10px;
+    background-color: #F23838;
+}
+
+.bug-card .bug-priority.p4::after {
+    content: "Critical";
+}
+
+.bug-card .bug-priority.p3 {
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 30px;
+    padding: 3px 10px;
+    background-color: #FFB157;
+}
+
+.bug-card .bug-priority.p3::after {
+    content: "Important";
+}
+
+.bug-card .bug-priority.p2 {
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 30px;
+    padding: 3px 10px;
+    background-color: #185FD9;
+}
+
+.bug-card .bug-priority.p2::after {
+    content: "Normal";
+}
+
+.bug-card .bug-priority.p1 {
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    color: #ffffff;
+    text-align: center;
+    border-radius: 30px;
+    padding: 3px 10px;
+    background-color: #18C0D9;
+}
+
+.bug-card .bug-priority.p1::after {
+    vertical-align: middle;
+    content: "Minor";
+}
+
+.group-bugs {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.bug-card {
+    margin: 0.2rem;
+}
+
+.bug-card .bug-title {
+    border-bottom: 2px solid #EEE5FC;
+}
+
+.bug-card .bug-title:hover {
+    cursor: pointer;
+}

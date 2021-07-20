@@ -1,9 +1,25 @@
 <link rel="stylesheet" href="../libraries/bootstrap-5.0.2-dist/css/bootstrap.min.css">
-<link rel="stylesheet" href="../css/foreground.css">
-<script defer src="../js/foreground.js"></script>
+<link rel="stylesheet" href="../css/inground.css">
+<link rel="stylesheet" href="../css/inground_class.css">
+<script defer src="../js/inground.js"></script>
 
 <div id="bugshot-container">
-    <div id="overlay"></div>
+
+    <div id="sidebar">
+        <div id="logo"></div>
+        <div id="bug-list-button"></div>
+        <div id="admin-button"></div>
+        <div id="project-button"></div>
+        <div id="add-button"></div>
+    </div>
+
+
+
+    <div id="bug-list"> </div>
+
+
+    <div id="bug-details">
+    </div>
 
     <div id="bug-menu">
 
@@ -54,53 +70,56 @@
 
     </div>
 
-    <div id="task-list">
 
-        <div id="task-menu">
-            <div id="task-close-button"></div>
-        </div>
-
-    </div>
-
-    <div id="sidebar">
-        <div id="logo"></div>
-        <div id="task-button"></div>
-        <div id="admin-button"></div>
-        <div id="project-button"></div>
-        <div id="add-button"></div>
-    </div>
-
+    <div id="overlay"></div>
 
 </div>
 
-<template>
-    <div class="task-container">
 
-        <div class="task-stage">BackLog</div>
 
-        <div class="task-cards">
 
-            template task-card
 
+
+
+<div hidden>
+
+    <template id="bug-group-template">
+        
+        <div class="bug-group">
+            
+            <div class="group-name">Backlog</div>
+            
+            <div class="group-bugs">
+                <!-- Insert here the bug template -->
+            </div>
         </div>
+        
+    </template>
 
-    </div>
-
-
-</template>
-
-<template id="task-card">
-
-    <div class="task">
-
-        <div class="head">
-            <div class="title">Default Title</div>
+    <template id="bug-card-template">
+        
+        <div class="bug-card">
+            
+            <div hidden class="bug-id">
+                0
+            </div>
+            
+            <div class="card">
+                
+                <div class="card-header bug-title">Title of the bug</div>
+                
+                <div class="card-body">
+                    <div class="card-text d-flex justify-content-between">
+                        
+                        <div class="bug-deadline">dd.MM.yyyy</div>
+                        <div class="bug-priority"></div>
+                        
+                    </div>
+                </div>
+            </div>
+            
         </div>
-        <div class="body">
-            <div class="deadline">dd.MM.yyyy</div>
-            <div class="priority"></div>
-        </div>
+        
+    </template>
 
-    </div>
-
-</template>
+</div>
