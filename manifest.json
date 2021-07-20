@@ -33,7 +33,7 @@
     ],
     "web_accessible_resources": [{
             "resources": [
-                "html/foreground.html"
+                "html/inground.html"
             ],
             "matches": [
                 "*://*/*"

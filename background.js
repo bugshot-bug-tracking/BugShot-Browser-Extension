@@ -80,7 +80,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             break;
 
         case "test":
-            console.log(`I arrived from foreground.js!`);
+            console.log(`I arrived from inground.js!`);
             chrome.runtime.sendMessage({
                 message: "run"
             });
@@ -294,7 +294,7 @@ async function logged() {
 
 
 
-/** Event listener on page update; injects foreground.js and .css if there is a project for it */
+/** Event listener on page update; injects inground.js and .css if there is a project for it */
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
     logged().then(response => {
@@ -476,7 +476,7 @@ async function takeScreenshot(windowID) {
         quality: 100
     });
 
-    console.log(screenshot);
+    // console.log(screenshot);
 
     let obj = {};
     obj[windowID] = screenshot;
