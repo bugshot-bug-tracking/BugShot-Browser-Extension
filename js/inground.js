@@ -38,16 +38,6 @@ bug_details = {
 
 
 
-
-
-
-
-
-
-
-
-
-
 defaultState();
 closeSidebar();
 
