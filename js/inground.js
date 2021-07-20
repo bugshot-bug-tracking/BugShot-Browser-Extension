@@ -48,7 +48,8 @@ bug_details = {
 
 
 
-
+defaultState();
+closeSidebar();
 
 
 //------ Event Listeners ------//
@@ -314,6 +315,7 @@ bug_form.addEventListener("submit", event => {
             console.log("Screenshot saved!");
 
             defaultState();
+            bug_form.reset();
         });
 
     } catch (error) {
@@ -397,8 +399,8 @@ function defaultState() {
         mark_coords: ""
     };
 
-    sidebar.className = "open";
     overlayxy.className = "hide";
     overlayxy.innerHTML = "";
     bug_menu.className = "hide";
+    bug_list.className = "hide";
 }
