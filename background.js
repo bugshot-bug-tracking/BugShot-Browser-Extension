@@ -478,9 +478,10 @@ async function takeScreenshot(windowID) {
 
     // console.log(screenshot);
 
-    let obj = {};
-    obj[windowID] = screenshot;
-    chrome.storage.local.set(obj);
+    // debatable if needed 
+    // let obj = {};
+    // obj[windowID] = screenshot;
+    // chrome.storage.local.set(obj);
 
     return screenshot;
 }
