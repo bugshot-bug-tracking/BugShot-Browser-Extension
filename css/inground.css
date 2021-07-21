@@ -31,7 +31,7 @@ body {
 
 #logo {
     height: 100%;
-    background-image: url("../images/svg/bug.svg");
+    background-image: url("../images/svg/logo_bugshot.svg");
     background-position: center;
     background-repeat: no-repeat;
 }
@@ -41,13 +41,13 @@ body {
 }
 
 #bug-list-button {
-    background-image: url("../images/svg/buglist_icn_default.svg");
+    background-image: url("../images/svg/bug_list_default.svg");
     background-position: center;
     background-repeat: no-repeat;
 }
 
 #bug-list-button:hover {
-    background-image: url("../images/svg/buglist_icn_hover.svg");
+    background-image: url("../images/svg/bug_list_hover.svg");
     cursor: pointer;
 }
 
