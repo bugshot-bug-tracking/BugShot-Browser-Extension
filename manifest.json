@@ -31,21 +31,19 @@
         "*://*/*",
         "<all_urls>"
     ],
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "js": ["libraries/webcomponents-sd-ce.js"]
+    }],
     "web_accessible_resources": [{
-            "resources": [
-                "html/inground.html"
-            ],
-            "matches": [
-                "*://*/*"
-            ]
-        },
-        {
-            "resources": [
-                "libraries/*"
-            ],
-            "matches": [
-                "*://*/*"
-            ]
-        }
-    ]
+        "resources": [
+            "html/inground.html",
+            "css/*",
+            "libraries/*",
+            "*"
+        ],
+        "matches": [
+            "*://*/*"
+        ]
+    }]
 }

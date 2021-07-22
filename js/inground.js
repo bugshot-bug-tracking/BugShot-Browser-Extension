@@ -369,13 +369,6 @@ function getSelector(pageCoord) {
 
 }
 
-function resizeIFrame(dimensions) {
-
-    console.log(dimensions);
-    top.postMessage(JSON.stringify(dimensions), "*");
-
-}
-
 function defaultState() {
 
     bug_details = {

@@ -3,3 +3,4 @@ jsconfig.json
 libraries/bootstrap-5.0.2-dist/js
 libraries/bootstrap-5.0.2-dist/css/*
 !libraries/bootstrap-5.0.2-dist/css/bootstrap.min.css
+libraries/iframe-resizer-4.2.9
