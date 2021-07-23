@@ -1,48 +1,7 @@
-/** This script is only for injecting an iframe into the page
-    and link it to the inground.html
-*/
-console.log("here");
-iframe = document.createElement('iframe');
-
 var extensionOrigin = 'chrome-extension://' + chrome.runtime.id;
-if (!location.ancestorOrigins.contains(extensionOrigin)) {
-    // Must be declared at web_accessible_resources in manifest.json
-    iframe.src = chrome.runtime.getURL('html/inground.html');
 
-    // Some styles for a fancy sidebar
-    iframe.style.cssText = `
-        display: block;
-        position: fixed;
-        overflow: hidden;
-        background-color: transparent;
-        top: 0;
-        right: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 9990;
-        `;
-
-
-
-    iframe.id = "bugshot-iframe";
-    // document.body.appendChild(iframe);
-}
-
-window.addEventListener("message", function(event) {
-    if (event.origin !== extensionOrigin)
-        return;
-
-    var size = JSON.parse(event.data);
-    iframe.style.height = size.height + "px";
-    iframe.style.width = size.width + "px";
-    iframe.style.top = (50 - (size.height / this.window.innerHeight) * 50) + "%"
-});
-
-
-
-fetch(extensionOrigin + "/../html/inground.html")
-    .then(stream => stream.text())
-    .then(txt => initialize(txt));
+if (location.ancestorOrigins.contains(extensionOrigin))
+    throw "";
 
 
 var bugshot_container = "";
@@ -57,7 +16,7 @@ var admin_button = "";
 var project_button = "";
 var add_button = "";
 
-var overlayxy = "";
+var overlay = "";
 var bug_form = "";
 
 
@@ -79,350 +38,352 @@ var bug_details = {
     mark_coords: "" // Coordonates of the mark made by the user {x, y}
 };
 
+
+// Get the base HTML code from another file and create a new element with the code 
+fetch(chrome.runtime.getURL("html/inground.html"))
+    .then(stream => stream.text())
+    .then(htmlTXT => initialize(htmlTXT));
+
+
 function initialize(htmlData) {
+
     class BugShot extends HTMLElement {
         constructor() {
             super();
             this.attachShadow({ mode: 'open' });
 
-
             this.shadowRoot.innerHTML = htmlData;
-
-            bugshot_container = this.shadowRoot.getElementById("bugshot-container");
-
-            sidebar = this.shadowRoot.getElementById("sidebar")
-
-            bug_list = this.shadowRoot.getElementById("bug-list")
-            bug_menu = this.shadowRoot.getElementById("bug-menu")
-
-            logo = this.shadowRoot.getElementById("logo")
-            bug_list_button = this.shadowRoot.getElementById("bug-list-button")
-            admin_button = this.shadowRoot.getElementById("admin-button")
-            project_button = this.shadowRoot.getElementById("project-button")
-            add_button = this.shadowRoot.getElementById("add-button")
-
-            overlayxy = this.shadowRoot.getElementById("overlay");
-            bug_form = this.shadowRoot.getElementById("bug-form");
-
-
-
-            /** <----- Templates ----->*/
-
-            bug_group_template = this.shadowRoot.getElementById("bug-group-template");
-            bug_card_template = this.shadowRoot.getElementById("bug-card-template");
-
-            /** -^-^-^- Templates -^-^-^- */
-
-
+            setVariables(this.shadowRoot);
+            setCSS(this.shadowRoot);
 
         }
+
+        // After the element was appended to DOM initialize the action listeners
         connectedCallback() {
-
-
             defaultState();
             closeSidebar();
 
-            logo.addEventListener('click', event => {
-                if (sidebar.classList.contains("open")) {
-                    sidebar.classList.remove("open");
-                    closeSidebar();
-                } else {
-                    sidebar.classList.add("open");
-                    openSidebar();
-                }
-
-            });
-
-            bug_list_button.addEventListener('click', event => {
-
-                console.log("This is not doen yet so i disabled it.");
-                // return;
-
-                if (bug_list.classList.contains("hide")) {
-                    bug_list.classList.remove("hide");
-                } else {
-                    bug_list.classList.add("hide");
-                    bug_list.innerHTML = ""
-                    return;
-                }
-
-
-
-                chrome.runtime.sendMessage({
-                    message: "getBugs"
-                }, response => {
-
-                    if (response.message === "error") {
-                        console.log(response.error);
-                        return;
-                    }
-
-                    if (response.message === "empty") {
-                        console.log("No project buggs");
-                        return;
-                    }
-
-                    if (response.message !== "ok") {
-                        console.log("What was the message?");
-                        return;
-                    }
-
-
-                    response.payload.forEach(stage => {
-
-                        // Make a deep copy of the tamplate
-                        let group_copy = bug_group_template.content.cloneNode(true).firstElementChild;
-
-                        // Add the new group to the bug-list
-                        bug_list.appendChild(group_copy);
-
-                        // Get reference to elements in the group
-                        let group_name = group_copy.querySelector(".group-name");
-                        let group_bugs = group_copy.querySelector(".group-bugs");
-
-
-                        // Assign a name to the group
-                        group_name.innerHTML = stage.designation;
-
-                        // Empty the bugs container
-                        group_bugs.innerHTML = "";
-
-                        // Create bug cards for each bug and append them to group-bugs
-                        stage.bugs.forEach(bug => {
-
-                            // Make a deep copy of the tamplate
-                            let bug_copy = bug_card_template.content.cloneNode(true).firstElementChild
-
-                            // Add the new card to the group-bugs
-                            group_bugs.appendChild(bug_copy);
-
-                            // Get reference to elements in the group
-                            let bug_id = bug_copy.querySelector(".bug-id");
-                            let bug_title = bug_copy.querySelector(".bug-title");
-                            let bug_deadline = bug_copy.querySelector(".bug-deadline");
-                            let bug_priority = bug_copy.querySelector(".bug-priority");
-
-
-                            // Insert data in apropriate fields
-                            bug_id.innerHTML = bug.id;
-
-                            bug_title.innerHTML = bug.designation;
-
-                            if (bug.deadline === null)
-                                bug.deadline = "dd.MM.yyyy";
-
-                            bug_deadline.innerHTML = bug.deadline;
-
-                            bug_priority.classList.add(`p${bug.priority_id}`);
-
-
-
-                            bug_title.addEventListener("click", event => {
-                                let bug_id = event.path.find(element => element.className === "bug-card").querySelector(".bug-id").innerHTML;
-                                if (bug_id === "0")
-                                    console.log("value is 0");
-                                else
-                                    console.log(`Value is ${bug_id}`);
-
-                            });
-
-                        });
-
-
-
-
-
-
-                    });
-
-
-                });
-
-
-            });
-
-            admin_button.addEventListener('click', event => {
-
-                chrome.runtime.sendMessage({
-                    message: "openAdminPannel"
-                }, response => {
-                    if (response.message === "ok")
-                        console.log("Oppened admin pannel in new tab.");
-                });
-
-            });
-
-            project_button.addEventListener('click', event => {
-
-                chrome.runtime.sendMessage({
-                    message: "openProjectPannel"
-                }, response => {
-                    if (response.message === "ok")
-                        console.log("Oppened project pannel in new tab.");
-                });
-
-            });
-
-            add_button.addEventListener('click', event => {
-
-                /**
-                 * 1. Hide sidebar
-                 * 2. Take Screenshot
-                 * 3. Show overlay to get mark location
-                 */
-
-                try { // TODO !!!IMPORTANT!!! block the scroll
-
-                    // default overlay
-                    overlayxy.className = "hide";
-                    overlayxy.innerHTML = "";
-                    bug_menu.className = "hide";
-
-                    if (!bug_list.classList.contains("hide")) {
-                        bug_list_button.click(); // close the bug list view by triggering click event;
-                    }
-
-                    sidebar.classList.add("hide");
-
-                    chrome.runtime.sendMessage({
-                        message: "takeScreenshot"
-                    }, response => {
-
-                        if (response.message === "error")
-                            throw response.error;
-
-                        if (response.message !== "ok")
-                            throw "Something went wrong with the screenshot!";
-
-                        bug_details.screenshot = response.payload;
-
-                        overlayxy.className = "";
-                    });
-
-                } catch (err) {
-                    console.error(err);
-                    bug_details.screenshot = "";
-
-                    if (sidebar.classList.contains("hide"))
-                        sidebar.classList.remove("hide");
-                }
-
-            });
-
-            overlayxy.addEventListener('click', event => {
-
-                event.stopImmediatePropagation();
-
-                if (overlayxy.classList.contains("lock"))
-                    return;
-
-                overlayxy.classList.add("lock"); // lock so it can't triggered again unintentionally
-
-                if (sidebar.classList.contains("hide")) // show sidebar again
-                    sidebar.classList.remove("hide"); // TODO disable sidebar controls maybe????
-
-
-                overlayxy.classList.add("mark");
-
-                // NEXT add a marker to the overlay just for show
-                let clientX = event.clientX; // coordinates relative to what user sees on screen
-                let clientY = event.clientY;
-
-                let pageX = event.pageX; // coordinates relative to the top of the page(it considers scroll)
-                let pageY = event.pageY;
-
-                addMark({ x: clientX, y: clientY });
-
-                // NEXT oppen bug form
-                bug_menu.className = "";
-
-                bug_details.mark_coords = { x: clientX, y: clientY };
-
-                bug_details.selector = getSelector({ x: pageX, y: pageY });
-
-            });
-
-
-            bug_form.addEventListener("submit", event => {
-                event.preventDefault();
-
-                Array.prototype.forEach.call(event.target.elements, (element) => {
-
-                    if (element.id === "bug-name")
-                        bug_details.designation = element.value;
-
-
-                    if (element.id === "bug-description")
-                        bug_details.description = element.value;
-
-
-                    if (element.type === "radio") // bug-priority
-                        if (element.checked == true)
-                            bug_details.priority_id = element.value;
-
-                });
-
-                bug_details.resolution = getScreenInfo();
-
-                console.log(bug_details);
-
-                try {
-                    chrome.runtime.sendMessage({
-                        message: "sendBug",
-                        payload: bug_details
-                    }, response => {
-
-                        if (response.message === "error")
-                            throw response.error;
-
-                        if (response.message !== "ok")
-                            throw "Something went wrong with the screenshot!";
-
-                        console.log("Screenshot saved!");
-
-                        defaultState();
-                        bug_form.reset();
-                    });
-
-                } catch (error) {
-                    console.error(error);
-                }
-
-            });
-
-            bug_form.addEventListener("reset", event => {
-                defaultState();
-            });
-
-
-
+            logo.addEventListener('click', logoClick);
+            bug_list_button.addEventListener('click', bugListButtonClick);
+            admin_button.addEventListener('click', adminButtonClick);
+            project_button.addEventListener('click', projectButtonClick);
+            add_button.addEventListener('click', addButtonClick);
+            overlay.addEventListener('click', overlayClick);
+
+            bug_form.addEventListener("submit", bugFormSubmit);
+            bug_form.addEventListener("reset", bugFormReset);
         }
+
     }
 
     window.customElements.define("bug-shot", BugShot);
+}
 
+function setVariables(dom) {
 
+    bugshot_container = dom.getElementById("bugshot-container");
+
+    sidebar = dom.getElementById("sidebar")
+
+    bug_list = dom.getElementById("bug-list")
+    bug_menu = dom.getElementById("bug-menu")
+
+    logo = dom.getElementById("logo")
+    bug_list_button = dom.getElementById("bug-list-button")
+    admin_button = dom.getElementById("admin-button")
+    project_button = dom.getElementById("project-button")
+    add_button = dom.getElementById("add-button")
+
+    overlay = dom.getElementById("overlay");
+    bug_form = dom.getElementById("bug-form");
+
+    /** <----- Templates ----->*/
+
+    bug_group_template = dom.getElementById("bug-group-template");
+    bug_card_template = dom.getElementById("bug-card-template");
+
+    /** -^-^-^- Templates -^-^-^- */
 
 }
 
-div = document.createElement("div");
-div.style.cssText = `    font-size: 14px;
-font-family: arial,sans-serif;
-color: #222;
-position: fixed;
-top: 0;
-right: 0;
-width: fit-content;
-height: fit-content;
-z-index: 9999;`;
-div.appendChild(document.createElement("bug-shot"));
-document.body.appendChild(div)
+function setCSS(dom) {
+    let styleSheet = [
+        chrome.runtime.getURL("css/inground_class.css"),
+        chrome.runtime.getURL("css/inground.css"),
+        chrome.runtime.getURL("libraries/bootstrap-5.0.2-dist/css/bootstrap.min.css")
+    ];
+
+    styleSheet.forEach(sheet => {
+        let link = document.createElement('link');
+        link.setAttribute('rel', 'stylesheet');
+        link.setAttribute('href', sheet);
+        dom.prepend(link);
+    });
+}
 
 
+/**  <----- Action Listeners implementation -----> */
+
+function logoClick(event) {
+
+    if (sidebar.classList.contains("open")) {
+        sidebar.classList.remove("open");
+        closeSidebar();
+        return;
+    }
+
+    sidebar.classList.add("open");
+    openSidebar();
+
+}
+
+function bugListButtonClick(event) {
+    console.log("This is not doen yet so i disabled it.");
+    // return;
+
+    if (bug_list.classList.contains("hide")) {
+        bug_list.classList.remove("hide");
+    } else {
+        bug_list.classList.add("hide");
+        bug_list.innerHTML = ""
+        return;
+    }
 
 
+    chrome.runtime.sendMessage({
+        message: "getBugs"
+    }, response => {
+
+        if (response.message === "error") {
+            console.log(response.error);
+            return;
+        }
+
+        if (response.message === "empty") {
+            console.log("No project buggs");
+            return;
+        }
+
+        if (response.message !== "ok") {
+            console.log("What was the message?");
+            return;
+        }
+
+        // For each bug group/stage
+        response.payload.forEach(stage => {
+
+            // Make a deep copy of the tamplate
+            let group_copy = bug_group_template.content.cloneNode(true).firstElementChild;
+
+            // Add the new group to the bug-list
+            bug_list.appendChild(group_copy);
+
+            // Get reference to elements in the group
+            let group_name = group_copy.querySelector(".group-name");
+            let group_bugs = group_copy.querySelector(".group-bugs");
 
 
+            // Assign a name to the group
+            group_name.innerHTML = stage.designation;
+
+            // Empty the bugs container
+            group_bugs.innerHTML = "";
+
+            // Create bug cards for each bug and append them to group-bugs
+            stage.bugs.forEach(bug => {
+
+                // Make a deep copy of the tamplate
+                let bug_copy = bug_card_template.content.cloneNode(true).firstElementChild;
+
+                // Add the new card to the group-bugs
+                group_bugs.appendChild(bug_copy);
+
+                // Get reference to elements in the group
+                let bug_id = bug_copy.querySelector(".bug-id");
+                let bug_title = bug_copy.querySelector(".bug-title");
+                let bug_deadline = bug_copy.querySelector(".bug-deadline");
+                let bug_priority = bug_copy.querySelector(".bug-priority");
+
+
+                // Insert data in apropriate fields
+                bug_id.innerHTML = bug.id;
+                bug_title.innerHTML = bug.designation;
+                if (bug.deadline === null)
+                    bug.deadline = "dd.MM.yyyy";
+                bug_deadline.innerHTML = bug.deadline;
+                bug_priority.classList.add(`p${bug.priority_id}`);
+
+                // TODO Add event listener for each card to display in a separate tab the details based on bug id
+                bug_title.addEventListener("click", event => {
+                    let bug_id = event.path.find(element => element.className === "bug-card").querySelector(".bug-id").innerHTML;
+                    if (bug_id === "0")
+                        console.log("value is 0");
+                    else
+                        console.log(`Value is ${bug_id}`);
+                });
+
+            });
+
+        });
+
+    });
+}
+
+function adminButtonClick(event) {
+
+    chrome.runtime.sendMessage({
+        message: "openAdminPannel"
+    }, response => {
+        if (response.message === "ok")
+            console.log("Oppened admin pannel in new tab.");
+    });
+
+}
+
+function projectButtonClick(event) {
+
+    chrome.runtime.sendMessage({
+        message: "openProjectPannel"
+    }, response => {
+        if (response.message === "ok")
+            console.log("Oppened project pannel in new tab.");
+    });
+
+}
+
+function addButtonClick(event) {
+    /**
+     * 1. Hide sidebar
+     * 2. Take Screenshot
+     * 3. Show overlay to get mark location
+     */
+
+    try { // TODO  !!!IMPORTANT!!! block the scroll
+
+        // 1
+        defaultState();
+        sidebar.classList.add("hide");
+
+        // 2
+        chrome.runtime.sendMessage({
+            message: "takeScreenshot"
+        }, response => {
+
+            if (response.message === "error")
+                throw response.error;
+
+            if (response.message !== "ok")
+                throw "Something went wrong with the screenshot!";
+
+            bug_details.screenshot = response.payload;
+
+            // 3
+            overlay.className = "";
+        });
+
+    } catch (err) {
+        console.error(err);
+        defaultState();
+
+        if (sidebar.classList.contains("hide"))
+            sidebar.classList.remove("hide");
+
+    }
+}
+
+function overlayClick(event) {
+
+    event.stopImmediatePropagation();
+
+    // Prevent more than 1 click event while registering a bug report
+    if (overlay.classList.contains("lock"))
+        return;
+    overlay.classList.add("lock");
+
+    if (sidebar.classList.contains("hide")) // show sidebar again
+        sidebar.classList.remove("hide"); // TODO disable sidebar controls maybe????
+
+
+    overlay.classList.add("marked");
+
+    // NEXT add a marker to the overlay just for show
+
+    // coordinates relative to what user sees on screen
+    let clientX = event.clientX;
+    let clientY = event.clientY;
+
+    // coordinates relative to the top of the page(it considers scroll)
+    // ? this will be usefull when adding a mark of bug later and well need absolute coordonates to page position
+    let pageX = event.pageX;
+    let pageY = event.pageY;
+
+    addMark({ x: clientX, y: clientY });
+
+    // NEXT oppen bug form
+    bug_menu.className = "";
+
+    bug_details.mark_coords = { x: clientX, y: clientY };
+
+    bug_details.selector = getSelector({ x: pageX, y: pageY });
+
+}
+
+function bugFormSubmit(event) {
+
+    // Stop any other possible action outside of this
+    event.preventDefault();
+
+    // Get all the information from the form
+    Array.prototype.forEach.call(event.target.elements, (element) => {
+
+        if (element.id === "bug-name")
+            bug_details.designation = element.value;
+
+        if (element.id === "bug-description")
+            bug_details.description = element.value;
+
+        if (element.type === "radio") // bug-priority
+            if (element.checked == true)
+                bug_details.priority_id = element.value;
+
+    });
+
+    bug_details.resolution = getScreenInfo();
+
+    console.log(bug_details);
+
+    try {
+        chrome.runtime.sendMessage({
+            message: "sendBug",
+            payload: bug_details
+        }, response => {
+
+            if (response.message === "error")
+                throw response.error;
+
+            if (response.message !== "ok")
+                throw "Something went wrong with the screenshot!";
+
+            console.log("Screenshot saved!");
+
+            defaultState();
+            bug_form.reset(); // the default reset function not the new one
+        });
+
+    } catch (error) {
+        console.error(error);
+    }
+
+}
+
+function bugFormReset(event) {
+    defaultState();
+}
+
+/** -^-^-^- Action Listeners implementation -^-^-^- */
+
+
+/**  <----- Helper Functions -----> */
 
 function closeSidebar() {
     logo.classList.remove("open");
@@ -442,6 +403,21 @@ function openSidebar() {
     add_button.classList.remove("hide");
 }
 
+function addMark(coord) {
+    if (!!overlay.getElementById("mark")) //prevent multiple marks
+        return;
+
+    let mark = document.createElement('div');
+    mark.id = "mark";
+
+    // the values are moddified because it renders the image from top-left so an offset is needed to align the arrow where the mouse pointer realy was
+    // the offset values represent the full height of the image and half the width
+    mark.style.cssText = `top: ${coord.y - 56}px; left: ${coord.x - 16}px`;
+
+    mark.classList.add("normal");
+    overlay.appendChild(mark);
+}
+
 function getScreenInfo() {
     return {
         width: screen.width * window.devicePixelRatio,
@@ -449,23 +425,10 @@ function getScreenInfo() {
     };
 }
 
-function addMark(coord) {
-    if (!!document.getElementById("mark")) //prevent multiple marks
-        return;
-
-    let mark = document.createElement('div');
-    mark.id = "mark";
-
-    mark.style.cssText = `top: ${coord.y - 53}px; left: ${coord.x - 14}px`; // the values are moddified because it renders the image from the top left so an offset is needed to align the arraw where the mouse pointer realy was
-
-    mark.classList.add("normal");
-    overlayxy.appendChild(mark);
-}
-
 function getSelector(pageCoord) {
-    // this is a work in progeress to get the element from page at the requested coordinates
+    // ? this is a work in progeress to get the element from page at the requested coordinates
     return "/";
-    // post a message to the current tab and as response get the selector postMessage()
+    // ? post a message to the current tab and as response get the selector postMessage()
 
 
 }
@@ -482,8 +445,34 @@ function defaultState() {
         mark_coords: ""
     };
 
-    overlayxy.className = "hide";
-    overlayxy.innerHTML = "";
+    defaultStateView();
+}
+
+function defaultStateView() {
+    overlay.className = "hide";
+    overlay.innerHTML = "";
     bug_menu.className = "hide";
     bug_list.className = "hide";
+    bug_list.innerHTML = "";
 }
+
+/** -^-^-^- Helper Functions -^-^-^-a */
+
+
+
+// After the preparations are done append the new element to the DOM
+div = document.createElement("div");
+
+div.style.cssText = `
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: fit-content;
+    height: fit-content;
+    overflow: hidden;
+    background-color: transparent;
+    z-index: 10000;`;
+
+div.appendChild(document.createElement("bug-shot"));
+
+document.body.append(div);

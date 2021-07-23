@@ -3,15 +3,18 @@
     "description": "Bug shooting as Chrome Extension MV3",
     "version": "0.1.0",
     "manifest_version": 3,
+
     "icons": {
         "16": "images/icons/get_started16.png",
         "32": "images/icons/get_started32.png",
         "48": "images/icons/get_started48.png",
         "128": "images/icons/get_started128.png"
     },
+
     "background": {
         "service_worker": "background.js"
     },
+
     "action": {
         "default_popup": "html/popup.html",
         "default_icons": {
@@ -21,26 +24,29 @@
             "128": "images/icons/get_started128.png"
         }
     },
+
     "permissions": [
         "activeTab",
         "tabs",
         "storage",
         "scripting"
     ],
+
     "host_permissions": [
-        "*://*/*",
-        "<all_urls>"
+        "*://*/*"
     ],
+
     "content_scripts": [{
-        "matches": ["<all_urls>"],
+        "matches": ["*://*/*"],
         "js": ["libraries/webcomponents-sd-ce.js"]
     }],
+
     "web_accessible_resources": [{
         "resources": [
-            "html/inground.html",
+            "html/*",
             "css/*",
             "libraries/*",
-            "*"
+            "images/*"
         ],
         "matches": [
             "*://*/*"

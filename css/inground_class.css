@@ -16,7 +16,7 @@
     display: block !important;
 }
 
-#overlay.mark {
+#overlay.marked {
     background-color: rgba(248, 248, 252, 0.25) !important;
     z-index: 9100 !important;
     cursor: not-allowed !important;
