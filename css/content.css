@@ -5,7 +5,7 @@ body {
 #bugshot-container {
     display: flex;
     flex-direction: row-reverse;
-    height: 100vh;
+    height: fit-content;
     align-items: center;
 }
 

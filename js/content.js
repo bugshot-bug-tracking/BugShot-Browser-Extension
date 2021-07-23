@@ -465,7 +465,7 @@ div = document.createElement("div");
 
 div.style.cssText = `
     position: fixed;
-    top: 0;
+    bottom: 0;
     right: 0;
     width: fit-content;
     height: fit-content;
