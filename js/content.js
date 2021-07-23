@@ -40,7 +40,7 @@ var bug_details = {
 
 
 // Get the base HTML code from another file and create a new element with the code 
-fetch(chrome.runtime.getURL("html/inground.html"))
+fetch(chrome.runtime.getURL("html/content.html"))
     .then(stream => stream.text())
     .then(htmlTXT => initialize(htmlTXT));
 
@@ -108,8 +108,8 @@ function setVariables(dom) {
 
 function setCSS(dom) {
     let styleSheet = [
-        chrome.runtime.getURL("css/inground_class.css"),
-        chrome.runtime.getURL("css/inground.css"),
+        chrome.runtime.getURL("css/content_class.css"),
+        chrome.runtime.getURL("css/content.css"),
         chrome.runtime.getURL("libraries/bootstrap-5.0.2-dist/css/bootstrap.min.css")
     ];
 

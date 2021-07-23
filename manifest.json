@@ -36,11 +36,6 @@
         "*://*/*"
     ],
 
-    "content_scripts": [{
-        "matches": ["*://*/*"],
-        "js": ["libraries/webcomponents-sd-ce.js"]
-    }],
-
     "web_accessible_resources": [{
         "resources": [
             "html/*",
