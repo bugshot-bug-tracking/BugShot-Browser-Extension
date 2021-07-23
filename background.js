@@ -59,7 +59,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
             break;
 
-        case "logged": //TODO somehow extract method from this
+        case "logged":
+            //TODO somehow extract method from this
             chrome.storage.local.get("user_id", data => {
                 if (chrome.runtime.lastError) {
                     sendResponse({
@@ -79,15 +80,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             return true;
             break;
 
-        case "test":
-            console.log(`I arrived from inground.js!`);
-            chrome.runtime.sendMessage({
-                message: "run"
-            });
-            sendResponse({ message: "ok" })
-            break;
-
-        case "checkProject": //TODO validate inputs //** determine if necessary or use direct calls on actions */
+        case "checkProject":
+            //TODO validate inputs //** determine if necessary or use direct calls on actions */
             console.log({ request, sender })
             getProject(sender.tab.url)
                 .then(response => {
@@ -181,7 +175,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 
         case "sendBug":
-            bug_details = {
+            let bug_details = {
                 screenshot: request.payload.screenshot,
                 designation: request.payload.designation,
                 description: request.payload.description,
@@ -192,7 +186,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 mark_coords: request.payload.mark_coords // this is an object {x, y}
             };
 
-            console.log({ bug_details_from_back: bug_details });
+            console.log({ bug_details_from_content: bug_details });
 
             sendBugDetails(bug_details).then(response => {
 
@@ -294,7 +288,7 @@ async function logged() {
 
 
 
-/** Event listener on page update; injects inground.js and .css if there is a project for it */
+/** Event listener on page update; injects content.js if there is a project for it */
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
     logged().then(response => {
@@ -310,35 +304,25 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
                     console.log({ domain, response });
 
                     if (!response) return; // If no project exit
-                    //if (!response[domain]) return; // If no info about project exit
 
-
-
-
-                    // chrome.scripting.insertCSS({ // Inject the css of the foreground script into the page
-                    //         target: { tabId: tabId },
-                    //         files: ["css/foreground.css"]
-                    //     })
-                    //     .then(() => {
-                    //         console.log(`Injected stylesheet for foreground in "${domain}".`);
-
-                    //         chrome.scripting.executeScript({ // Inject the script 
-                    //                 target: { tabId: tabId },
-                    //                 files: ["js/foreground.js"]
-                    //             })
-                    //             .then(() => {
-                    //                 console.log(`Injected foreground script in "${domain}".`);
-                    //             });
-                    //     })
-                    //     .catch(err => console.log(err));
-
-
-
-                    chrome.scripting.executeScript({ // Inject the script 
+                    // Inject the webcomponents handler
+                    // ! this may pose a problem later if there are any confilicts with the original page scripts
+                    chrome.scripting.executeScript({
                         target: { tabId: tabId },
-                        files: ["js/iframe.js"]
-                    });
+                        files: ["libraries/webcomponents-sd-ce.js"]
+                    }).then(() => {
+                        console.log(`Injected webcomponents handler in "${domain}".`);;
+                    }).then(() => {
 
+                        // Inject the content script 
+                        chrome.scripting.executeScript({
+                            target: { tabId: tabId },
+                            files: ["js/content.js"]
+                        }).then(() => {
+                            console.log(`Injected content in "${domain}".`);;
+                        });
+
+                    });
 
                 })
                 .catch(err => {
@@ -399,7 +383,7 @@ async function getProject(projectURL) {
  * @return {Promise} All info regarding current project or 'null' if not found
  * @throws Will throw an error messaje in case of server problems (codes >= 500) 
  */
-async function getProjectWithCache(projectURL) { //TODO need somekind of check if the in memory data is still the same as remote(in case a project is deleted from remote but it's still in local)
+async function getProjectWithCache(projectURL) { //TODO need some kind of check if the in memory data is still the same as remote(in case a project is deleted from remote but it's still in local)
 
     let domain = (new URL(projectURL)).hostname; // Get domain name of the URL
 
@@ -478,7 +462,7 @@ async function takeScreenshot(windowID) {
 
     // console.log(screenshot);
 
-    // debatable if needed 
+    // ? debatable if needed 
     // let obj = {};
     // obj[windowID] = screenshot;
     // chrome.storage.local.set(obj);
