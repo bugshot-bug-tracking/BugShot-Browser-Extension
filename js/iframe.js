@@ -404,7 +404,7 @@ function openSidebar() {
 }
 
 function addMark(coord) {
-    if (!!overlay.getElementById("mark")) //prevent multiple marks
+    if (!!overlay.querySelector("mark")) //prevent multiple marks
         return;
 
     let mark = document.createElement('div');
