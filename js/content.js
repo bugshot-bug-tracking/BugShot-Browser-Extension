@@ -336,6 +336,11 @@ function bugFormSubmit(event) {
     // Stop any other possible action outside of this
     event.preventDefault();
 
+    let loading = document.createElement('div');
+    loading.id = "loading";
+    bug_menu.prepend(loading);
+    bug_form.classList.add("hide");
+
     // Get all the information from the form
     Array.prototype.forEach.call(event.target.elements, (element) => {
 
@@ -369,11 +374,32 @@ function bugFormSubmit(event) {
 
             console.log("Screenshot saved!");
 
-            defaultState();
-            bug_form.reset(); // the default reset function not the new one
+
+            let state = document.createElement('div');
+            let logo = document.createElement('div')
+            let message = document.createElement('div');
+
+            loading.className = "hide";
+
+            state.className = "state-success"
+            logo.className = "logo";
+            message.className = "message";
+
+            bug_menu.prepend(state);
+            state.append(logo);
+            state.append(message);
+
+            setTimeout(function() {
+                defaultState();
+                bug_form.reset(); // the default reset function not the new one
+                state.className = "hide";
+            }, 5000);
+
+
         });
 
     } catch (error) {
+        defaultState();
         console.error(error);
     }
 
@@ -452,6 +478,7 @@ function defaultState() {
 }
 
 function defaultStateView() {
+    bug_form.className = "";
     overlay.className = "hide";
     overlay.innerHTML = "";
     bug_menu.className = "hide";

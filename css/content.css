@@ -105,14 +105,6 @@ body {
     display: none;
 }
 
-#bug-menu {
-    background-color: #00ff00;
-    min-width: 270px;
-    height: 100vh;
-    width: 17vw;
-    padding: 0.8rem;
-}
-
 #overlay {
     background-color: rgba(248, 248, 252, 0.5);
     width: 100vw;
@@ -139,4 +131,160 @@ body {
     top: 50%;
     transform: translate(0%, -50%);
     background-image: url("../images/svg/loading.svg");
+}
+
+#bug-menu {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    background-color: #F8F8FC;
+    min-width: 270px;
+    height: 100vh;
+    width: 21vw;
+    overflow: auto;
+    padding: 0.6rem;
+}
+
+#bug-menu::-webkit-scrollbar {
+    display: none;
+}
+
+#bug-form {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border: 1px solid #EEE5FC;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: #00000059 10px 10px 10px -11px;
+}
+
+#bug-description {
+    border: 1px solid #EEE5FC;
+    border-radius: 12px;
+    margin: 10px 0px 10px 0px;
+}
+
+#bug-name {
+    border: 1px solid #EEE5FC;
+    margin: 10px 0px 10px 0px;
+}
+
+#form-submit {
+    background: #18D992 0% 0% no-repeat padding-box;
+    border-radius: 20px;
+    border-color: #18D992;
+}
+
+#form-submit:hover {
+    background: #0dac72 0% 0% no-repeat padding-box;
+}
+
+#form-reset {
+    background: #1872d9 0% 0% no-repeat padding-box;
+    border-radius: 20px;
+    border-color: #1872d9;
+}
+
+#form-reset:hover {
+    background: #0d4fac 0% 0% no-repeat padding-box;
+}
+
+#critical-option {
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    color: #F23838;
+    text-align: center;
+    border-color: #F23838;
+    border-radius: 30px;
+    padding: 3px 10px;
+    height: 24px;
+    width: fit-content;
+    background-color: #FFFFFF;
+    background-image: none;
+}
+
+#critical-option::after {
+    content: "Critical";
+}
+
+#critical-option:checked {
+    background-color: #F23838;
+    color: #FFFFFF;
+}
+
+#important-option {
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    color: #FFB157;
+    text-align: center;
+    border-color: #FFB157;
+    border-radius: 30px;
+    padding: 3px 10px;
+    height: 24px;
+    width: fit-content;
+    background-color: #FFFFFF;
+    background-image: none;
+}
+
+#important-option::after {
+    content: "Important";
+}
+
+#important-option:checked {
+    background-color: #FFB157;
+    color: #FFFFFF;
+}
+
+#normal-option {
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    color: #185FD9;
+    text-align: center;
+    border-color: #185FD9;
+    border-radius: 30px;
+    padding: 3px 10px;
+    height: 24px;
+    width: fit-content;
+    background-color: #FFFFFF;
+    background-image: none;
+}
+
+#normal-option::after {
+    content: "Normal";
+}
+
+#normal-option:checked {
+    background-color: #185FD9;
+    color: #FFFFFF;
+}
+
+#minoir-option {
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    color: #18C0D9;
+    text-align: center;
+    border-color: #18C0D9;
+    border-radius: 30px;
+    padding: 3px 10px;
+    height: 24px;
+    width: fit-content;
+    background-color: #FFFFFF;
+    background-image: none;
+}
+
+#minoir-option::after {
+    content: "Minor";
+}
+
+#minoir-option:checked {
+    background-color: #18C0D9;
+    color: #FFFFFF;
 }
