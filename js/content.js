@@ -149,6 +149,9 @@ function bugListButtonClick(event) {
         return;
     }
 
+    let loading = document.createElement('div');
+    loading.id = "loading";
+    bug_list.prepend(loading);
 
     chrome.runtime.sendMessage({
         message: "getBugs"
@@ -168,7 +171,7 @@ function bugListButtonClick(event) {
             console.log("What was the message?");
             return;
         }
-
+        loading.className = "hide";
         // For each bug group/stage
         response.payload.forEach(stage => {
 
@@ -471,7 +474,8 @@ div.style.cssText = `
     height: fit-content;
     overflow: hidden;
     background-color: transparent;
-    z-index: 10000;`;
+    z-index: 10000;
+    `;
 
 div.appendChild(document.createElement("bug-shot"));
 

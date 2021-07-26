@@ -45,7 +45,7 @@
     content: "Deadline: ";
     font-size: 14px;
     color: #1A2040;
-    font-weight: 500;
+    font-weight: bold;
 }
 
 .bug-card .bug-deadline {
@@ -120,14 +120,38 @@
     align-items: stretch;
 }
 
+.bug-group .group-name {
+    margin: 10px;
+    padding-bottom: 8px;
+    font-weight: bold;
+    font-size: 1.25rem;
+    text-align: center;
+    border-bottom: 1px solid #F1E0E0;
+}
+
+.bug-group {
+    margin-bottom: 5%;
+}
+
 .bug-card {
     margin: 0.2rem;
 }
 
 .bug-card .bug-title {
-    border-bottom: 2px solid #EEE5FC;
+    background: #FFF7FF;
+    border-radius: 12px 12px 0px 0px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #1A2040;
+    border-bottom: 2px solid #ffcfff;
 }
 
 .bug-card .bug-title:hover {
     cursor: pointer;
+}
+
+.bug-card .card {
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: #00000059 10px 10px 10px -11px;
+    border-radius: 12px;
 }
