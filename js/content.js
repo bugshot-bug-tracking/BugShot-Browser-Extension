@@ -257,41 +257,15 @@ function projectButtonClick(event) {
 function addButtonClick(event) {
     /**
      * 1. Hide sidebar
-     * 2. Take Screenshot
-     * 3. Show overlay to get mark location
+     * 2. Show overlay to get mark location and take screenshot
      */
 
-    try { // TODO  !!!IMPORTANT!!! block the scroll
+    // 1
+    defaultState();
+    sidebar.classList.add("hide");
 
-        // 1
-        defaultState();
-        sidebar.classList.add("hide");
-
-        // 2
-        chrome.runtime.sendMessage({
-            message: "takeScreenshot"
-        }, response => {
-
-            if (response.message === "error")
-                throw response.error;
-
-            if (response.message !== "ok")
-                throw "Something went wrong with the screenshot!";
-
-            bug_details.screenshot = response.payload;
-
-            // 3
-            overlay.className = "";
-        });
-
-    } catch (err) {
-        console.error(err);
-        defaultState();
-
-        if (sidebar.classList.contains("hide"))
-            sidebar.classList.remove("hide");
-
-    }
+    // 2 
+    overlay.className = "";
 }
 
 function overlayClick(event) {
@@ -302,32 +276,63 @@ function overlayClick(event) {
     if (overlay.classList.contains("lock"))
         return;
     overlay.classList.add("lock");
+    // hide overlay for screenshot
+    overlay.classList.add("hide");
 
-    if (sidebar.classList.contains("hide")) // show sidebar again
-        sidebar.classList.remove("hide"); // TODO disable sidebar controls maybe????
+    try {
 
+        // Take screenshot
+        chrome.runtime.sendMessage({
+            message: "takeScreenshot"
+        }, response => {
+            // Show overlay again
+            overlay.classList.remove("hide");
 
-    overlay.classList.add("marked");
+            if (response.message === "error")
+                throw response.error;
 
-    // NEXT add a marker to the overlay just for show
+            if (response.message !== "ok")
+                throw "Something went wrong with the screenshot!";
 
-    // coordinates relative to what user sees on screen
-    let clientX = event.clientX;
-    let clientY = event.clientY;
+            // Save screenshot in memory
+            bug_details.screenshot = response.payload;
 
-    // coordinates relative to the top of the page(it considers scroll)
-    // ? this will be usefull when adding a mark of bug later and well need absolute coordonates to page position
-    let pageX = event.pageX;
-    let pageY = event.pageY;
+            // Un-hide sidebar
+            if (sidebar.classList.contains("hide")) // show sidebar again
+                sidebar.classList.remove("hide"); // TODO disable sidebar controls maybe????
 
-    addMark({ x: clientX, y: clientY });
+            // Change the overlay style as marked state
+            overlay.classList.add("marked");
 
-    // NEXT oppen bug form
-    bug_menu.className = "";
+            // NEXT add a marker to the overlay just for show
 
-    bug_details.mark_coords = { x: clientX, y: clientY };
+            // coordinates relative to what user sees on screen
+            let clientX = event.clientX;
+            let clientY = event.clientY;
 
-    bug_details.selector = getSelector({ x: pageX, y: pageY });
+            // coordinates relative to the top of the page(it considers scroll)
+            // ? this will be usefull when adding a mark of bug later and well need absolute coordonates to page position
+            let pageX = event.pageX;
+            let pageY = event.pageY;
+
+            addMark({ x: clientX, y: clientY });
+
+            // NEXT oppen bug form
+            bug_menu.className = "";
+
+            bug_details.mark_coords = { x: clientX, y: clientY };
+
+            bug_details.selector = getSelector({ x: pageX, y: pageY });
+
+        });
+    } catch (err) {
+        console.error(err);
+        defaultState();
+
+        if (sidebar.classList.contains("hide"))
+            sidebar.classList.remove("hide");
+
+    }
 
 }
 
@@ -393,7 +398,7 @@ function bugFormSubmit(event) {
                 defaultState();
                 bug_form.reset(); // the default reset function not the new one
                 state.className = "hide";
-            }, 5000);
+            }, 3800);
 
 
         });
