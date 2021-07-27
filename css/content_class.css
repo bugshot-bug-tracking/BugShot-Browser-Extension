@@ -124,7 +124,7 @@
     margin: 10px;
     padding-bottom: 8px;
     font-weight: bold;
-    font-size: 1.25rem;
+    font-size: 1.25em;
     text-align: center;
     border-bottom: 1px solid #F1E0E0;
 }
@@ -134,13 +134,13 @@
 }
 
 .bug-card {
-    margin: 0.2rem;
+    margin: 0.2em;
 }
 
 .bug-card .bug-title {
     background: #FFF7FF;
     border-radius: 12px 12px 0px 0px;
-    font-size: 1rem;
+    font-size: 1em;
     font-weight: bold;
     color: #1A2040;
     border-bottom: 2px solid #ffcfff;
