@@ -4,6 +4,8 @@ if (location.ancestorOrigins.contains(extensionOrigin))
     throw "";
 
 
+/** <----- Element references ----->*/
+
 var bugshot_container = "";
 
 var sidebar = "";
@@ -19,6 +21,7 @@ var add_button = "";
 var overlay = "";
 var bug_form = "";
 
+/** -^-^-^- Element references -^-^-^- */
 
 
 /** <----- Templates ----->*/
@@ -27,6 +30,9 @@ var bug_group_template = "";
 var bug_card_template = "";
 
 /** -^-^-^- Templates -^-^-^- */
+
+
+/** <----- Bug report details ----->*/
 
 var bug_details = {
     screenshot: "", // URI encoded image
@@ -37,6 +43,8 @@ var bug_details = {
     resolution: "", // Client display resolution {width, height}
     mark_coords: "" // Coordonates of the mark made by the user {x, y}
 };
+
+/** -^-^-^- Bug report details -^-^-^- */
 
 
 // Get the base HTML code from another file and create a new element with the code 
@@ -68,6 +76,7 @@ function initialize(htmlData) {
             admin_button.addEventListener('click', adminButtonClick);
             project_button.addEventListener('click', projectButtonClick);
             add_button.addEventListener('click', addButtonClick);
+
             overlay.addEventListener('click', overlayClick);
 
             bug_form.addEventListener("submit", bugFormSubmit);
@@ -79,6 +88,7 @@ function initialize(htmlData) {
     window.customElements.define("bug-shot", BugShot);
 }
 
+// Set references to relevant elements added in the provided DOM
 function setVariables(dom) {
 
     bugshot_container = dom.getElementById("bugshot-container");
@@ -106,6 +116,7 @@ function setVariables(dom) {
 
 }
 
+// Add CSS stylesheet links in the provided DOM
 function setCSS(dom) {
     let styleSheet = [
         chrome.runtime.getURL("css/content_class.css"),
@@ -125,40 +136,32 @@ function setCSS(dom) {
 /**  <----- Action Listeners implementation -----> */
 
 function logoClick(event) {
-
     if (sidebar.classList.contains("open")) {
-        sidebar.classList.remove("open");
         closeSidebar();
-        return;
-    }
-
-    sidebar.classList.add("open");
-    openSidebar();
-
+        defaultState();
+    } else
+        openSidebar();
 }
 
 function bugListButtonClick(event) {
-    console.log("This is not doen yet so i disabled it.");
-    // return;
 
-    if (bug_list.classList.contains("hide")) {
-        bug_list.classList.remove("hide");
-    } else {
-        bug_list.classList.add("hide");
-        bug_list.innerHTML = ""
+    // if the list transitioned to hidden
+    if (toggleHidden(bug_list) === false) {
+        bug_list.innerHTML = "";
         return;
     }
 
-    let loading = document.createElement('div');
-    loading.id = "loading";
-    bug_list.prepend(loading);
+    addLoadingAnimation(bug_list);
 
     chrome.runtime.sendMessage({
         message: "getBugs"
     }, response => {
 
+        removeLoadingAnimation(bug_list);
+
         if (response.message === "error") {
-            console.log(response.error);
+            addStateAnimation(bug_list, "error");
+            console.error(response.error);
             return;
         }
 
@@ -168,10 +171,10 @@ function bugListButtonClick(event) {
         }
 
         if (response.message !== "ok") {
-            console.log("What was the message?");
+            console.error("What was the message?");
             return;
         }
-        loading.className = "hide";
+
         // For each bug group/stage
         response.payload.forEach(stage => {
 
@@ -212,7 +215,7 @@ function bugListButtonClick(event) {
                 bug_id.innerHTML = bug.id;
                 bug_title.innerHTML = bug.designation;
                 if (bug.deadline === null)
-                    bug.deadline = "dd.MM.yyyy";
+                    bug.deadline = "no deadline";
                 bug_deadline.innerHTML = bug.deadline;
                 bug_priority.classList.add(`p${bug.priority_id}`);
 
@@ -262,10 +265,10 @@ function addButtonClick(event) {
 
     // 1
     defaultState();
-    sidebar.classList.add("hide");
+    toggleHidden(sidebar);
 
     // 2 
-    overlay.className = "";
+    toggleHidden(overlay);
 }
 
 function overlayClick(event) {
@@ -276,30 +279,38 @@ function overlayClick(event) {
     if (overlay.classList.contains("lock"))
         return;
     overlay.classList.add("lock");
+
     // hide overlay for screenshot
-    overlay.classList.add("hide");
+    toggleHidden(overlay);
 
-    try {
-
+    setTimeout(() => {
         // Take screenshot
         chrome.runtime.sendMessage({
             message: "takeScreenshot"
         }, response => {
             // Show overlay again
-            overlay.classList.remove("hide");
+            toggleHidden(overlay);
+            console.log(response);
+            if (response.message === "error") {
+                defaultState();
+                console.error(response.error);
+                return;
+            }
 
-            if (response.message === "error")
-                throw response.error;
+            if (response.message !== "ok") {
+                defaultState();
+                console.error("Something went wrong with the screenshot!");
+                return;
+            }
 
-            if (response.message !== "ok")
-                throw "Something went wrong with the screenshot!";
+
+            console.log("Screenshot taken!");
 
             // Save screenshot in memory
             bug_details.screenshot = response.payload;
 
-            // Un-hide sidebar
-            if (sidebar.classList.contains("hide")) // show sidebar again
-                sidebar.classList.remove("hide"); // TODO disable sidebar controls maybe????
+            // Show sidebar again
+            toggleHidden(sidebar); // TODO disable sidebar controls maybe????
 
             // Change the overlay style as marked state
             overlay.classList.add("marked");
@@ -318,21 +329,15 @@ function overlayClick(event) {
             addMark({ x: clientX, y: clientY });
 
             // NEXT oppen bug form
-            bug_menu.className = "";
-
+            toggleHidden(bug_menu);
             bug_details.mark_coords = { x: clientX, y: clientY };
 
             bug_details.selector = getSelector({ x: pageX, y: pageY });
 
         });
-    } catch (err) {
-        console.error(err);
-        defaultState();
+    }, 100);
 
-        if (sidebar.classList.contains("hide"))
-            sidebar.classList.remove("hide");
 
-    }
 
 }
 
@@ -341,10 +346,8 @@ function bugFormSubmit(event) {
     // Stop any other possible action outside of this
     event.preventDefault();
 
-    let loading = document.createElement('div');
-    loading.id = "loading";
-    bug_menu.prepend(loading);
-    bug_form.classList.add("hide");
+    addLoadingAnimation(bug_menu);
+    toggleHidden(bug_form);
 
     // Get all the information from the form
     Array.prototype.forEach.call(event.target.elements, (element) => {
@@ -365,48 +368,43 @@ function bugFormSubmit(event) {
 
     console.log(bug_details);
 
-    try {
-        chrome.runtime.sendMessage({
-            message: "sendBug",
-            payload: bug_details
-        }, response => {
 
-            if (response.message === "error")
-                throw response.error;
+    chrome.runtime.sendMessage({
+        message: "sendBug",
+        payload: bug_details
+    }, response => {
 
-            if (response.message !== "ok")
-                throw "Something went wrong with the screenshot!";
+        removeLoadingAnimation(bug_menu);
 
-            console.log("Screenshot saved!");
-
-
-            let state = document.createElement('div');
-            let logo = document.createElement('div')
-            let message = document.createElement('div');
-
-            loading.className = "hide";
-
-            state.className = "state-success"
-            logo.className = "logo";
-            message.className = "message";
-
-            bug_menu.prepend(state);
-            state.append(logo);
-            state.append(message);
+        if (response.message === "error") {
+            addStateAnimation(bug_menu, "error");
 
             setTimeout(function() {
                 defaultState();
                 bug_form.reset(); // the default reset function not the new one
-                state.className = "hide";
             }, 3800);
 
+            console.error(response.error);
+            return;
+        }
 
-        });
+        if (response.message !== "ok") {
+            defaultState();
+            console.error("Something went wrong with the the bug report!");
+            return;
+        }
 
-    } catch (error) {
-        defaultState();
-        console.error(error);
-    }
+        console.log("Bug report sent!");
+
+        addStateAnimation(bug_menu, "success");
+
+        setTimeout(function() {
+            defaultState();
+            bug_form.reset(); // the default reset function not the new one
+        }, 3800);
+
+
+    });
 
 }
 
@@ -420,21 +418,22 @@ function bugFormReset(event) {
 /**  <----- Helper Functions -----> */
 
 function closeSidebar() {
-    logo.classList.remove("open");
+    sidebar.className = "";
 
-    bug_list_button.classList.add("hide");
-    admin_button.classList.add("hide");
-    project_button.classList.add("hide");
-    add_button.classList.add("hide");
+    bug_list_button.setAttribute("hidden", "");
+    admin_button.setAttribute("hidden", "");
+    project_button.setAttribute("hidden", "");
+    add_button.setAttribute("hidden", "");
 }
 
 function openSidebar() {
-    logo.classList.add("open");
+    sidebar.className = "open";
 
-    bug_list_button.classList.remove("hide");
-    admin_button.classList.remove("hide");
-    project_button.classList.remove("hide");
-    add_button.classList.remove("hide");
+    bug_list_button.removeAttribute("hidden");
+    admin_button.removeAttribute("hidden");
+    project_button.removeAttribute("hidden");
+    add_button.removeAttribute("hidden");
+
 }
 
 function addMark(coord) {
@@ -483,13 +482,67 @@ function defaultState() {
 }
 
 function defaultStateView() {
-    bug_form.className = "";
-    overlay.className = "hide";
+
+    bug_form.removeAttribute("hidden");
+    sidebar.removeAttribute("hidden");
+
+    overlay.setAttribute("hidden", "");
     overlay.innerHTML = "";
-    bug_menu.className = "hide";
-    bug_list.className = "hide";
+    overlay.className = "";
+
+    bug_menu.setAttribute("hidden", "");
+    removeLoadingAnimation(bug_menu);
+    removeStateAnimation(bug_menu); // Same state for both success and error
+
+    bug_list.setAttribute("hidden", "");
     bug_list.innerHTML = "";
+
+
 }
+
+
+function toggleHidden(element) {
+    // if the element is visible hide it else show
+    if (element.getAttribute("hidden") == null) {
+        element.setAttribute("hidden", "");
+        return false; // false is hidden
+    }
+    element.removeAttribute("hidden");
+    return true; // true is visible
+}
+
+function addLoadingAnimation(element) {
+    let loading = document.createElement('div');
+    loading.className = "loading";
+    element.prepend(loading);
+}
+
+function removeLoadingAnimation(element) {
+    if (element.querySelector(".loading") === null) return;
+    let loading = element.querySelector(".loading");
+    loading.remove();
+}
+
+function addStateAnimation(element, animation) {
+    let state = document.createElement('div');
+    let logo = document.createElement('div')
+    let message = document.createElement('div');
+
+    state.className = `state ${animation}`
+    logo.className = "logo";
+    message.className = "message";
+
+    element.prepend(state);
+    state.append(logo);
+    state.append(message);
+}
+
+function removeStateAnimation(element) {
+    if (element.querySelector(".state") === null) return;
+    let state = element.querySelector(".state");
+    state.remove();
+}
+
 
 /** -^-^-^- Helper Functions -^-^-^-a */
 
