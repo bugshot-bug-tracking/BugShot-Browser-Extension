@@ -528,6 +528,7 @@ async function sendBugScreenshot(bug_details, bugID) {
             designation: timestamp,
             position_x: bug_details.mark_coords.x,
             position_y: bug_details.mark_coords.y
+                // TODO moidify the API endpoint and request to set the page_XY coords
         })
     });
 

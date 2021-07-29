@@ -10,7 +10,32 @@
 
     <div id="bug-list"> </div>
 
-    <div id="bug-info"> </div>
+    <div id="bug-info">
+
+        <div class="header d-flex justify-content-between no-wrap">
+            <div class="title"></div>
+            <div class="btn btn-dark">X</div>
+        </div>
+
+        <div class="body d-flex flex-row no-wrap">
+            <div class="id"></div>
+            <div class="creator"></div>
+            <div class="screenshot"></div>
+            <div class="url"></div>
+            <div class="description"></div>
+            <div class="technical-info">
+                <div class="os"></div>
+                <div class="browser"></div>
+                <div class="selector"></div>
+                <div class="resolution"></div>
+            </div>
+            <div class="priority"></div>
+            <div class="status"></div>
+            <div class="deadline"></div>
+        </div>
+
+
+    </div>
 
     <div id="bug-menu">
 
@@ -58,7 +83,6 @@
     </div>
 
     <div id="overlay"></div>
-
 </div>
 
 
@@ -80,11 +104,7 @@
     <template id="bug-card-template">
         
         <div class="bug-card">
-            
-            <div hidden class="bug-id">
-                0
-            </div>
-            
+                        
             <div class="card">
                 
                 <div class="card-header bug-title">Title of the bug</div>
@@ -102,5 +122,6 @@
         </div>
         
     </template>
+
 
 </div>

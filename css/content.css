@@ -146,6 +146,24 @@
     display: none;
 }
 
+#bug-info {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    background-color: #F8F8FC;
+    min-width: 270px;
+    height: 100vh;
+    width: 21vw;
+    overflow: auto;
+    padding: 0.6em;
+}
+
+#bug-info::-webkit-scrollbar {
+    display: none;
+}
+
 #bug-form {
     display: flex;
     flex-direction: column;

@@ -187,8 +187,8 @@
 .state.success .message {
     position: relative;
     align-self: center;
-    width: 100%;
-    height: 30%;
+    width: 80%;
+    height: 8%;
     background-image: url("../images/svg/success.svg");
     background-position: center;
     background-size: contain;
@@ -198,7 +198,7 @@
 .state.error .logo {
     position: relative;
     align-self: center;
-    width: 100%;
+    width: 80%;
     height: 25%;
     background-image: url("../images/gif/error_bug.gif");
     background-position: center;
@@ -209,8 +209,8 @@
 .state.error .message {
     position: relative;
     align-self: center;
-    width: 100%;
-    height: 30%;
+    width: 80%;
+    height: 8%;
     background-image: url("../images/svg/oops.svg");
     background-position: center;
     background-size: contain;

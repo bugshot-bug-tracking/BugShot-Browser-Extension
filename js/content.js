@@ -9,7 +9,9 @@ if (location.ancestorOrigins.contains(extensionOrigin))
 var bugshot_container = "";
 
 var sidebar = "";
+
 var bug_list = "";
+var bug_info = "";
 var bug_menu = "";
 
 var logo = "";
@@ -45,6 +47,12 @@ var bug_details = {
 };
 
 /** -^-^-^- Bug report details -^-^-^- */
+
+
+var bugs = {
+    status: [],
+    info: []
+};
 
 
 // Get the base HTML code from another file and create a new element with the code 
@@ -93,16 +101,17 @@ function setVariables(dom) {
 
     bugshot_container = dom.getElementById("bugshot-container");
 
-    sidebar = dom.getElementById("sidebar")
+    sidebar = dom.getElementById("sidebar");
 
-    bug_list = dom.getElementById("bug-list")
-    bug_menu = dom.getElementById("bug-menu")
+    bug_list = dom.getElementById("bug-list");
+    bug_info = dom.getElementById("bug-info");
+    bug_menu = dom.getElementById("bug-menu");
 
-    logo = dom.getElementById("logo")
-    bug_list_button = dom.getElementById("bug-list-button")
-    admin_button = dom.getElementById("admin-button")
-    project_button = dom.getElementById("project-button")
-    add_button = dom.getElementById("add-button")
+    logo = dom.getElementById("logo");
+    bug_list_button = dom.getElementById("bug-list-button");
+    admin_button = dom.getElementById("admin-button");
+    project_button = dom.getElementById("project-button");
+    add_button = dom.getElementById("add-button");
 
     overlay = dom.getElementById("overlay");
     bug_form = dom.getElementById("bug-form");
@@ -175,8 +184,15 @@ function bugListButtonClick(event) {
             return;
         }
 
+        bugs.status = [];
+        bugs.info = [];
+
         // For each bug group/stage
         response.payload.forEach(stage => {
+
+            let obj = {};
+            obj[stage.id] = stage.designation;
+            bugs.status.push(obj);
 
             // Make a deep copy of the tamplate
             let group_copy = bug_group_template.content.cloneNode(true).firstElementChild;
@@ -197,6 +213,7 @@ function bugListButtonClick(event) {
 
             // Create bug cards for each bug and append them to group-bugs
             stage.bugs.forEach(bug => {
+                bugs.info.push(bug);
 
                 // Make a deep copy of the tamplate
                 let bug_copy = bug_card_template.content.cloneNode(true).firstElementChild;
@@ -205,14 +222,12 @@ function bugListButtonClick(event) {
                 group_bugs.appendChild(bug_copy);
 
                 // Get reference to elements in the group
-                let bug_id = bug_copy.querySelector(".bug-id");
                 let bug_title = bug_copy.querySelector(".bug-title");
                 let bug_deadline = bug_copy.querySelector(".bug-deadline");
                 let bug_priority = bug_copy.querySelector(".bug-priority");
 
 
                 // Insert data in apropriate fields
-                bug_id.innerHTML = bug.id;
                 bug_title.innerHTML = bug.designation;
                 if (bug.deadline === null)
                     bug.deadline = "no deadline";
@@ -220,13 +235,7 @@ function bugListButtonClick(event) {
                 bug_priority.classList.add(`p${bug.priority_id}`);
 
                 // TODO Add event listener for each card to display in a separate tab the details based on bug id
-                bug_title.addEventListener("click", event => {
-                    let bug_id = event.path.find(element => element.className === "bug-card").querySelector(".bug-id").innerHTML;
-                    if (bug_id === "0")
-                        console.log("value is 0");
-                    else
-                        console.log(`Value is ${bug_id}`);
-                });
+                bug_title.addEventListener("click", event => bugInfo(event, bug.id));
 
             });
 
@@ -290,7 +299,7 @@ function overlayClick(event) {
         }, response => {
             // Show overlay again
             toggleHidden(overlay);
-            console.log(response);
+
             if (response.message === "error") {
                 defaultState();
                 console.error(response.error);
@@ -412,6 +421,16 @@ function bugFormReset(event) {
     defaultState();
 }
 
+function bugInfo(event, bug_id) {
+    let bug = bugs.info.find(elem => elem.id = bug_id)
+
+    // TODO add a X button
+    if (toggleHidden(bug_info) === false)
+        toggleHidden(bug_info);
+
+
+}
+
 /** -^-^-^- Action Listeners implementation -^-^-^- */
 
 
@@ -497,9 +516,9 @@ function defaultStateView() {
     bug_list.setAttribute("hidden", "");
     bug_list.innerHTML = "";
 
+    bug_info.setAttribute("hidden", "");
 
 }
-
 
 function toggleHidden(element) {
     // if the element is visible hide it else show
