@@ -22,6 +22,9 @@ var add_button = "";
 
 var overlay = "";
 var bug_form = "";
+var bug_info_close_button = "";
+
+var mark = "";
 
 /** -^-^-^- Element references -^-^-^- */
 
@@ -55,6 +58,27 @@ var bugs = {
 };
 
 
+var bug_info_ref = {
+    title: "",
+    id: "",
+    creator: "",
+    date_created: "",
+    screenshot: "",
+    url: "",
+    description: "",
+    technical_info: "",
+    os: "",
+    browser: "",
+    selector: "",
+    resolution: "",
+    priority: "",
+    status: "",
+    deadline: "",
+    attach: "",
+    comments: ""
+};
+
+
 // Get the base HTML code from another file and create a new element with the code 
 fetch(chrome.runtime.getURL("html/content.html"))
     .then(stream => stream.text())
@@ -76,7 +100,6 @@ function initialize(htmlData) {
 
         // After the element was appended to DOM initialize the action listeners
         connectedCallback() {
-            defaultState();
             closeSidebar();
 
             logo.addEventListener('click', logoClick);
@@ -89,6 +112,9 @@ function initialize(htmlData) {
 
             bug_form.addEventListener("submit", bugFormSubmit);
             bug_form.addEventListener("reset", bugFormReset);
+
+            bug_info_close_button.addEventListener("click", bugInfoCloseButtonClick)
+
         }
 
     }
@@ -116,12 +142,36 @@ function setVariables(dom) {
     overlay = dom.getElementById("overlay");
     bug_form = dom.getElementById("bug-form");
 
+
+    bug_info_close_button = dom.getElementById("bug-info-close-button");
     /** <----- Templates ----->*/
 
     bug_group_template = dom.getElementById("bug-group-template");
     bug_card_template = dom.getElementById("bug-card-template");
 
     /** -^-^-^- Templates -^-^-^- */
+
+
+    bug_info_ref = {
+        title: dom.querySelector("#bug-info .details.title"),
+        id: dom.querySelector("#bug-info .details.id"),
+        creator: dom.querySelector("#bug-info .details.creator"),
+        date_created: dom.querySelector("#bug-info .details.date-created"),
+        screenshot: dom.querySelector("#bug-info .details.screenshot"),
+        url: dom.querySelector("#bug-info .details.url"),
+        description: dom.querySelector("#bug-info .details.description"),
+        technical_info: dom.querySelector("#bug-info .details.technical-info"),
+        os: dom.querySelector("#bug-info .details.os"),
+        browser: dom.querySelector("#bug-info .details.browser"),
+        selector: dom.querySelector("#bug-info .details.selector"),
+        resolution: dom.querySelector("#bug-info .details.resolution"),
+        priority: dom.querySelector("#bug-info .details-priority"),
+        status: dom.querySelector("#bug-info .details.status"),
+        deadline: dom.querySelector("#bug-info .details.deadline"),
+        attach: dom.querySelector("#bug-info .details.attach"),
+        comments: dom.querySelector("#bug-info .details.comments")
+    };
+
 
 }
 
@@ -224,7 +274,7 @@ function bugListButtonClick(event) {
                 // Get reference to elements in the group
                 let bug_title = bug_copy.querySelector(".bug-title");
                 let bug_deadline = bug_copy.querySelector(".bug-deadline");
-                let bug_priority = bug_copy.querySelector(".bug-priority");
+                let bug_priority = bug_copy.querySelector(".bug.priority");
 
 
                 // Insert data in apropriate fields
@@ -267,16 +317,12 @@ function projectButtonClick(event) {
 }
 
 function addButtonClick(event) {
-    /**
-     * 1. Hide sidebar
-     * 2. Show overlay to get mark location and take screenshot
-     */
 
-    // 1
+    // 1 Hide sidebar
     defaultState();
     toggleHidden(sidebar);
 
-    // 2 
+    // 2 Show overlay to get mark location and take screenshot
     toggleHidden(overlay);
 }
 
@@ -345,8 +391,6 @@ function overlayClick(event) {
 
         });
     }, 100);
-
-
 
 }
 
@@ -422,15 +466,38 @@ function bugFormReset(event) {
 }
 
 function bugInfo(event, bug_id) {
-    let bug = bugs.info.find(elem => elem.id = bug_id)
 
-    // TODO add a X button
+    let bug = bugs.info.find(elem => elem.id == bug_id);
+    let status = bugs.status.find(e => Object.keys(e)[0] == bug.status_id);
+
     if (toggleHidden(bug_info) === false)
         toggleHidden(bug_info);
+
+    bug_info_ref.title.innerHTML = bug.designation;
+    bug_info_ref.id.innerHTML = bug.id;
+    bug_info_ref.creator.innerHTML = bug.user_id;
+    bug_info_ref.date_created.innerHTML = bug.created_at;
+    bug_info_ref.screenshot.innerHTML = ""; // TODO screenshot
+    bug_info_ref.url.innerHTML = bug.url;
+    bug_info_ref.description.innerHTML = bug.description;
+    bug_info_ref.os.innerHTML = bug.operating_system;
+    bug_info_ref.browser.innerHTML = bug.browser;
+    bug_info_ref.selector.innerHTML = bug.selector;
+    bug_info_ref.resolution.innerHTML = bug.resolution;
+    bug_info_ref.status.innerHTML = Object.values(status)[0];
+    bug_info_ref.deadline.innerHTML = bug.deadline;
+    bug_info_ref.attach.innerHTML = ""; // TODO attach
+    bug_info_ref.comments.innerHTML = ""; // TODO comment
+
+    bug_info_ref.priority.firstElementChild.className = `priority p${bug.priority_id}`;
+
 
 
 }
 
+function bugInfoCloseButtonClick(event) {
+    toggleHidden(bug_info);
+}
 /** -^-^-^- Action Listeners implementation -^-^-^- */
 
 
@@ -459,7 +526,7 @@ function addMark(coord) {
     if (!!overlay.querySelector("mark")) //prevent multiple marks
         return;
 
-    let mark = document.createElement('div');
+    mark = document.createElement('div');
     mark.id = "mark";
 
     // the values are moddified because it renders the image from top-left so an offset is needed to align the arrow where the mouse pointer realy was
@@ -481,8 +548,6 @@ function getSelector(pageCoord) {
     // ? this is a work in progeress to get the element from page at the requested coordinates
     return "/";
     // ? post a message to the current tab and as response get the selector postMessage()
-
-
 }
 
 function defaultState() {
@@ -524,10 +589,10 @@ function toggleHidden(element) {
     // if the element is visible hide it else show
     if (element.getAttribute("hidden") == null) {
         element.setAttribute("hidden", "");
-        return false; // false is hidden
+        return false; // false is hidden (transition from visible to hidden)
     }
     element.removeAttribute("hidden");
-    return true; // true is visible
+    return true; // true is visible (transition from hidden to visible)
 }
 
 function addLoadingAnimation(element) {

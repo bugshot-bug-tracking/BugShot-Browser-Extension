@@ -8,36 +8,45 @@
         <div id="add-button"></div>
     </div>
 
-    <div id="bug-list"> </div>
+    <div id="bug-list" hidden> </div>
 
-    <div id="bug-info">
+    <div id="bug-info" hidden>
+        <div class="details d-flex flex-column no-wrap">
 
-        <div class="header d-flex justify-content-between no-wrap">
-            <div class="title"></div>
-            <div class="btn btn-dark">X</div>
-        </div>
-
-        <div class="body d-flex flex-row no-wrap">
-            <div class="id"></div>
-            <div class="creator"></div>
-            <div class="screenshot"></div>
-            <div class="url"></div>
-            <div class="description"></div>
-            <div class="technical-info">
-                <div class="os"></div>
-                <div class="browser"></div>
-                <div class="selector"></div>
-                <div class="resolution"></div>
+            <div class="header d-flex justify-content-between no-wrap">
+                <div class="details title"></div>
+                <div id="bug-info-close-button" class="btn btn-dark">X</div>
             </div>
-            <div class="priority"></div>
-            <div class="status"></div>
-            <div class="deadline"></div>
+
+            <div class="details id"></div>
+            <div class="details creator"></div>
+            <div class="details date-created"></div>
+            <div class="details screenshot"></div>
+            <div class="details url"></div>
+            <div class="details description"></div>
+            <div class="details technical-info">
+                <div class="details os"></div>
+                <div class="details browser"></div>
+                <div class="details selector"></div>
+                <div class="details resolution"></div>
+            </div>
+
+            <div class="d-inline-flex">
+                <div class="details-priority d-inline-flex">
+                    <div class="priority"></div>
+                </div>
+                <div class="details status d-inline-flex"></div>
+            </div>
+
+            <div class="details deadline"></div>
         </div>
 
+        <div class="details attach"></div>
+        <div class="details comments"></div>
 
     </div>
 
-    <div id="bug-menu">
+    <div id="bug-menu" hidden>
 
         <form id="bug-form">
             <h4>New Bug Report:</h4>
@@ -82,7 +91,7 @@
 
     </div>
 
-    <div id="overlay"></div>
+    <div id="overlay" hidden></div>
 </div>
 
 
@@ -113,7 +122,7 @@
                     <div class="card-text d-flex justify-content-between">
                         
                         <div class="bug-deadline">dd.MM.yyyy</div>
-                        <div class="bug-priority"></div>
+                        <div class="bug priority"></div>
                         
                     </div>
                 </div>

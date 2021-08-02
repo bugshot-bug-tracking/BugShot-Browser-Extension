@@ -52,64 +52,51 @@
     color: #9BA5D7;
 }
 
-.bug-card .bug-priority.p4 {
+.priority {
     font-weight: normal;
     font-size: 12px;
     line-height: 16px;
     color: #ffffff;
-    text-align: center;
     border-radius: 30px;
-    padding: 3px 10px;
-    background-color: #F23838;
 }
 
-.bug-card .bug-priority.p4::after {
+.priority.p4 {
+    padding: 3px 10px;
+    background-color: #F23838;
+    width: fit-content;
+}
+
+.priority.p3 {
+    padding: 4px;
+    background-color: #FFB157;
+    width: fit-content;
+}
+
+.priority.p2 {
+    padding: 3px 10px;
+    background-color: #185FD9;
+    width: fit-content;
+}
+
+.priority.p1 {
+    padding: 3px 10px;
+    background-color: #18C0D9;
+    width: fit-content;
+}
+
+.priority.p4::after {
     content: "Critical";
 }
 
-.bug-card .bug-priority.p3 {
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 16px;
-    color: #ffffff;
-    text-align: center;
-    border-radius: 30px;
-    padding: 3px 10px;
-    background-color: #FFB157;
-}
-
-.bug-card .bug-priority.p3::after {
+.priority.p3::after {
     content: "Important";
 }
 
-.bug-card .bug-priority.p2 {
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 16px;
-    color: #ffffff;
-    text-align: center;
-    border-radius: 30px;
-    padding: 3px 10px;
-    background-color: #185FD9;
-}
-
-.bug-card .bug-priority.p2::after {
+.priority.p2::after {
     content: "Normal";
 }
 
-.bug-card .bug-priority.p1 {
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 16px;
-    color: #ffffff;
-    text-align: center;
-    border-radius: 30px;
-    padding: 3px 10px;
-    background-color: #18C0D9;
-}
-
-.bug-card .bug-priority.p1::after {
-    vertical-align: middle;
+.priority.p1::after {
     content: "Minor";
 }
 
@@ -134,15 +121,16 @@
 
 .bug-card {
     margin: 0.2em;
+    margin-bottom: 0.5em;
 }
 
 .bug-card .bug-title {
-    background: #FFF7FF;
+    background: #FFFFFF;
     border-radius: 12px 12px 0px 0px;
     font-size: 1em;
     font-weight: bold;
     color: #1A2040;
-    border-bottom: 2px solid #ffcfff;
+    border-bottom: 2px solid #bbbbbb;
 }
 
 .bug-card .bug-title:hover {
@@ -225,4 +213,170 @@
     top: 50%;
     transform: translate(0%, -50%);
     background-image: url("../images/svg/loading.svg");
+}
+
+#bug-info>.details {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border: 1px solid #EEE5FC;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: #00000059 10px 10px 10px -11px;
+}
+
+.details {
+    font-size: 14px;
+    color: #1A2040;
+}
+
+.details .header {
+    margin-bottom: 0.5em;
+}
+
+.details.title {
+    font-size: 20px;
+    font-weight: 500;
+    align-self: center;
+    text-overflow: ellipsis;
+    margin-left: 5px;
+}
+
+.details.id {
+    font-size: 12px;
+}
+
+.details.creator {}
+
+.details.date-created {}
+
+.details.screenshot {
+    width: 100%;
+    height: 230px;
+    margin: 0.4em;
+    background-color: grey;
+}
+
+.details.url {
+    text-overflow: ellipsis;
+}
+
+.details.description {}
+
+.details.technical-info {}
+
+.details.os {
+    color: #9BA5D7;
+}
+
+.details.browser {
+    color: #9BA5D7;
+}
+
+.details.selector {
+    color: #9BA5D7;
+}
+
+.details.resolution {
+    color: #9BA5D7;
+}
+
+.details-priority {
+    width: -webkit-fill-available;
+}
+
+.details.status {
+    width: -webkit-fill-available;
+}
+
+.details.deadline {}
+
+.details.attach {}
+
+.details.comments {}
+
+.details.id::before {
+    content: "id: ";
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.details.creator::before {
+    content: "creator: ";
+    text-transform: capitalize;
+    font-weight: bold;
+}
+
+.details.date-created::before {
+    content: "date: ";
+    text-transform: capitalize;
+    font-weight: bold;
+}
+
+.details.url::before {
+    content: "url: ";
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.details.description::before {
+    content: "description: ";
+    text-transform: capitalize;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.details.technical-info::before {
+    content: "technical info: ";
+    text-transform: capitalize;
+    font-weight: bold;
+}
+
+.details.os::before {
+    content: "Operating System: ";
+    text-transform: capitalize;
+    font-weight: bold;
+    color: #1A2040;
+}
+
+.details.browser::before {
+    content: "browser: ";
+    text-transform: capitalize;
+    font-weight: bold;
+    color: #1A2040;
+}
+
+.details.selector::before {
+    content: "selector: ";
+    text-transform: capitalize;
+    font-weight: bold;
+    color: #1A2040;
+}
+
+.details.resolution::before {
+    content: "resolution: ";
+    text-transform: capitalize;
+    font-weight: bold;
+    color: #1A2040;
+}
+
+.details-priority::before {
+    content: "priority: ";
+    text-transform: capitalize;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.details.status::before {
+    content: "status: ";
+    text-transform: capitalize;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.details.deadline::before {
+    content: "deadline: ";
+    text-transform: capitalize;
+    font-weight: bold;
 }
