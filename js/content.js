@@ -478,7 +478,6 @@ function bugInfo(event, bug_id) {
     bug_info_ref.creator.innerHTML = bug.user_id;
     bug_info_ref.date_created.innerHTML = bug.created_at;
     bug_info_ref.screenshot.innerHTML = ""; // TODO screenshot
-    bug_info_ref.url.innerHTML = bug.url;
     bug_info_ref.description.innerHTML = bug.description;
     bug_info_ref.os.innerHTML = bug.operating_system;
     bug_info_ref.browser.innerHTML = bug.browser;
@@ -491,6 +490,11 @@ function bugInfo(event, bug_id) {
 
     bug_info_ref.priority.firstElementChild.className = `priority p${bug.priority_id}`;
 
+    let url = document.createElement('a');
+    url.setAttribute("href", bug.url);
+    url.innerHTML = bug.url;
+    bug_info_ref.url.innerHTML = "";
+    bug_info_ref.url.append(url);
 
 
 }

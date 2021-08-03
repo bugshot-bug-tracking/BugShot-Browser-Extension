@@ -259,7 +259,15 @@
 }
 
 .details.url {
+    overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.details.url a {
+    color: #9BA5D7;
+    font-size: 14px;
+    text-decoration: none;
 }
 
 .details.description {}
@@ -308,16 +316,11 @@
     font-weight: bold;
 }
 
-.details.date-created::before {
-    content: "date: ";
-    text-transform: capitalize;
-    font-weight: bold;
-}
-
 .details.url::before {
     content: "url: ";
     text-transform: uppercase;
     font-weight: bold;
+    color: #1A2040;
 }
 
 .details.description::before {
