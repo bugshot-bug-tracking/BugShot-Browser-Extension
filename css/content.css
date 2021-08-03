@@ -11,7 +11,8 @@
 }
 
 :host {
-    all: initial
+    all: initial;
+    font-size: 16px;
 }
 
 #bugshot-container>* {
@@ -300,4 +301,9 @@
 #minoir-option:checked {
     background-color: #18C0D9;
     color: #FFFFFF;
+}
+
+#bug-info-close-button {
+    height: 36px;
+    align-self: center;
 }
