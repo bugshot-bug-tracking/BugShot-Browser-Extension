@@ -45,13 +45,17 @@
             <div class="details deadline">{{ bug.deadline }}</div>
         </div>
 
-        <div class="details attach"></div>
+        <div class="details attach">
+            <BugAttachments :bug="bug"></BugAttachments>
+        </div>
         <div class="details comments"></div>
     </div>
 </template>
 
 <script>
+import BugAttachments from "./BugAttachments.vue";
 export default {
+    components: { BugAttachments },
     name: "Buginfo",
     props: ["bug"],
     setup(props, context) {

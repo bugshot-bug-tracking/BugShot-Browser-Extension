@@ -16,6 +16,12 @@ mix
 	})
 	.disableNotifications();
 
+mix.extract({
+	// If you don't specify a location, it defaults to `vendor.js`
+	to: './dist/vendor.js',
+});
+mix.options({ runtimeChunkPath: './dist' });
+
 mix
 	.copy("src/popup/popup.html", "dist/popup")
 	.sass("src/popup/assets/css/popup.scss", "dist/popup/assets/css")
@@ -31,6 +37,5 @@ mix
 
 mix
 	.js('src/content/content.js', 'dist/content').vue()
-
 
 

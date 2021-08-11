@@ -35,3 +35,5 @@ pnpm-debug.log*
 !public/libraries/bootstrap-5.0.2-dist/css/bootstrap.css.map
 !public/libraries/bootstrap-5.0.2-dist/css/bootstrap.min.css
 !public/libraries/bootstrap-5.0.2-dist/css/bootstrap.min.css.map
+
+mix-manifest.json

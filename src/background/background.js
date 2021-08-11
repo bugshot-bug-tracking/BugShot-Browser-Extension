@@ -316,6 +316,26 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 						// Inject the content script 
 						chrome.scripting.executeScript({
 							target: { tabId: tabId },
+							files: ["manifest.js"]
+						}).then(() => {
+							console.log(`Injected manifest in "${domain}".`);;
+						});
+
+					}).then(() => {
+
+						// Inject the content script 
+						chrome.scripting.executeScript({
+							target: { tabId: tabId },
+							files: ["vendor.js"]
+						}).then(() => {
+							console.log(`Injected vendor in "${domain}".`);;
+						});
+
+					}).then(() => {
+
+						// Inject the content script 
+						chrome.scripting.executeScript({
+							target: { tabId: tabId },
 							files: ["content/content.js"]
 						}).then(() => {
 							console.log(`Injected content in "${domain}".`);;
