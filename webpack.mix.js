@@ -24,6 +24,7 @@ mix
 mix
 	.copy('src/background/background.js', 'dist')
 	.copy('src/manifest.json', 'dist')
+	.copy('README.md', 'dist')
 	.copyDirectory('public', 'dist');
 
 
