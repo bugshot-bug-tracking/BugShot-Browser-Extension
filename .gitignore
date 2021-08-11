@@ -1,6 +1,37 @@
-jsconfig.json
-.gitignore
-libraries/bootstrap-5.0.2-dist/js
-libraries/bootstrap-5.0.2-dist/css/*
-!libraries/bootstrap-5.0.2-dist/css/bootstrap.min.css
-libraries/iframe-resizer-4.2.9
+.DS_Store
+node_modules
+/dist
+
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Vue Browser Extension Output
+*.pem
+*.pub
+*.zip
+/artifacts
+
+
+/public/libraries/bootstrap-5.0.2-dist/js
+/public/libraries/bootstrap-5.0.2-dist/css/*
+!public/libraries/bootstrap-5.0.2-dist/css/bootstrap.css
+!public/libraries/bootstrap-5.0.2-dist/css/bootstrap.css.map
+!public/libraries/bootstrap-5.0.2-dist/css/bootstrap.min.css
+!public/libraries/bootstrap-5.0.2-dist/css/bootstrap.min.css.map

@@ -1,0 +1,2 @@
+# BugShot WEB Extension
+
