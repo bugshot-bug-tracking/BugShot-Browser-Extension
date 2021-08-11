@@ -1,51 +1,42 @@
 {
-    "name": "BugShot MV3",
-    "description": "Bug shooting as Chrome Extension MV3",
-    "version": "0.1.0",
-    "manifest_version": 3,
-
-    "icons": {
-        "16": "images/icons/get_started16.png",
-        "32": "images/icons/get_started32.png",
-        "48": "images/icons/get_started48.png",
-        "128": "images/icons/get_started128.png"
-    },
-
-    "background": {
-        "service_worker": "background.js"
-    },
-
-    "action": {
-        "default_popup": "html/popup.html",
-        "default_icons": {
-            "16": "images/icons/get_started16.png",
-            "32": "images/icons/get_started32.png",
-            "48": "images/icons/get_started48.png",
-            "128": "images/icons/get_started128.png"
-        }
-    },
-
-    "permissions": [
-        "activeTab",
-        "tabs",
-        "storage",
-        "scripting"
-    ],
-
-    "host_permissions": [
-        "*://*/*",
-        "<all_urls>"
-    ],
-
-    "web_accessible_resources": [{
-        "resources": [
-            "html/*",
-            "css/*",
-            "libraries/*",
-            "images/*"
-        ],
-        "matches": [
-            "*://*/*"
-        ]
-    }]
+	"name": "BugShot MV3",
+	"description": "Bug shooting as Chrome Extension MV3",
+	"version": "0.1.0",
+	"manifest_version": 3,
+	"icons": {
+		"16": "assets/icons/get_started16.png",
+		"32": "assets/icons/get_started32.png",
+		"48": "assets/icons/get_started48.png",
+		"128": "assets/icons/get_started128.png"
+	},
+	"background": {
+		"service_worker": "background.js"
+	},
+	"action": {
+		"default_popup": "popup/popup.html"
+	},
+	"permissions": [
+		"activeTab",
+		"tabs",
+		"storage",
+		"scripting"
+	],
+	"host_permissions": [
+		"*://*/*",
+		"<all_urls>"
+	],
+	"web_accessible_resources": [
+		{
+			"resources": [
+				"assets/*",
+				"html/*",
+				"css/*",
+				"libraries/*",
+				"images/*"
+			],
+			"matches": [
+				"*://*/*"
+			]
+		}
+	]
 }
