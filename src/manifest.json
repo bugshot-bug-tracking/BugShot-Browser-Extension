@@ -32,7 +32,8 @@
 				"html/*",
 				"css/*",
 				"libraries/*",
-				"images/*"
+				"images/*",
+				"content/Styles.css"
 			],
 			"matches": [
 				"*://*/*"

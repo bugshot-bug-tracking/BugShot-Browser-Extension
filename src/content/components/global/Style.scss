@@ -28,21 +28,21 @@
 
   &.success {
     > .logo {
-      background-image: url("../images/gif/bug_confirmation.gif");
+      background-image: url("/assets/images/gif/bug_confirmation.gif");
     }
 
     > .message {
-      background-image: url("../images/svg/success.svg");
+      background-image: url("/assets/images/svg/success.svg");
     }
   }
 
   &.error {
     > .logo {
-      background-image: url("../images/gif/error_bug.gif");
+      background-image: url("/assets/images/gif/error_bug.gif");
     }
 
     > .message {
-      background-image: url("../images/svg/oops.svg");
+      background-image: url("/assets/images/svg/oops.svg");
     }
   }
 
@@ -53,7 +53,7 @@
     height: 158px;
     top: 50%;
     transform: translate(0%, -50%);
-    background-image: url("../images/svg/loading.svg");
+    background-image: url("/assets/images/svg/loading.svg");
 
     > .logo {
       display: none;

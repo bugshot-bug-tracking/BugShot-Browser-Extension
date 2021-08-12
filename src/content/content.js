@@ -29,7 +29,8 @@ function setCSS(dom) {
 	let styleSheet = [
 		chrome.runtime.getURL("assets/css/content_class.css"),
 		chrome.runtime.getURL("assets/css/content.css"),
-		chrome.runtime.getURL("libraries/bootstrap-5.0.2-dist/css/bootstrap.min.css")
+		chrome.runtime.getURL("libraries/bootstrap-5.0.2-dist/css/bootstrap.min.css"),
+		chrome.runtime.getURL("/content/Styles.css")
 	];
 
 	styleSheet.forEach(sheet => {
