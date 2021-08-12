@@ -1,5 +1,5 @@
 <template>
-    <div class="file-name">{{ item.name }}</div>
+    <div class="file-name">{{ item.designation }}</div>
     <div class="btn download" @click="download" />
     <div class="btn delete" @click="deleteFile" />
 </template>

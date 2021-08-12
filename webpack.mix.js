@@ -16,11 +16,7 @@ mix
 	})
 	.disableNotifications();
 
-mix.extract({
-	// If you don't specify a location, it defaults to `vendor.js`
-	to: './dist/vendor.js',
-});
-mix.options({ runtimeChunkPath: './dist' });
+mix.extract({ to: './dist/vendor.js', }).options({ runtimeChunkPath: './dist' });
 
 mix
 	.copy("src/popup/popup.html", "dist/popup")
@@ -31,7 +27,8 @@ mix
 	.copy('src/background/background.js', 'dist')
 	.copy('src/manifest.json', 'dist')
 	.copy('README.md', 'dist')
-	.copyDirectory('public', 'dist');
+	.copyDirectory('public', 'dist')
+	.copy("node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js", "./dist/libraries/")
 
 
 

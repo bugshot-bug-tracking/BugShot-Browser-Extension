@@ -209,6 +209,43 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			return true;
 			break;
 
+		case "saveAttachment":
+			saveAttachment(request.payload.data, sender.tab.url, request.payload.bug_id)
+				.then(response => {
+					sendResponse({
+						message: "ok",
+						payload: response
+					});
+				})
+				.catch(err => {
+					console.log(err);
+
+					sendResponse({
+						message: "error",
+						error: err
+					});
+				});
+			return true;
+			break;
+
+		case "getAttachment":
+			getAttachment(sender.tab.url, request.payload.bug_id)
+				.then(response => {
+					sendResponse({
+						message: "ok",
+						payload: response
+					});
+				})
+				.catch(err => {
+					console.log(err);
+
+					sendResponse({
+						message: "error",
+						error: err
+					});
+				});
+			return true;
+			break;
 
 		default:
 			sendResponse({
@@ -308,7 +345,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 					// ! this may pose a problem later if there are any confilicts with the original page scripts
 					chrome.scripting.executeScript({
 						target: { tabId: tabId },
-						files: ["libraries/webcomponents-sd-ce.js"]
+						files: ["libraries/webcomponents-bundle.js"]
 					}).then(() => {
 						console.log(`Injected webcomponents handler in "${domain}".`);;
 					}).then(() => {
@@ -523,6 +560,53 @@ async function sendBugDetails(bug_details) {
 	console.log({ bugDetails: json });
 
 	return json.data;
+}
+
+
+async function saveAttachment(data, projectURL, bug_id) {
+	console.log(data);
+	let project = await getProjectWithCache(projectURL); // Will throw error if project not in remote
+
+	if (project === null) return null; // In case the project was taken from storage and no info is given
+
+	let url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/attachments`;
+
+	let response = await fetch(url, {
+		method: 'POST',
+		headers: {
+			'clientId': "5",
+			'version': "1.0.0",
+			'Content-type': 'application/json',
+		},
+		body: JSON.stringify({
+			designation: data.name,
+			base64: data.data,
+		})
+	});
+	console.log(response);
+	response = await response.json();
+
+	return response;
+}
+
+async function getAttachment(projectURL, bug_id) {
+	let project = await getProjectWithCache(projectURL); // Will throw error if project not in remote
+
+	if (project === null) return null; // In case the project was taken from storage and no info is given
+
+	let url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/attachments`;
+
+	let response = await fetch(url, {
+		method: 'GET',
+		headers: {
+			'clientId': "5",
+			'version': "1.0.0",
+		},
+	});
+	console.log(response);
+	response = await response.json();
+
+	return response;
 }
 
 async function sendBugScreenshot(bug_details, bugID) {
