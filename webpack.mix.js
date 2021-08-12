@@ -34,5 +34,5 @@ mix
 
 mix
 	.js('src/content/content.js', 'dist/content').vue()
-
+	.sass("src/content/Styles.scss", "dist/content/Styles.css")
 

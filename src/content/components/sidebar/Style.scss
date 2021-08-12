@@ -1,0 +1,83 @@
+#sidebar {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(26, 32, 64, 1);
+  min-width: 60px;
+  min-height: 60px;
+  width: 4vw;
+  height: 7vh;
+  transition: 0.1s;
+  transition-timing-function: ease-in;
+  border-top-left-radius: 13px;
+  border-bottom-left-radius: 13px;
+
+  > div {
+    flex: 1;
+  }
+
+  &.open {
+    height: 100vh;
+    border-top-left-radius: unset;
+    border-bottom-left-radius: unset;
+  }
+
+  &.open > div {
+    flex: 0.1;
+  }
+
+  #logo {
+    height: 100vh;
+    background-image: url("../images/svg/logo_bugshot.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  #bug-list-button {
+    background-image: url("../images/svg/bug_list_default.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+
+    &:hover {
+      background-image: url("../images/svg/bug_list_hover.svg");
+      cursor: pointer;
+    }
+  }
+
+  #admin-button {
+    background-image: url("../images/svg/admin_icn_default.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+
+    &:hover {
+      background-image: url("../images/svg/admin_icn_hover.svg");
+      cursor: pointer;
+    }
+  }
+
+  #project-button {
+    background-image: url("../images/svg/project_icn_default.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+
+    &:hover {
+      background-image: url("../images/svg/project_icn_hover.svg");
+      cursor: pointer;
+    }
+  }
+
+  #add-button {
+    flex: 1;
+    background-image: url("../images/svg/new_bug_default.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+
+    &:hover {
+      background-image: url("../images/svg/new_bug_hover.svg");
+      cursor: pointer;
+    }
+  }
+}
