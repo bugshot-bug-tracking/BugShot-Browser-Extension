@@ -1,7 +1,9 @@
 <template>
     <div class="file-name">{{ item.designation }}</div>
-    <div class="btn download" @click="download" />
-    <div class="btn delete" @click="deleteFile" />
+    <div class="controls">
+        <div class="btn download" @click="download" />
+        <div class="btn delete" @click="deleteFile" />
+    </div>
 </template>
 
 

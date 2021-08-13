@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import BugAttachments from "./BugAttachments.vue";
+import BugAttachments from "./attachment/BugAttachments.vue";
 export default {
     components: { BugAttachments },
     name: "Buginfo",

@@ -1,0 +1,76 @@
+#attachments {
+  > .header {
+    display: inline-flex;
+    justify-content: space-between;
+    width: 100%;
+
+    > .title {
+      font-weight: 500;
+      font-size: 20px;
+    }
+
+    > label#file-label {
+      cursor: pointer;
+      transition: 0.3s;
+      background-image: url("/assets/images/svg/klammer.svg");
+      background-repeat: no-repeat;
+      width: 32px;
+      height: 32px;
+
+      &:hover {
+        background-image: url("/assets/images/svg/klammer_hover.svg");
+      }
+
+      > input#file {
+        width: 0;
+        height: 0;
+      }
+    }
+  }
+
+  > .error {
+    color: red;
+    font-weight: bold;
+  }
+
+  > .files {
+    margin-top: 5px;
+
+    > .item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 15px;
+      background: transparent;
+      transition: 0.3s;
+
+      > .controls {
+        opacity: 0;
+        display: inline-flex;
+        > * {
+          margin: 0px 6px;
+        }
+
+        > .btn {
+          background-repeat: no-repeat;
+          width: 16px;
+          height: 16px;
+          &.download {
+            background-image: url("/assets/images/svg/icons/download.svg");
+          }
+          &.delete {
+            background-image: url("/assets/images/svg/icons/trash.svg");
+          }
+        }
+      }
+
+      &:hover {
+        background: #c2f8e4;
+        > .controls {
+          transition: 0.3s;
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
