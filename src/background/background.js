@@ -247,6 +247,44 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			return true;
 			break;
 
+		case "downloadAttachment":
+			downloadAttachment(sender.tab.url, request.payload.bug_id, request.payload.data)
+				.then(response => {
+					sendResponse({
+						message: "ok",
+						payload: response
+					});
+				})
+				.catch(err => {
+					console.log(err);
+
+					sendResponse({
+						message: "error",
+						error: err
+					});
+				});
+			return true;
+			break;
+
+		case "deleteAttachment":
+			deleteAttachment(sender.tab.url, request.payload.bug_id, request.payload.data)
+				.then(response => {
+					sendResponse({
+						message: "ok",
+						payload: response
+					});
+				})
+				.catch(err => {
+					console.log(err);
+
+					sendResponse({
+						message: "error",
+						error: err
+					});
+				});
+			return true;
+			break;
+
 		default:
 			sendResponse({
 				message: "Message not recognized as a command!"
@@ -609,6 +647,37 @@ async function getAttachment(projectURL, bug_id) {
 	return response;
 }
 
+async function downloadAttachment(projectURL, bug_id, data) {
+	let project = await getProjectWithCache(projectURL); // Will throw error if project not in remote
+
+	if (project === null) return null; // In case the project was taken from storage and no info is given
+
+	let url = `https://bugshot.view4all.de/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/attachments/${data.id}/download`;
+
+	return await chrome.tabs.create({
+		url: url
+	});
+}
+
+async function deleteAttachment(projectURL, bug_id, data) {
+	let project = await getProjectWithCache(projectURL); // Will throw error if project not in remote
+
+	if (project === null) return null; // In case the project was taken from storage and no info is given
+
+	let url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/attachments/${data.id}`;
+
+	let response = await fetch(url, {
+		method: 'DELETE',
+		headers: {
+			'clientId': "5",
+			'version': "1.0.0",
+		},
+	});
+	console.log(response);
+	response = await response.json();
+
+	return response;
+}
 async function sendBugScreenshot(bug_details, bugID) {
 
 	let project = await getProjectWithCache(bug_details.url);
