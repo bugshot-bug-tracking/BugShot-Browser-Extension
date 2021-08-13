@@ -1,4 +1,11 @@
 <template>
+    <!-- // TODO Work In Progres (WIP) refactoring this as a tab
+    <Container>
+        <Info />
+        <BugAttachments :bug="bug" />
+        <Comments />
+    </Container> -->
+
     <div id="bug-info">
         <div class="details d-flex flex-column no-wrap">
             <div class="header d-flex justify-content-between no-wrap">
@@ -53,10 +60,14 @@
 </template>
 
 <script>
+import Container from "../global/Container.vue";
+import Info from "./info/Info.vue";
 import BugAttachments from "./attachment/BugAttachments.vue";
+import Comments from "./comments/Comments.vue";
+
 export default {
-    components: { BugAttachments },
-    name: "Buginfo",
+    components: { Container, Info, BugAttachments, Comments },
+    name: "InfoTab",
     props: ["bug"],
     setup(props, context) {
         const close = () => {
