@@ -65,6 +65,32 @@
   }
 }
 
-#container {
+#tab {
   display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  background-color: #f8f8fc;
+  height: 100vh;
+  min-width: 270px;
+  width: 21vw;
+  overflow: auto;
+  padding: 0.6em;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  > #container {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    background: #ffffff 0% 0% no-repeat padding-box;
+    border: 1px solid #eee5fc;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: #00000059 10px 10px 10px -11px;
+    margin-bottom: 0.5em;
+  }
 }

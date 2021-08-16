@@ -1,10 +1,17 @@
 <template>
-    <!-- // TODO Work In Progres (WIP) refactoring this as a tab
+    <Tab>
     <Container>
-        <Info />
+            <Info :bug="bug" />
+        </Container>
+
+        <Container>
         <BugAttachments :bug="bug" />
+        </Container>
+
+        <Container>
         <Comments />
-    </Container> -->
+        </Container>
+    </Tab>
 
     <div id="bug-info">
         <div class="details d-flex flex-column no-wrap">
@@ -60,13 +67,14 @@
 </template>
 
 <script>
+import Tab from "../global/Tab.vue";
 import Container from "../global/Container.vue";
 import Info from "./info/Info.vue";
 import BugAttachments from "./attachment/BugAttachments.vue";
 import Comments from "./comments/Comments.vue";
 
 export default {
-    components: { Container, Info, BugAttachments, Comments },
+    components: { Tab, Container, Info, BugAttachments, Comments },
     name: "InfoTab",
     props: ["bug"],
     setup(props, context) {
