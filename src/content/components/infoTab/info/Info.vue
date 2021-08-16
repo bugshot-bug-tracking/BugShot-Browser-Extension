@@ -5,7 +5,7 @@
                 <div class="content">{{ bug.designation }}</div>
             </div>
 
-            <div class="close-button btn btn-dark">X</div>
+            <img class="close-button btn" @click="close" />
         </div>
 
         <div class="id">
@@ -27,7 +27,9 @@
 
         <div class="url">
             <label>URL:</label>
-            <div class="content">{{ bug.url }}</div>
+            <div class="content">
+                <a :href="bug.url">{{ bug.url }}</a>
+            </div>
         </div>
 
         <div class="description">
@@ -35,8 +37,11 @@
             <div class="content">{{ bug.description }}</div>
         </div>
 
-        <div id="technical" :class="{ open: open }" @click="collapseTechnical">
-            <div class="technical-label d-inline-flex justify-content-between">
+        <div id="technical" :class="{ open: open }">
+            <div
+                class="technical-label d-inline-flex justify-content-between"
+                @click="collapseTechnical"
+            >
                 <span>Technical information:</span>
                 <img />
             </div>
@@ -63,8 +68,8 @@
             </div>
         </div>
 
-        <div class="d-inline-flex">
-            <div class="deadline">
+        <div class="grid1x2 my-3">
+            <div class="deadline grid1x2">
                 <label>Priority:</label>
                 <div
                     class="content priority"
@@ -72,7 +77,7 @@
                 ></div>
             </div>
 
-            <div class="status">
+            <div class="grid1x2 status">
                 <label>Status:</label>
                 <div class="content status">PH</div>
             </div>
@@ -91,13 +96,19 @@ import { ref } from "vue";
 export default {
     name: "Info",
     props: ["bug"],
-    setup() {
+    emits: ["close"],
+    setup(props, context) {
         const open = ref(false);
+
         const collapseTechnical = () => {
             open.value = !open.value;
         };
 
-        return { open, collapseTechnical };
+        const close = () => {
+            context.emit("close");
+        };
+
+        return { open, collapseTechnical, close };
     },
 };
 </script>
