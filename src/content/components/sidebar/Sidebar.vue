@@ -21,6 +21,7 @@ import { ref } from "vue";
 
 export default {
     name: "Sidebar",
+    emits: ["default", "list", "add"],
     setup(props, context) {
         const open = ref(false);
 

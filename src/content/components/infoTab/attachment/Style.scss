@@ -47,6 +47,7 @@
       > .controls {
         opacity: 0;
         display: inline-flex;
+
         > * {
           margin: 0px 6px;
         }
@@ -55,9 +56,11 @@
           background-repeat: no-repeat;
           width: 16px;
           height: 16px;
+
           &.download {
             background-image: url("/assets/images/svg/icons/download.svg");
           }
+
           &.delete {
             background-image: url("/assets/images/svg/icons/trash.svg");
           }
@@ -66,6 +69,8 @@
 
       &:hover {
         background: #c2f8e4;
+        border-radius: 8px;
+
         > .controls {
           transition: 0.3s;
           opacity: 1;

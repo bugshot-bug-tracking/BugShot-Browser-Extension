@@ -26,6 +26,7 @@ import { ref } from "vue";
 export default {
     name: "BugCard",
     props: ["bug"],
+    emits: ["info"],
     setup(props, context) {
         const bugInfo = ref(props.bug);
 

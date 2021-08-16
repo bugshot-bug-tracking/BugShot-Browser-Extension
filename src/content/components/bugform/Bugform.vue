@@ -106,6 +106,7 @@ export default {
     components: { State },
     name: "Bugform",
     props: ["bug"],
+    emits: ["default", "submit"],
     setup(props, context) {
         const state = ref(null);
         const submit = (event) => {

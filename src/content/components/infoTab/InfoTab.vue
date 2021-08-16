@@ -1,15 +1,15 @@
 <template>
     <Tab>
-    <Container>
+        <Container>
             <Info :bug="bug" />
         </Container>
 
         <Container>
-        <BugAttachments :bug="bug" />
+            <BugAttachments :bug="bug" />
         </Container>
 
         <Container>
-        <Comments />
+            <Comments />
         </Container>
     </Tab>
 
@@ -77,6 +77,7 @@ export default {
     components: { Tab, Container, Info, BugAttachments, Comments },
     name: "InfoTab",
     props: ["bug"],
+    emits: ["close"],
     setup(props, context) {
         const close = () => {
             context.emit("close");

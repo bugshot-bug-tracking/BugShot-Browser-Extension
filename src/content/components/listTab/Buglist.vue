@@ -27,7 +27,7 @@ import BugCard from "./BugCard.vue";
 export default {
     name: "Buglist",
     components: { State, BugGroup, BugCard },
-
+    emits: ["info"],
     setup(props, context) {
         const bugs = ref({ status: [], info: [] });
         const state = ref("loading");

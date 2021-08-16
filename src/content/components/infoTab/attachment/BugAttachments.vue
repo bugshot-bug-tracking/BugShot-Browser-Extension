@@ -72,6 +72,7 @@ export default {
 
                                     case "ok":
                                         updateAttachments();
+                                        err.value = "";
                                         console.info("Attachment Uploaded.");
                                         break;
                                 }
