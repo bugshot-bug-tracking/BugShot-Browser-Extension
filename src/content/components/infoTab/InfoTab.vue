@@ -5,7 +5,7 @@
         </Container>
 
         <Container>
-            <BugAttachments :bug="bug" />
+            <Attachments :bug="bug" :isRemote="true" />
         </Container>
 
         <Container>
@@ -18,11 +18,11 @@
 import Tab from "../global/Tab.vue";
 import Container from "../global/Container.vue";
 import Info from "./info/Info.vue";
-import BugAttachments from "./attachment/BugAttachments.vue";
+import Attachments from "../global/attachment/Attachments.vue";
 import Comments from "./comments/Comments.vue";
 
 export default {
-    components: { Tab, Container, Info, BugAttachments, Comments },
+    components: { Tab, Container, Info, Attachments, Comments },
     name: "InfoTab",
     props: ["bug"],
     emits: ["close"],

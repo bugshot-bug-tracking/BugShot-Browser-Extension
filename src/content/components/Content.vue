@@ -8,7 +8,7 @@
         />
         <ListTab v-if="showList" @info="infoEvent" />
         <InfoTab v-if="showInfo" :bug="bugInfo" @close="closeInfo" />
-        <Bugform v-if="showForm" :bug="bugDetails" @default="setDefault" />
+        <FormTab v-if="showForm" :bug="bugDetails" @default="setDefault" />
         <Overlay
             v-if="showOverlay"
             :details="bugDetails"
@@ -25,11 +25,11 @@ import { ref } from "vue";
 import Sidebar from "./sidebar/Sidebar.vue";
 import ListTab from "./listTab/Buglist.vue";
 import InfoTab from "./infoTab/InfoTab.vue";
-import Bugform from "./bugform/Bugform.vue";
+import FormTab from "./formTab/FormTab.vue";
 import Overlay from "./overlay/Overlay.vue";
 
 export default {
-    components: { Sidebar, ListTab, InfoTab, Bugform, Overlay },
+    components: { Sidebar, ListTab, InfoTab, FormTab, Overlay },
     setup() {
         const showSidebar = ref(true);
         const showList = ref(false);

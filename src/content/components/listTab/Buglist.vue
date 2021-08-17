@@ -1,5 +1,5 @@
 <template>
-    <div id="bug-list">
+    <Tab style="width: 17vw">
         <State v-if="state !== null" :state="state" />
 
         <BugGroup
@@ -14,7 +14,7 @@
                 @info="info"
             />
         </BugGroup>
-    </div>
+    </Tab>
 </template>
 
 <script>
@@ -23,10 +23,16 @@ import { ref } from "vue";
 import State from "../global/State.vue";
 import BugGroup from "./BugGroup.vue";
 import BugCard from "./BugCard.vue";
+import Tab from "../global/Tab.vue";
 
 export default {
     name: "Buglist",
-    components: { State, BugGroup, BugCard },
+    components: {
+        Tab,
+        State,
+        BugGroup,
+        BugCard,
+    },
     emits: ["info"],
     setup(props, context) {
         const bugs = ref({ status: [], info: [] });
