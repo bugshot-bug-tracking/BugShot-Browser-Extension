@@ -62,6 +62,14 @@ export default {
             let fileInfos = [];
             let errFlag = false;
 
+            if (
+                files.value.length > 10 ||
+                attachments.value.length + files.value.length > 10
+            ) {
+                err.value = "You are limited to a maximum of 10 files";
+                return;
+            }
+
             Array.prototype.forEach.call(files.value, (file) => {
                 // if the file is bigger than 5 MiB
                 if (file.size > 5 * (1 << 20)) {
@@ -209,6 +217,8 @@ export default {
         };
 
         const updateAttachments = () => {
+            err.value = "";
+            if (props.isRemote === false) return;
             chrome.runtime.sendMessage(
                 {
                     message: "getAttachment",
