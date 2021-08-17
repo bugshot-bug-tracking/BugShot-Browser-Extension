@@ -29,8 +29,10 @@
   }
 
   > .error {
-    color: red;
-    font-weight: bold;
+    color: #f23838;
+    font-weight: 500;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f1e0e0;
   }
 
   > .files {
