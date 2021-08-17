@@ -191,7 +191,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 				sendBugScreenshot(bug_details, response.id).then(() => {
 					sendResponse({
-						message: "ok"
+						message: "ok",
+						payload: response
 					});
 				});
 

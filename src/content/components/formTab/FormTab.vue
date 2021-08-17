@@ -2,12 +2,11 @@
     <Tab>
         <State v-if="state !== null" :state="state" />
 
-        <Container>
-            <form id="bug-form" v-if="state === null">
+        <Container v-if="state === null">
+            <form id="bug-form">
                 <h5 style="text-align: center">New Bug Report</h5>
 
                 <div class="form-group">
-                    <!-- <label for="bug-name">Bug Name</label> -->
                     <input
                         type="text"
                         class="form-control"
@@ -19,7 +18,6 @@
                 </div>
 
                 <div class="form-group">
-                    <!-- <label for="bug-description">Example textarea</label> -->
                     <textarea
                         class="form-control"
                         id="bug-description"
@@ -40,7 +38,6 @@
                             value="4"
                             v-model="bug.priority"
                         />
-                        <!-- <label class="form-check-label" for="critical-option">Critical</label> -->
                     </div>
 
                     <div class="form-check form-check-inline">
@@ -52,7 +49,6 @@
                             value="3"
                             v-model="bug.priority"
                         />
-                        <!-- <label class="form-check-label" for="important-option">Important</label> -->
                     </div>
 
                     <div class="form-check form-check-inline">
@@ -65,7 +61,6 @@
                             v-model="bug.priority"
                             checked
                         />
-                        <!-- <label class="form-check-label" for="normal-option">Normal</label> -->
                     </div>
 
                     <div class="form-check form-check-inline">
@@ -77,7 +72,6 @@
                             value="1"
                             v-model="bug.priority"
                         />
-                        <!-- <label class="form-check-label" for="minoir-option">Minoir</label> -->
                     </div>
                 </div>
 
@@ -85,7 +79,7 @@
                     id="form-submit"
                     type="submit"
                     class="btn btn-primary mb-2"
-                    @click="submit"
+                    @click.prevent="submit"
                 >
                     <span>Report Bug!</span>
                 </button>
@@ -100,7 +94,7 @@
             </form>
         </Container>
 
-        <Container>
+        <Container v-if="state === null">
             <Attachments :bug="bug" :isRemote="false" @getLocal="localFiles" />
         </Container>
     </Tab>
@@ -117,16 +111,13 @@ export default {
     components: { State, Tab, Container, Attachments },
     name: "FormTab",
     props: ["bug"],
-    emits: ["default", "submit"],
+    emits: ["default"],
     setup(props, context) {
         const state = ref(null);
         const files64 = ref([]);
 
         const submit = (event) => {
             props.bug.priority = Number(props.bug.priority);
-
-            // Stop any other possible action outside of this
-            event.preventDefault();
 
             state.value = "loading";
 
@@ -136,8 +127,6 @@ export default {
                     payload: props.bug,
                 },
                 (response) => {
-                    state.value = null;
-
                     if (response.message === "error") {
                         state.value = "error";
 
@@ -157,17 +146,56 @@ export default {
                         return;
                     }
 
+                    console.log(response.payload);
                     console.log("Bug report sent!");
 
-                    state.value = "success";
+                    let newBugInfo = response.payload;
+                    console.log("here");
+                    submitAttachments(newBugInfo.id).then(() => {
+                        console.log("Bug attachments sent!");
 
-                    setTimeout(function () {
-                        context.emit("default");
-                    }, 3800);
+                        state.value = "success";
+
+                        setTimeout(function () {
+                            context.emit("default");
+                        }, 3800);
+                    });
                 }
             );
+        };
 
-            context.emit("submit");
+        const submitAttachments = (bug_id) => {
+            let filesPromises = files64.value.map((file) => {
+                return new Promise((resolve, reject) => {
+                    chrome.runtime.sendMessage(
+                        {
+                            message: "saveAttachment",
+                            payload: {
+                                data: {
+                                    name: file.designation,
+                                    data: file.data,
+                                },
+                                bug_id: bug_id,
+                            },
+                        },
+                        (response) => {
+                            console.log(response);
+
+                            switch (response.message) {
+                                case "error":
+                                    reject(response.error);
+
+                                case "ok":
+                                    console.info("Attachments Uploaded.");
+                                    resolve(response.payload);
+                                    break;
+                            }
+                        }
+                    );
+                });
+            });
+
+            return Promise.all(filesPromises);
         };
 
         const cancel = () => {
@@ -176,6 +204,7 @@ export default {
         const localFiles = (files) => {
             files64.value = files.value;
         };
+
         return { state, submit, cancel, localFiles };
     },
 };

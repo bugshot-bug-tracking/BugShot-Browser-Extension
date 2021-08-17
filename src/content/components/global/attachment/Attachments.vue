@@ -3,8 +3,13 @@
         <div class="header">
             <div class="title">Attachments</div>
 
-            <label for="file" id="file-label">
-                <input type="file" id="file" multiple @change="upload" />
+            <label id="file-label">
+                <input
+                    type="file"
+                    style="width: 0; height: 0"
+                    multiple
+                    @change="upload"
+                />
             </label>
         </div>
 
@@ -19,7 +24,7 @@
                     :isRemote="isRemote"
                     @download="downloadFile"
                     @delete="deleteFile"
-                ></AttachmentItem>
+                />
             </div>
         </div>
     </div>

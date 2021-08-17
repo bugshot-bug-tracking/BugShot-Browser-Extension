@@ -20,11 +20,6 @@
       &:hover {
         background-image: url("/assets/images/svg/klammer_hover.svg");
       }
-
-      > input#file {
-        width: 0;
-        height: 0;
-      }
     }
   }
 
@@ -45,6 +40,12 @@
       padding: 10px 15px;
       background: transparent;
       transition: 0.3s;
+
+      .file-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
 
       > .controls {
         opacity: 0;
