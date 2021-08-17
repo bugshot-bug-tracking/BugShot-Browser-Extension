@@ -1,30 +1,23 @@
 <template>
     <div class="file-name">{{ item.designation }}</div>
     <div class="controls">
-        <div class="btn download" @click="download" />
-        <div class="btn delete" @click="deleteFile" />
+        <div
+            v-if="isRemote"
+            class="btn download"
+            @click="$emit('download', item)"
+        />
+        <div class="btn delete" @click="$emit('delete', item)" />
     </div>
 </template>
 
 
 <script>
 export default {
-    name: "Attachment",
-    props: ["item"],
-    emits: ["download", "delete"],
-    setup(props, context) {
-        const download = () => {
-            context.emit("download", props.item);
-        };
-
-        const deleteFile = () => {
-            context.emit("delete", props.item);
-        };
-
-        return {
-            download,
-            deleteFile,
-        };
+    name: "AttachmentItem",
+    props: {
+        item: Object,
+        isRemote: Boolean,
     },
+    emits: ["download", "delete"],
 };
 </script>

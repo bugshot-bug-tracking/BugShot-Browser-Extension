@@ -2,20 +2,24 @@
     <div id="attachments">
         <div class="header">
             <div class="title">Attachments</div>
+
             <label for="file" id="file-label">
                 <input type="file" id="file" multiple @change="upload" />
             </label>
         </div>
 
-        <div class="error" v-if="err != ''">{{ err }}</div>
+        <div class="error" v-if="err != ''">
+            <span style="white-space: pre-line">{{ err }}</span>
+        </div>
 
         <div class="files">
             <div class="item" v-for="item in attachments" :key="item.id">
-                <Attachment
+                <AttachmentItem
                     :item="item"
+                    :isRemote="isRemote"
                     @download="downloadFile"
                     @delete="deleteFile"
-                ></Attachment>
+                ></AttachmentItem>
             </div>
         </div>
     </div>
@@ -23,34 +27,56 @@
 
 <script>
 import { onMounted, ref, watch } from "vue";
-import Attachment from "./Attachment.vue";
+import AttachmentItem from "./AttachmentItem.vue";
 
 export default {
-    components: { Attachment },
-    name: "BugAttachment",
-    props: ["bug"],
-    setup(props) {
+    components: { AttachmentItem },
+    name: "Attachments",
+    props: {
+        bug: Object,
+        isRemote: Boolean, // this is intended to be used as a use-case flag, if the data is send to db directly or locally processed
+    },
+    emits: ["getLocal"],
+    setup(props, context) {
         const files = ref([]);
         const attachments = ref([]);
         const err = ref("");
 
+        const toBase64 = (file) =>
+            new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = (error) => reject(error);
+            });
+
         const upload = (event) => {
             files.value = event.target.files;
+            err.value = "";
 
-            const toBase64 = (file) =>
-                new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file);
-                    reader.onload = () => resolve(reader.result);
-                    reader.onerror = (error) => reject(error);
-                });
+            let fileInfos = [];
+            let errFlag = false;
 
             Array.prototype.forEach.call(files.value, (file) => {
-                try {
-                    // if the file is bigger than 5 MiB
-                    if (file.size > 5 * (1 << 20))
-                        throw "Error: file is bigger than 5 MiB";
+                // if the file is bigger than 5 MiB
+                if (file.size > 5 * (1 << 20)) {
+                    if (errFlag === false) {
+                        errFlag = true;
+                        err.value = "Following files are bigger than 5 MiB:\n";
+                    }
+                    err.value += ` - ${file.name}\n`;
+                    return;
+                }
+                fileInfos.push(file);
+            });
 
+            if (props.isRemote) uploadRemote(fileInfos);
+            else uploadLocal(fileInfos);
+        };
+
+        const uploadRemote = (filesInfo) => {
+            filesInfo.forEach((file) => {
+                try {
                     toBase64(file).then((data64) => {
                         chrome.runtime.sendMessage(
                             {
@@ -72,7 +98,6 @@ export default {
 
                                     case "ok":
                                         updateAttachments();
-                                        err.value = "";
                                         console.info("Attachment Uploaded.");
                                         break;
                                 }
@@ -84,6 +109,28 @@ export default {
                     console.error(error);
                 }
             });
+        };
+
+        const uploadLocal = (filesInfo) => {
+            try {
+                let filesPromises = filesInfo.map((file) => {
+                    return new Promise((resolve) => {
+                        resolve(toBase64(file));
+                    });
+                });
+
+                Promise.all(filesPromises).then((files64) => {
+                    for (let index = 0; index < files64.length; index++) {
+                        attachments.value.push({
+                            designation: filesInfo[index].name,
+                            data: files64[index],
+                        });
+                    }
+                    context.emit("getLocal", attachments);
+                });
+            } catch (error) {
+                console.error(error);
+            }
         };
 
         const downloadFile = (item) => {
@@ -117,6 +164,11 @@ export default {
         };
 
         const deleteFile = (item) => {
+            if (props.isRemote) deleteRemote(item);
+            else deleteLocal(item);
+        };
+
+        const deleteRemote = (item) => {
             chrome.runtime.sendMessage(
                 {
                     message: "deleteAttachment",
@@ -145,6 +197,10 @@ export default {
                     }
                 }
             );
+        };
+
+        const deleteLocal = (item) => {
+            attachments.value.splice(attachments.value.indexOf(item), 1);
         };
 
         const updateAttachments = () => {
@@ -178,7 +234,7 @@ export default {
         };
 
         onMounted(() => {
-            updateAttachments();
+            if (props.isRemote) updateAttachments();
         });
 
         watch(props, updateAttachments);
