@@ -31,10 +31,9 @@
                 <div class="form-group d-flex justify-content-between mb-lg-2">
                     <div class="form-check form-check-inline">
                         <input
-                            class="form-check-input"
+                            class="form-check-input option critical"
                             type="radio"
                             name="inlineRadioOptions"
-                            id="critical-option"
                             value="4"
                             v-model="bug.priority"
                         />
@@ -42,10 +41,9 @@
 
                     <div class="form-check form-check-inline">
                         <input
-                            class="form-check-input"
+                            class="form-check-input option important"
                             type="radio"
                             name="inlineRadioOptions"
-                            id="important-option"
                             value="3"
                             v-model="bug.priority"
                         />
@@ -53,10 +51,9 @@
 
                     <div class="form-check form-check-inline">
                         <input
-                            class="form-check-input"
+                            class="form-check-input option normal"
                             type="radio"
                             name="inlineRadioOptions"
-                            id="normal-option"
                             value="2"
                             v-model="bug.priority"
                             checked
@@ -65,10 +62,9 @@
 
                     <div class="form-check form-check-inline">
                         <input
-                            class="form-check-input"
+                            class="form-check-input option minoir"
                             type="radio"
                             name="inlineRadioOptions"
-                            id="minoir-option"
                             value="1"
                             v-model="bug.priority"
                         />
@@ -102,6 +98,7 @@
 
 <script>
 import { ref } from "vue";
+
 import Tab from "../global/Tab.vue";
 import Container from "../global/Container.vue";
 import State from "../global/State.vue";

@@ -2,4 +2,149 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
+
+  #bug-description {
+    border: 1px solid #eee5fc;
+    border-radius: 12px;
+    margin: 10px 0px 10px 0px;
+  }
+
+  #bug-name {
+    border: 1px solid #eee5fc;
+    margin: 10px 0px 10px 0px;
+  }
+
+  #form-submit {
+    background: #18d992 0% 0% no-repeat padding-box;
+    border-radius: 20px;
+    border-color: #18d992;
+
+    &:hover {
+      background: #0dac72 0% 0% no-repeat padding-box;
+    }
+  }
+
+  #form-reset {
+    background: #1872d9 0% 0% no-repeat padding-box;
+    border-radius: 20px;
+    border-color: #1872d9;
+
+    &:hover {
+      background: #0d4fac 0% 0% no-repeat padding-box;
+    }
+  }
+
+  .option {
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 16px;
+    text-align: center;
+    border-radius: 30px;
+    padding: 3px 10px;
+    height: 24px;
+    width: fit-content;
+    background-color: #ffffff;
+    background-image: none;
+
+    &.critical {
+      color: #f23838;
+      border-color: #f23838;
+
+      &::after {
+        content: "Critical";
+      }
+
+      &:checked {
+        background-color: #f23838;
+        color: #ffffff;
+      }
+    }
+
+    &.important {
+      color: #ffb157;
+      border-color: #ffb157;
+
+      &::after {
+        content: "Important";
+      }
+
+      &:checked {
+        background-color: #ffb157;
+        color: #ffffff;
+      }
+    }
+
+    &.normal {
+      color: #185fd9;
+      border-color: #185fd9;
+
+      &::after {
+        content: "Normal";
+      }
+
+      &:checked {
+        background-color: #185fd9;
+        color: #ffffff;
+      }
+    }
+
+    &.minoir {
+      color: #18c0d9;
+      border-color: #18c0d9;
+
+      &::after {
+        content: "Minor";
+      }
+
+      &:checked {
+        background-color: #18c0d9;
+        color: #ffffff;
+      }
+    }
+  }
+}
+
+.priority {
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 16px;
+  color: #ffffff;
+  border-radius: 30px;
+  width: fit-content;
+
+  &.p4 {
+    padding: 3px 10px;
+    background-color: #f23838;
+
+    &::after {
+      content: "Critical";
+    }
+  }
+
+  &.p3 {
+    padding: 4px;
+    background-color: #ffb157;
+
+    &::after {
+      content: "Important";
+    }
+  }
+
+  &.p2 {
+    padding: 3px 10px;
+    background-color: #185fd9;
+
+    &::after {
+      content: "Normal";
+    }
+  }
+
+  &.p1 {
+    padding: 3px 10px;
+    background-color: #18c0d9;
+
+    &::after {
+      content: "Minor";
+    }
+  }
 }

@@ -1,3 +1,55 @@
-#list-tab-tab {
-  width: 17vw;
+.bug-group {
+  margin-bottom: 5%;
+
+  > .group-name {
+    margin: 10px;
+    padding-bottom: 8px;
+    font-weight: bold;
+    font-size: 1.25em;
+    text-align: center;
+    border-bottom: 1px solid #f1e0e0;
+  }
+
+  > .group-bugs {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.bug-card {
+  margin: 0.2em;
+  margin-bottom: 0.5em;
+
+  > .card {
+    background: #ffffff 0% 0% no-repeat padding-box;
+    box-shadow: #00000059 10px 10px 10px -11px;
+    border-radius: 12px;
+    padding: 0px 10px 0px 10px;
+  }
+
+  .bug-title {
+    background: #ffffff;
+    border-radius: 12px 12px 0px 0px;
+    font-size: 1em;
+    font-weight: bold;
+    color: #1a2040;
+    border-bottom: 2px solid #eee5fc;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .bug-deadline {
+    align-items: center;
+    color: #9ba5d7;
+
+    &::before {
+      content: "Deadline: ";
+      font-size: 14px;
+      color: #1a2040;
+      font-weight: bold;
+    }
+  }
 }
