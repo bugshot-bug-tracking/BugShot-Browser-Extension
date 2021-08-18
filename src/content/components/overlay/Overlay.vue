@@ -8,9 +8,7 @@
         <div
             id="mark"
             v-if="mark.on"
-            :style="
-                'top: ' + (mark.y - 56) + 'px; left: ' + (mark.x - 16) + 'px;'
-            "
+            :style="`top: ${mark.y - 56}px; left: ${mark.x - 16}px;`"
             :class="priority"
         ></div>
     </div>

@@ -4,10 +4,10 @@
 	"version": "0.1.0",
 	"manifest_version": 3,
 	"icons": {
-		"16": "assets/icons/get_started16.png",
-		"32": "assets/icons/get_started32.png",
-		"48": "assets/icons/get_started48.png",
-		"128": "assets/icons/get_started128.png"
+		"16": "assets/extension_icons/get_started16.png",
+		"32": "assets/extension_icons/get_started32.png",
+		"48": "assets/extension_icons/get_started48.png",
+		"128": "assets/extension_icons/get_started128.png"
 	},
 	"background": {
 		"service_worker": "background.js"
@@ -29,10 +29,7 @@
 		{
 			"resources": [
 				"assets/*",
-				"html/*",
-				"css/*",
 				"libraries/*",
-				"images/*",
 				"content/Styles.css"
 			],
 			"matches": [

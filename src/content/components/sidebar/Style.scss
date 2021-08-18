@@ -27,7 +27,7 @@
 
   #logo {
     height: 100vh;
-    background-image: url("/assets/images/svg/logo_bugshot.svg");
+    background-image: url("/assets/images/global/logo_bugshot.svg");
     background-position: center;
     background-repeat: no-repeat;
 
@@ -37,45 +37,45 @@
   }
 
   #bug-list-button {
-    background-image: url("/assets/images/svg/bug_list_default.svg");
+    background-image: url("/assets/images/sidebar/bug_list_default.svg");
     background-position: center;
     background-repeat: no-repeat;
 
     &:hover {
-      background-image: url("/assets/images/svg/bug_list_hover.svg");
+      background-image: url("/assets/images/sidebar/bug_list_hover.svg");
       cursor: pointer;
     }
   }
 
   #admin-button {
-    background-image: url("/assets/images/svg/admin_icn_default.svg");
+    background-image: url("/assets/images/sidebar/admin_icn_default.svg");
     background-position: center;
     background-repeat: no-repeat;
 
     &:hover {
-      background-image: url("/assets/images/svg/admin_icn_hover.svg");
+      background-image: url("/assets/images/sidebar/admin_icn_hover.svg");
       cursor: pointer;
     }
   }
 
   #project-button {
-    background-image: url("/assets/images/svg/project_icn_default.svg");
+    background-image: url("/assets/images/sidebar/project_icn_default.svg");
     background-position: center;
     background-repeat: no-repeat;
 
     &:hover {
-      background-image: url("/assets/images/svg/project_icn_hover.svg");
+      background-image: url("/assets/images/sidebar/project_icn_hover.svg");
       cursor: pointer;
     }
   }
 
   #add-button {
-    background-image: url("/assets/images/svg/new_bug_default.svg");
+    background-image: url("/assets/images/sidebar/new_bug_default.svg");
     background-position: center;
     background-repeat: no-repeat;
 
     &:hover {
-      background-image: url("/assets/images/svg/new_bug_hover.svg");
+      background-image: url("/assets/images/sidebar/new_bug_hover.svg");
       cursor: pointer;
     }
   }

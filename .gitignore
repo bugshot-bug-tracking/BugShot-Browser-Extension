@@ -29,11 +29,5 @@ pnpm-debug.log*
 /artifacts
 
 
-/public/libraries/bootstrap-5.0.2-dist/js
-/public/libraries/bootstrap-5.0.2-dist/css/*
-!public/libraries/bootstrap-5.0.2-dist/css/bootstrap.css
-!public/libraries/bootstrap-5.0.2-dist/css/bootstrap.css.map
-!public/libraries/bootstrap-5.0.2-dist/css/bootstrap.min.css
-!public/libraries/bootstrap-5.0.2-dist/css/bootstrap.min.css.map
-
+package-lock.json
 mix-manifest.json

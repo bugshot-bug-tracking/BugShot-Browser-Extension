@@ -14,7 +14,7 @@
   }
 
   .close-button {
-    content: url("/assets/images/svg/icons/x-lg.svg");
+    content: url("/assets/icons/x-lg.svg");
   }
   .title > .content {
     font-size: 20px;
@@ -44,7 +44,7 @@
 
     img {
       transition: 0.3s;
-      content: url("/assets/images/svg/icons/caret-down-fill.svg");
+      content: url("/assets/icons/caret-down-fill.svg");
     }
 
     &.open {
@@ -77,6 +77,11 @@
 
       label {
         font-weight: 500;
+      }
+
+      .selector {
+        flex-direction: column;
+        align-items: flex-start;
       }
     }
 

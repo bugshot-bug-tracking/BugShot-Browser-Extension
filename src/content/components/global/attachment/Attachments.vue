@@ -39,7 +39,7 @@ export default {
     name: "Attachments",
     props: {
         bug: Object,
-        isRemote: Boolean, // this is intended to be used as a use-case flag, if the data is send to db directly or locally processed
+        isRemote: Boolean, // this is intended to be used as a use-case flag, if the data is send to db directly or locally in RAM
     },
     emits: ["getLocal"],
     setup(props, context) {

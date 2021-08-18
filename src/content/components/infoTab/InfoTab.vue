@@ -8,9 +8,9 @@
             <Attachments :bug="bug" :isRemote="true" />
         </Container>
 
-        <Container>
-            <Comments />
-        </Container>
+        <!-- <Container>
+            <Comments :bug="bug" />
+        </Container> -->
     </Tab>
 </template>
 

@@ -1,6 +1,8 @@
 const mix = require("laravel-mix");
 const webpack = require("webpack");
 
+
+// General Laravel Mix settings
 mix
 	.setPublicPath("./")
 	.options({
@@ -18,21 +20,24 @@ mix
 
 mix.extract({ to: './dist/vendor.js', }).options({ runtimeChunkPath: './dist' });
 
-mix
-	.copy("src/popup/popup.html", "dist/popup")
-	.sass("src/popup/assets/css/popup.scss", "dist/popup/assets/css")
-	.js('src/popup/popup.js', 'dist/popup').vue({ version: 3 });
-
+// Background files
 mix
 	.copy('src/background/background.js', 'dist')
-	.copy('src/manifest.json', 'dist')
-	.copy('README.md', 'dist')
-	.copyDirectory('public', 'dist')
 	.copy("node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js", "./dist/libraries/")
 
+// Popup files
+mix
+	.copy("src/popup/popup.html", "dist/popup")
+	.js('src/popup/popup.js', 'dist/popup').vue();
 
-
+// Content files
 mix
 	.js('src/content/content.js', 'dist/content').vue()
 	.sass("src/content/Styles.scss", "dist/content/Styles.css")
+
+// Misc files
+mix
+	.copyDirectory('public', 'dist')
+	.copy('src/manifest.json', 'dist')
+	.copy('README.md', 'dist')
 

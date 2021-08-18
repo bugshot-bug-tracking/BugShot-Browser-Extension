@@ -16,8 +16,8 @@ class BugShot extends HTMLElement {
 		super();
 		this.attachShadow({ mode: 'open' });
 
-		this.shadowRoot.innerHTML = `<div id="bugshotcontainer"></div>`;
 		Vue.createApp(Content).mount(this.shadowRoot);
+
 		setCSS(this.shadowRoot)
 	}
 
@@ -27,9 +27,7 @@ class BugShot extends HTMLElement {
 // Add CSS stylesheet links in the provided DOM
 function setCSS(dom) {
 	let styleSheet = [
-		chrome.runtime.getURL("assets/css/content_class.css"),
-		chrome.runtime.getURL("assets/css/content.css"),
-		chrome.runtime.getURL("libraries/bootstrap-5.0.2-dist/css/bootstrap.min.css"),
+		chrome.runtime.getURL("/libraries/bootstrap.css"),
 		chrome.runtime.getURL("/content/Styles.css")
 	];
 

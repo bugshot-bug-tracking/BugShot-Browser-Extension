@@ -368,67 +368,49 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
 	logged().then(response => {
 
-		if (!response) return; // If not logged in exit
+		// If not logged in exit
+		if (!response) return;
 
-		if (changeInfo.status === 'complete' && /^http/.test(tab.url)) { // When tab finished loading and it's a legit one (http/https)
+		// If tab hasn't finished loading or it's not a legit one (http/https)
+		if (!((changeInfo.status === 'complete') && /^http/.test(tab.url))) return;
 
-			let domain = (new URL(tab.url)).hostname; // Get domain name of the current page
+		// Get domain name of the current page
+		let domain = (new URL(tab.url)).hostname;
 
-			getProjectWithCache(tab.url) // Get the project info from storage or remote with cacheing if from remote
-				.then(response => {
-					console.log({ domain, response });
+		// Get the project info from storage or remote (with cacheing if from remote)
+		getProjectWithCache(tab.url)
+			.then(response => {
+				console.log({ domain, response });
 
-					if (!response) return; // If no project exit
+				if (!response) return; // If no project exit
 
-					// Inject the webcomponents handler
-					// ! this may pose a problem later if there are any confilicts with the original page scripts
-					chrome.scripting.executeScript({
-						target: { tabId: tabId },
-						files: ["libraries/webcomponents-bundle.js"]
-					}).then(() => {
-						console.log(`Injected webcomponents handler in "${domain}".`);;
-					}).then(() => {
+				// Inject the scripts in page
+				// ! this may pose a problem later if there are any confilicts with the original page scripts
+				// ? isolate worlds possible solves this ! not tested ¡
 
-						// Inject the content script 
-						chrome.scripting.executeScript({
-							target: { tabId: tabId },
-							files: ["manifest.js"]
-						}).then(() => {
-							console.log(`Injected manifest in "${domain}".`);;
-						});
+				loadScript(tabId, "libraries/webcomponents-bundle.js", "WebComponents", domain);
+				loadScript(tabId, "manifest.js", "Manifest", domain);
+				loadScript(tabId, "vendor.js", "Vendor", domain);
+				loadScript(tabId, "content/content.js", "Content", domain);
 
-					}).then(() => {
+			})
+			.catch(err => {
+				console.log({ domain, result: err, location: "getProjectWithCacheing" });
+			});
 
-						// Inject the content script 
-						chrome.scripting.executeScript({
-							target: { tabId: tabId },
-							files: ["vendor.js"]
-						}).then(() => {
-							console.log(`Injected vendor in "${domain}".`);;
-						});
-
-					}).then(() => {
-
-						// Inject the content script 
-						chrome.scripting.executeScript({
-							target: { tabId: tabId },
-							files: ["content/content.js"]
-						}).then(() => {
-							console.log(`Injected content in "${domain}".`);;
-						});
-
-					});
-
-				})
-				.catch(err => {
-					console.log({ domain, result: err, location: "getProjectWithCacheing" });
-				});
-		}
 	});
 
 });
 
+function loadScript(tabId, scriptPath, name, domain) {
 
+	chrome.scripting.executeScript({
+		target: { tabId: tabId },
+		files: [scriptPath]
+	}).then(() => {
+		console.log(`Injected ${name} in "${domain}".`)
+	});
+}
 
 /**
  * Check if the URL belong to a project and return the details
