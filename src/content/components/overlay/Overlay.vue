@@ -67,6 +67,36 @@ export default {
                         message: "takeScreenshot",
                     },
                     (response) => {
+                        const generateQuerySelector = (el) => {
+                            if (el.tagName.toLowerCase() == "html")
+                                return "html";
+                            let str = el.tagName.toLowerCase();
+
+                            str += el.id != "" ? "#" + el.id : "";
+
+                            if (
+                                (typeof el.className === "string" ||
+                                    el.className instanceof String) &&
+                                el.className !== ""
+                            ) {
+                                let classes = el.className.split(/\s/);
+                                for (let i = 0; i < classes.length; i++)
+                                    str += "." + classes[i];
+                            }
+                            return (
+                                generateQuerySelector(el.parentNode) +
+                                " > " +
+                                str
+                            );
+                        };
+
+                        props.details.selector = generateQuerySelector(
+                            document.elementFromPoint(
+                                event.clientX,
+                                event.clientY
+                            )
+                        );
+
                         // Show overlay again
                         showOverlay.value = true;
 
@@ -114,7 +144,6 @@ export default {
                         // NEXT oppen bug form
                         props.details.mark_coords = { x: clientX, y: clientY };
 
-                        props.details.selector = "/";
                         context.emit("formOpen");
                     }
                 );
