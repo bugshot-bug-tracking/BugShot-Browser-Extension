@@ -23,7 +23,9 @@
             </div>
         </div>
 
-        <div class="screenshot" />
+        <div class="screenshot">
+            <Screenshot :bug="bug" />
+        </div>
 
         <div class="url">
             <label>URL:</label>
@@ -92,8 +94,10 @@
 
 <script>
 import { ref } from "vue";
+import Screenshot from "../../global/screenshot/Screenshot.vue";
 
 export default {
+    components: { Screenshot },
     name: "Info",
     props: ["bug"],
     emits: ["close"],

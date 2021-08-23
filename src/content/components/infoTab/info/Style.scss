@@ -52,6 +52,7 @@
         transition: 0.3s;
         transform: rotate(180deg);
       }
+
       .technical-info {
         max-height: initial;
         transition: max-height 0.3s ease-out;
@@ -104,9 +105,10 @@
 
   .screenshot {
     width: 100%;
-    height: 230px;
+    height: 170px;
     margin: 0.4em 0;
     background-color: grey;
+    border: 2px solid #eee5fc;
   }
 
   .url {
@@ -124,6 +126,7 @@
       }
     }
   }
+
   .grid1x2 {
     display: grid;
     grid-template-columns: 1fr 1fr;

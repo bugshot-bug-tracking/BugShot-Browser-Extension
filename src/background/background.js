@@ -173,6 +173,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			return true;
 			break;
 
+		case "getScreenshots":
+			getScreenshots(sender.tab.url, request.payload.bug_id)
+				.then((response) => {
+					sendResponse({
+						message: "ok",
+						payload: response,
+					});
+				})
+				.catch((err) => {
+					console.log(err);
+
+					sendResponse({
+						message: "error",
+						error: err,
+					});
+				});
+
+			return true;
+			break;
 
 		case "sendBug":
 			let bug_details = {
@@ -547,8 +566,75 @@ async function takeScreenshot(windowID) {
 	return screenshot;
 }
 
-async function sendBugDetails(bug_details) {
+async function getScreenshots(projectURL, bug_id) {
+	let screenArray = [];
 
+	let infos = await getScreenshotsInfo(projectURL, bug_id);
+
+	for (let index = 0; index < infos.data.length; index++) {
+		const info = infos.data[index];
+
+		let data = await getScreenshotsData(projectURL, bug_id, info.id);
+
+		let screenshot = {
+			id: info.id,
+			designation: info.designation,
+			data: `data:image/jpeg;base64,${data.data.base64}`,
+			position: {
+				x: data.data.position_x,
+				y: data.data.position_y,
+			},
+		};
+
+		screenArray.push(screenshot);
+
+		if (index === infos.data.length - 1) return screenArray;
+	}
+
+	return [];
+}
+
+async function getScreenshotsInfo(projectURL, bug_id) {
+	let project = await getProjectWithCache(projectURL); // Will throw error if project not in remote
+
+	if (project === null) return null; // In case the project was taken from storage and no info is given
+
+	let url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/screenshots`;
+
+	let response = await fetch(url, {
+		method: "GET",
+		headers: {
+			clientId: "5",
+			version: "1.0.0",
+		},
+	});
+
+	response = await response.json();
+
+	return response;
+}
+
+async function getScreenshotsData(projectURL, bug_id, screenshot_id) {
+	let project = await getProjectWithCache(projectURL); // Will throw error if project not in remote
+
+	if (project === null) return null; // In case the project was taken from storage and no info is given
+
+	let url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/screenshots/${screenshot_id}`;
+
+	let response = await fetch(url, {
+		method: "GET",
+		headers: {
+			clientId: "5",
+			version: "1.0.0",
+		},
+	});
+
+	response = await response.json();
+
+	return response;
+}
+
+async function sendBugDetails(bug_details) {
 	let project = await getProjectWithCache(bug_details.url);
 
 	let url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs`;
