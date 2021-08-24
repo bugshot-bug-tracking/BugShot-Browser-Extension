@@ -3,24 +3,59 @@
         class="thumbnail"
         :src="thumbnail"
         alt="Screenshots"
-        @click="modalTogle"
+        @click="modal = !modal"
     />
+
+    <Modal :show="modal" @close="modal = !modal">
+        <img :src="shownImage.image" alt="Screenshots" />
+        <template v-slot:extra>
+            <div class="controls-bottom">
+                <div class="controls">
+                    <div class="btn btn-hide-mark">Hide mark</div>
+                    <div class="images-counter" v-if="images.length > 1">
+                        {{ shownImage.number }} of {{ images.length }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls-side" v-if="images.length > 1">
+                <div class="btn btn-side-arrow arrow-left" @click="previous" />
+                <div class="btn btn-side-arrow arrow-right" @click="next" />
+            </div>
+        </template>
+    </Modal>
 </template>
 
 
 <script>
 import { computed, onMounted, ref, watch } from "vue";
+import Modal from "../modal/Modal.vue";
 
 export default {
+    components: { Modal },
     name: "Screenshot",
     props: {
         bug: Object,
     },
     setup(props, context) {
         const images = ref([{}]);
-        const modal = ref(null);
+        const modal = ref(false);
 
-        const modalTogle = () => {};
+        const counter = ref(0);
+
+        const shownImage = computed(() => {
+            return {
+                image: images.value[counter.value].data,
+                number: counter.value + 1,
+            };
+        });
+
+        const previous = () => {
+            if (counter.value > 0) counter.value--;
+        };
+        const next = () => {
+            if (counter.value < images.value.length - 1) counter.value++;
+        };
 
         const update = () => {
             chrome.runtime.sendMessage(
@@ -31,15 +66,12 @@ export default {
                     },
                 },
                 (response) => {
-                    console.log({ screenArray: response });
-
-                    images.value = response.payload;
-
                     switch (response.message) {
                         case "error":
                             throw response.error;
 
                         case "ok":
+                            images.value = response.payload;
                             console.info("Request get screenshots: ok!");
                             break;
                     }
@@ -58,7 +90,14 @@ export default {
 
         watch(props, update);
 
-        return { images, modal, thumbnail, modalTogle };
+        return {
+            images,
+            modal,
+            thumbnail,
+            shownImage,
+            previous,
+            next,
+        };
     },
 };
 </script>

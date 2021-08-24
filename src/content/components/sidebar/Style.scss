@@ -26,10 +26,12 @@
   }
 
   #logo {
-    height: 100vh;
     background-image: url("/assets/images/global/logo_bugshot.svg");
     background-position: center;
     background-repeat: no-repeat;
+    background-size: contain;
+    background-origin: content-box;
+    padding: 0 1vw;
 
     &:hover {
       cursor: pointer;
@@ -73,6 +75,7 @@
     background-image: url("/assets/images/sidebar/new_bug_default.svg");
     background-position: center;
     background-repeat: no-repeat;
+    background-size: contain;
 
     &:hover {
       background-image: url("/assets/images/sidebar/new_bug_hover.svg");

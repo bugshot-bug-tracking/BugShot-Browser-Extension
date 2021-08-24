@@ -1,0 +1,76 @@
+.modal-mask {
+  position: fixed;
+  z-index: 9998;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: table;
+  transition: opacity 0.3s ease;
+}
+
+.modal-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.modal-container {
+  height: fit-content;
+  width: fit-content;
+  max-height: 95vh;
+  max-width: 95vw;
+  position: relative;
+  margin: auto;
+  background-color: transparent;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 33%);
+  transition: all 0.3s ease;
+  font-family: Helvetica, Arial, sans-serif;
+
+  > .btn-modal-close {
+    position: absolute;
+    top: -13px;
+    right: -13px;
+    background-image: url("/assets/icons/x-lg.svg");
+    background-repeat: no-repeat;
+    width: 16px;
+    height: 16px;
+    background-color: #fff !important;
+    padding: 12px !important;
+    border-radius: 100% !important;
+    background-position: center;
+    z-index: 1;
+    box-shadow: -1px 2px 10px rgb(0 0 0 / 50%);
+  }
+
+  > .modal-content {
+    contain: content;
+    max-height: 90vh;
+    overflow: hidden;
+    scroll-behavior: auto;
+  }
+}
+
+/*
+ * The following styles are auto-applied to elements with
+ * transition="modal" when their visibility is toggled
+ * by Vue.js.
+ *
+ * You can easily play with the modal transition by editing
+ * these styles.
+ */
+
+.modal-enter {
+  opacity: 0;
+}
+
+.modal-leave-active {
+  opacity: 0;
+}
+
+.modal-enter .modal-container,
+.modal-leave-active .modal-container {
+  -webkit-transform: scale(1.1);
+  transform: scale(1.1);
+}
