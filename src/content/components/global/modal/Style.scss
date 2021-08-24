@@ -47,8 +47,12 @@
   > .modal-content {
     contain: content;
     max-height: 90vh;
-    overflow: hidden;
+    overflow: auto;
     scroll-behavior: auto;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 
