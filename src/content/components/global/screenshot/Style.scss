@@ -1,6 +1,31 @@
-.thumbnail {
-  width: 100%;
+.thumbnail-wraper {
   cursor: pointer;
+  .thumbnail {
+    width: 100%;
+  }
+
+  .enlarge {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-image: url("/assets/icons/icn_zoom.svg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: rgba(0, 0, 0, 0.2);
+    background-size: 10%;
+
+    opacity: 0;
+    transition: 0.2s ease-in-out;
+  }
+  &:hover {
+    .enlarge {
+      transition: 0.2s ease-in-out;
+      opacity: 1;
+    }
+  }
 }
 
 .controls-bottom {

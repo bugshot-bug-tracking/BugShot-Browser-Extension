@@ -1,10 +1,8 @@
 <template>
-    <img
-        class="thumbnail"
-        :src="thumbnail"
-        alt="Screenshots"
-        @click="modal = !modal"
-    />
+    <div class="thumbnail-wraper" @click="modal = !modal">
+        <img class="thumbnail" :src="thumbnail" alt="Screenshots" />
+        <div class="enlarge" />
+    </div>
 
     <Modal :show="modal" @close="modal = !modal">
         <img :src="shownImage.image" alt="Screenshots" />
