@@ -1,18 +1,18 @@
 <template>
     <div id="sidebar" :class="{ open: open }">
         <div id="logo" @click="logoClick"></div>
-        <div
-            id="bug-list-button"
-            v-show="open"
-            @click="bugListButtonClick"
-        ></div>
-        <div id="admin-button" v-show="open" @click="adminButtonClick"></div>
+
+        <div id="bug-list-button" v-show="open" @click="$emit('list')" />
+
+        <div id="admin-button" v-show="open" @click="adminButtonClick" />
+
         <div
             id="project-button"
             v-show="open"
             @click="projectButtonClick"
         ></div>
-        <div id="add-button" v-show="open" @click="addButtonClick"></div>
+
+        <div id="add-button" v-show="open" @click="$emit('add')" />
     </div>
 </template>
 
@@ -25,15 +25,11 @@ export default {
     setup(props, context) {
         const open = ref(false);
 
-        const logoClick = (event) => {
+        const logoClick = () => {
             open.value = !open.value;
             if (open.value === false)
-                //custom event to trigger default state if sidebar is closed
+                // trigger default state if sidebar is closed
                 context.emit("default");
-        };
-
-        const bugListButtonClick = (event) => {
-            context.emit("list");
         };
 
         const adminButtonClick = (event) => {
@@ -56,17 +52,11 @@ export default {
             );
         };
 
-        const addButtonClick = (event) => {
-            context.emit("add");
-        };
-
         return {
             open,
             logoClick,
-            bugListButtonClick,
             adminButtonClick,
             projectButtonClick,
-            addButtonClick,
         };
     },
 };

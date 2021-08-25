@@ -1,5 +1,6 @@
 .thumbnail-wraper {
   cursor: pointer;
+
   .thumbnail {
     width: 100%;
   }
@@ -20,6 +21,7 @@
     opacity: 0;
     transition: 0.2s ease-in-out;
   }
+
   &:hover {
     .enlarge {
       transition: 0.2s ease-in-out;

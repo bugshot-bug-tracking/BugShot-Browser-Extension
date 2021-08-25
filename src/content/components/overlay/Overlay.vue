@@ -6,9 +6,9 @@
         @click.once="marked"
     >
         <div
-            id="mark"
+            class="marker"
             v-if="mark.on"
-            :style="`top: ${mark.y - 56}px; left: ${mark.x - 16}px;`"
+            :style="`left: ${mark.x - 16}px; top: ${mark.y - 56}px;`"
             :class="priority"
         ></div>
     </div>
@@ -29,26 +29,7 @@ export default {
             x: 0,
             y: 0,
         });
-        const priority = computed(() => {
-            switch (Number(props.details.priority)) {
-                case 1:
-                    return "minor";
-                    break;
-                case 2:
-                    return "normal";
-                    break;
-                case 3:
-                    return "important";
-                    break;
-                case 4:
-                    return "critical";
-                    break;
 
-                default:
-                    return "normal";
-                    break;
-            }
-        });
         const marked = (event) => {
             event.stopImmediatePropagation();
 
@@ -118,12 +99,9 @@ export default {
                         // Save screenshot in memory
                         props.details.screenshot = response.payload;
                         props.details.priority = 2;
+
                         // Show sidebar again
                         context.emit("sidebar");
-
-                        // Change the overlay style as marked state
-
-                        // NEXT add a marker to the overlay just for show
 
                         // coordinates relative to what user sees on screen
                         let clientX = event.clientX;
@@ -148,6 +126,22 @@ export default {
                 );
             }, 100);
         };
+
+        const priority = computed(() => {
+            switch (Number(props.details.priority)) {
+                case 1:
+                    return "minor";
+                case 2:
+                    return "normal";
+                case 3:
+                    return "important";
+                case 4:
+                    return "critical";
+
+                default:
+                    return "normal";
+            }
+        });
 
         return {
             showOverlay,

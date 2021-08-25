@@ -1,6 +1,6 @@
 <template>
     <div class="tab">
-        <slot></slot>
+        <slot />
     </div>
 </template>
 

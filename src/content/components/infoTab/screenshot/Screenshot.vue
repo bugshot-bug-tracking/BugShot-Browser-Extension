@@ -9,7 +9,7 @@
 
         <div
             v-show="showMark"
-            id="mark"
+            class="marker"
             :class="priority"
             :style="` 
 			left: calc(${shownImage.mark.x}% - 16px);
@@ -24,7 +24,7 @@
                         class="btn btn-hide-mark"
                         @click="showMark = !showMark"
                     >
-                        Hide mark
+                        {{ showMark ? "Hide" : "Show" }} mark
                     </div>
 
                     <div class="images-counter" v-if="images.length > 1">
@@ -43,7 +43,7 @@
 
 <script>
 import { computed, onMounted, ref, watch } from "vue";
-import Modal from "../modal/Modal.vue";
+import Modal from "../../global/modal/Modal.vue";
 
 export default {
     components: { Modal },
@@ -52,7 +52,6 @@ export default {
         bug: Object,
     },
     emits: ["loading"],
-
     setup(props, context) {
         const images = ref([{}]);
         const modal = ref(false);
@@ -125,20 +124,15 @@ export default {
             switch (Number(props.bug.priority_id)) {
                 case 1:
                     return "minor";
-                    break;
                 case 2:
                     return "normal";
-                    break;
                 case 3:
                     return "important";
-                    break;
                 case 4:
                     return "critical";
-                    break;
 
                 default:
                     return "normal";
-                    break;
             }
         });
 

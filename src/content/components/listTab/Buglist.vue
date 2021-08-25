@@ -11,14 +11,14 @@
                 v-for="bug in bugs.info[status.id]"
                 :key="bug.id"
                 :bug="bug"
-                @info="info"
+                @info="$emit('info', $event)"
             />
         </BugGroup>
     </Tab>
 </template>
 
 <script>
-import { ref } from "vue";
+import { reactive, ref } from "vue";
 
 import Tab from "../global/tab/Tab.vue";
 import State from "../global/state/State.vue";
@@ -34,15 +34,9 @@ export default {
         BugCard,
     },
     emits: ["info"],
-    setup(props, context) {
-        const bugs = ref({ status: [], info: [] });
+    setup() {
+        const bugs = reactive({ status: [], info: [] });
         const state = ref("loading");
-
-        const info = (bug) => {
-            context.emit("info", bug);
-        };
-
-        state.value = "loading";
 
         chrome.runtime.sendMessage(
             {
@@ -67,16 +61,16 @@ export default {
                     return;
                 }
 
-                bugs.value.status = [];
-                bugs.value.info = [];
+                bugs.status = [];
+                bugs.info = [];
 
                 response.payload.forEach((stage) => {
-                    bugs.value.status.push({
+                    bugs.status.push({
                         id: stage.id,
                         name: stage.designation,
                     });
 
-                    bugs.value.info[stage.id] = stage.bugs;
+                    bugs.info[stage.id] = stage.bugs;
 
                     stage.bugs.forEach((bug) => {
                         if (bug.deadline === null) bug.deadline = "no deadline";
@@ -88,7 +82,6 @@ export default {
         return {
             bugs,
             state,
-            info,
         };
     },
 };

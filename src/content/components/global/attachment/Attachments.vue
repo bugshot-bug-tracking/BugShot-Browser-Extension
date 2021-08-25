@@ -48,13 +48,12 @@ export default {
         bug: Object,
         isRemote: Boolean, // this is intended to be used as a use-case flag, if the data is send to db directly or locally in RAM
     },
-    emits: ["getLocal", "loading"],
+    emits: ["getLocal"],
 
     setup(props, context) {
         const files = ref([]);
         const attachments = ref([]);
         const err = ref("");
-
         const isLoading = ref(false);
 
         const toBase64 = (file) =>

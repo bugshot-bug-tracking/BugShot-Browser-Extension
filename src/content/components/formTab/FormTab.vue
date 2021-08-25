@@ -79,11 +79,12 @@
                 >
                     <span>Report Bug!</span>
                 </button>
+
                 <button
                     id="form-reset"
                     type="reset"
                     class="btn btn-secondary mb-2"
-                    @click="cancel"
+                    @click="$emit('default')"
                 >
                     <span>Cancel</span>
                 </button>
@@ -107,13 +108,14 @@ import Attachments from "../global/attachment/Attachments.vue";
 export default {
     components: { State, Tab, Container, Attachments },
     name: "FormTab",
-    props: ["bug"],
+    props: { bug: Object },
     emits: ["default"],
     setup(props, context) {
+        // good for form reset, debatable if really needed
         const state = ref(null);
         const files64 = ref([]);
 
-        const submit = (event) => {
+        const submit = () => {
             props.bug.priority = Number(props.bug.priority);
 
             state.value = "loading";
@@ -146,9 +148,7 @@ export default {
                     console.log(response.payload);
                     console.log("Bug report sent!");
 
-                    let newBugInfo = response.payload;
-                    console.log("here");
-                    submitAttachments(newBugInfo.id).then(() => {
+                    submitAttachments(response.payload.id).then(() => {
                         console.log("Bug attachments sent!");
 
                         state.value = "success";
@@ -195,14 +195,12 @@ export default {
             return Promise.all(filesPromises);
         };
 
-        const cancel = () => {
-            context.emit("default");
-        };
+        // get a reference to the file uploaded via attachments component
         const localFiles = (files) => {
             files64.value = files.value;
         };
 
-        return { state, submit, cancel, localFiles };
+        return { state, submit, localFiles };
     },
 };
 </script>

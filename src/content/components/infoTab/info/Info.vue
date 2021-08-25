@@ -73,10 +73,7 @@
         <div class="grid1x2 my-3">
             <div class="deadline grid1x2">
                 <label>Priority:</label>
-                <div
-                    class="content priority"
-                    :class="'p' + bug.priority_id"
-                ></div>
+                <div class="content priority" :class="'p' + bug.priority_id" />
             </div>
 
             <div class="grid1x2 status">
@@ -94,14 +91,12 @@
 
 <script>
 import { ref } from "vue";
-import Screenshot from "../../global/screenshot/Screenshot.vue";
+import Screenshot from "../screenshot/Screenshot.vue";
 
 export default {
     components: { Screenshot },
     name: "Info",
-    props: {
-        bug: Object,
-    },
+    props: { bug: Object },
     emits: ["close", "loading"],
     setup(props, context) {
         const open = ref(false);

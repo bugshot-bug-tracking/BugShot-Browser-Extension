@@ -7,9 +7,11 @@
                         class="btn btn-modal-close"
                         @click="$emit('close')"
                     />
+
                     <div class="modal-content">
                         <slot />
                     </div>
+
                     <slot name="extra" />
                 </div>
             </div>

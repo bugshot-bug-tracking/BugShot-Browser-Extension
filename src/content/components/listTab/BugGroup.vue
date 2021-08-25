@@ -3,7 +3,7 @@
         <div class="group-name">{{ name }}</div>
 
         <div class="group-bugs">
-            <slot></slot>
+            <slot />
         </div>
     </div>
 </template>
@@ -11,6 +11,6 @@
 <script>
 export default {
     name: "BugGroup",
-    props: ["name"],
+    props: { name: String },
 };
 </script>
