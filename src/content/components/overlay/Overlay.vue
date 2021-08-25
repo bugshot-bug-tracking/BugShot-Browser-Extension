@@ -30,7 +30,6 @@ export default {
             y: 0,
         });
         const priority = computed(() => {
-            props.details.priority;
             switch (Number(props.details.priority)) {
                 case 1:
                     return "minor";
