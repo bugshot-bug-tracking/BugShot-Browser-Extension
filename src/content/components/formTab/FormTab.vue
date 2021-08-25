@@ -99,9 +99,9 @@
 <script>
 import { ref } from "vue";
 
-import Tab from "../global/Tab.vue";
-import Container from "../global/Container.vue";
-import State from "../global/State.vue";
+import Tab from "../global/tab/Tab.vue";
+import Container from "../global/container/Container.vue";
+import State from "../global/state/State.vue";
 import Attachments from "../global/attachment/Attachments.vue";
 
 export default {

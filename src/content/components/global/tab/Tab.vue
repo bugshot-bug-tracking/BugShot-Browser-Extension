@@ -1,5 +1,5 @@
 <template>
-    <div id="tab">
+    <div class="tab">
         <slot></slot>
     </div>
 </template>
@@ -8,6 +8,5 @@
 <script>
 export default {
     name: "Tab",
-    setup() {},
 };
 </script>

@@ -23,8 +23,8 @@
 <script>
 import { ref } from "@vue/reactivity";
 
-import Tab from "../global/Tab.vue";
-import Container from "../global/Container.vue";
+import Tab from "../global/tab/Tab.vue";
+import Container from "../global/container/Container.vue";
 import Info from "./info/Info.vue";
 import Attachments from "../global/attachment/Attachments.vue";
 import State from "../global/state/State.vue";

@@ -20,10 +20,10 @@
 <script>
 import { ref } from "vue";
 
-import State from "../global/State.vue";
+import Tab from "../global/tab/Tab.vue";
+import State from "../global/state/State.vue";
 import BugGroup from "./BugGroup.vue";
 import BugCard from "./BugCard.vue";
-import Tab from "../global/Tab.vue";
 
 export default {
     name: "Buglist",

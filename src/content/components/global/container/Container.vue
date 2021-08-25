@@ -1,5 +1,5 @@
 <template>
-    <div id="container">
+    <div class="content-container">
         <slot></slot>
     </div>
 </template>
@@ -7,6 +7,5 @@
 <script>
 export default {
     name: "Container",
-    setup() {},
 };
 </script>
