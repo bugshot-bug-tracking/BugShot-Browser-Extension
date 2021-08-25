@@ -1,5 +1,5 @@
 <template>
-    <transition name="modal">
+    <transition :duration="100" name="modal">
         <div class="modal-mask" v-if="show">
             <div class="modal-wrapper" @click.self="$emit('close')">
                 <div class="modal-container">
