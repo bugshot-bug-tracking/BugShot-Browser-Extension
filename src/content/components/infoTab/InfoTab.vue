@@ -1,37 +1,49 @@
 <template>
     <Tab>
+        <State :state="'loading'" :show="isLoading" />
+
         <Container>
-            <Info :bug="bug" @close="close" />
+            <Info :bug="bug" @close="$emit('close')" @loading="infoLoading" />
         </Container>
 
         <Container>
             <Attachments :bug="bug" :isRemote="true" />
         </Container>
 
-        <!-- <Container>
-            <Comments :bug="bug" />
-        </Container> -->
+        <div v-if="false">
+            <!-- 
+				<Container>
+					<Comments :bug="bug"/>
+				</Container> 
+			-->
+        </div>
     </Tab>
 </template>
 
 <script>
+import { ref } from "@vue/reactivity";
+
 import Tab from "../global/Tab.vue";
 import Container from "../global/Container.vue";
 import Info from "./info/Info.vue";
 import Attachments from "../global/attachment/Attachments.vue";
-import Comments from "./comments/Comments.vue";
+import State from "../global/state/State.vue";
 
 export default {
-    components: { Tab, Container, Info, Attachments, Comments },
+    components: { Tab, Container, Info, Attachments, State },
     name: "InfoTab",
-    props: ["bug"],
+    props: { bug: Object },
     emits: ["close"],
-    setup(props, context) {
-        const close = () => {
-            context.emit("close");
+    setup() {
+        const isLoading = ref(false);
+
+        const infoLoading = (value) => {
+            isLoading.value = value;
         };
+
         return {
-            close,
+            isLoading,
+            infoLoading,
         };
     },
 };

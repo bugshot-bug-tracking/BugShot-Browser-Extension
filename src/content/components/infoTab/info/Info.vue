@@ -5,7 +5,7 @@
                 <div class="content">{{ bug.designation }}</div>
             </div>
 
-            <img class="close-button btn" @click="close" />
+            <img class="close-button btn" @click="$emit('close')" />
         </div>
 
         <div class="id">
@@ -24,7 +24,7 @@
         </div>
 
         <div class="screenshot">
-            <Screenshot :bug="bug" />
+            <Screenshot :bug="bug" @loading="setLoading" />
         </div>
 
         <div class="url">
@@ -42,7 +42,7 @@
         <div id="technical" :class="{ open: open }">
             <div
                 class="technical-label d-inline-flex justify-content-between"
-                @click="collapseTechnical"
+                @click="open = !open"
             >
                 <span>Technical information:</span>
                 <img />
@@ -99,20 +99,18 @@ import Screenshot from "../../global/screenshot/Screenshot.vue";
 export default {
     components: { Screenshot },
     name: "Info",
-    props: ["bug"],
-    emits: ["close"],
+    props: {
+        bug: Object,
+    },
+    emits: ["close", "loading"],
     setup(props, context) {
         const open = ref(false);
 
-        const collapseTechnical = () => {
-            open.value = !open.value;
+        const setLoading = (value) => {
+            context.emit("loading", value);
         };
 
-        const close = () => {
-            context.emit("close");
-        };
-
-        return { open, collapseTechnical, close };
+        return { open, setLoading };
     },
 };
 </script>

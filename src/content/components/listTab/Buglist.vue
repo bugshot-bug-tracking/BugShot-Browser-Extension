@@ -1,6 +1,6 @@
 <template>
     <Tab style="width: 17vw">
-        <State v-if="state !== null" :state="state" />
+        <State :show="state !== null" :state="state" />
 
         <BugGroup
             v-for="status in bugs.status"

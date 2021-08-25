@@ -1,6 +1,6 @@
 <template>
     <Tab>
-        <State v-if="state !== null" :state="state" />
+        <State :show="state !== null" :state="state" />
 
         <Container v-if="state === null">
             <form id="bug-form">

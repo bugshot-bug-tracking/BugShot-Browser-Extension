@@ -18,6 +18,12 @@
         </div>
 
         <div class="files">
+            <State
+                :state="'mini-loading'"
+                :show="isLoading"
+                style="z-index: 0"
+            />
+
             <div class="item" v-for="item in attachments" :key="item.id">
                 <AttachmentItem
                     :item="item"
@@ -33,19 +39,23 @@
 <script>
 import { onMounted, ref, watch } from "vue";
 import AttachmentItem from "./AttachmentItem.vue";
+import State from "../state/State.vue";
 
 export default {
-    components: { AttachmentItem },
+    components: { AttachmentItem, State },
     name: "Attachments",
     props: {
         bug: Object,
         isRemote: Boolean, // this is intended to be used as a use-case flag, if the data is send to db directly or locally in RAM
     },
-    emits: ["getLocal"],
+    emits: ["getLocal", "loading"],
+
     setup(props, context) {
         const files = ref([]);
         const attachments = ref([]);
         const err = ref("");
+
+        const isLoading = ref(false);
 
         const toBase64 = (file) =>
             new Promise((resolve, reject) => {
@@ -56,6 +66,8 @@ export default {
             });
 
         const upload = (event) => {
+            isLoading.value = true;
+
             files.value = event.target.files;
             err.value = "";
 
@@ -67,6 +79,7 @@ export default {
                 attachments.value.length + files.value.length > 10
             ) {
                 err.value = "You are limited to a maximum of 10 files";
+                isLoading.value = false;
                 return;
             }
 
@@ -88,8 +101,11 @@ export default {
         };
 
         const uploadRemote = (filesInfo) => {
+            isLoading.value = true;
+
             filesInfo.forEach((file) => {
                 try {
+                    isLoading.value = true;
                     toBase64(file).then((data64) => {
                         chrome.runtime.sendMessage(
                             {
@@ -110,6 +126,8 @@ export default {
                                         throw response.error;
 
                                     case "ok":
+                                        isLoading.value = false;
+
                                         updateAttachments();
                                         console.info("Attachment Uploaded.");
                                         break;
@@ -118,6 +136,8 @@ export default {
                         );
                     });
                 } catch (error) {
+                    isLoading.value = false;
+
                     err.value = error;
                     console.error(error);
                 }
@@ -126,6 +146,8 @@ export default {
 
         const uploadLocal = (filesInfo) => {
             try {
+                isLoading.value = true;
+
                 let filesPromises = filesInfo.map((file) => {
                     return new Promise((resolve) => {
                         resolve(toBase64(file));
@@ -139,9 +161,14 @@ export default {
                             data: files64[index],
                         });
                     }
+
+                    isLoading.value = false;
+
                     context.emit("getLocal", attachments);
                 });
             } catch (error) {
+                isLoading.value = false;
+
                 console.error(error);
             }
         };
@@ -182,6 +209,8 @@ export default {
         };
 
         const deleteRemote = (item) => {
+            isLoading.value = true;
+
             chrome.runtime.sendMessage(
                 {
                     message: "deleteAttachment",
@@ -191,6 +220,8 @@ export default {
                     },
                 },
                 (response) => {
+                    isLoading.value = false;
+
                     switch (response.message) {
                         case "ok":
                             console.info("Request delete attachment: ok!");
@@ -218,7 +249,11 @@ export default {
 
         const updateAttachments = () => {
             err.value = "";
+
             if (props.isRemote === false) return;
+
+            isLoading.value = true;
+
             chrome.runtime.sendMessage(
                 {
                     message: "getAttachment",
@@ -227,6 +262,8 @@ export default {
                     },
                 },
                 (response) => {
+                    isLoading.value = false;
+
                     switch (response.message) {
                         case "ok":
                             console.info("Request get attachments: ok!");
@@ -255,6 +292,7 @@ export default {
         watch(props, updateAttachments);
 
         return {
+            isLoading,
             files,
             attachments,
             err,

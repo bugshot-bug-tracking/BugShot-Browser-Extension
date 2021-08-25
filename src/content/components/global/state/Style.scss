@@ -1,0 +1,93 @@
+.state-wraper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+
+  .state {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: stretch;
+    height: inherit;
+    width: inherit;
+    position: relative;
+    background-color: #f8f8fc;
+
+    > .logo {
+      align-self: center;
+      width: 100%;
+      height: 25%;
+      background-position: center;
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    > .message {
+      align-self: center;
+      width: 80%;
+      height: 8%;
+      background-position: center;
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    &.success {
+      .logo {
+        background-image: url("/assets/images/gif/bug_confirmation.gif");
+      }
+
+      .message {
+        background-image: url("/assets/images/global/success.svg");
+      }
+    }
+
+    &.error {
+      .logo {
+        background-image: url("/assets/images/gif/error_bug.gif");
+      }
+
+      .message {
+        background-image: url("/assets/images/global/oops.svg");
+      }
+    }
+
+    &.loading {
+      > .logo {
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+
+        background-image: url("/assets/images/global/loading.svg");
+      }
+
+      > .message {
+        display: none;
+      }
+    }
+
+    &.mini-loading {
+      z-index: -1;
+
+      background-color: transparent;
+
+      > .logo {
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+
+        background-image: url("/assets/images/global/loading.svg");
+      }
+
+      > .message {
+        display: none;
+      }
+    }
+  }
+}

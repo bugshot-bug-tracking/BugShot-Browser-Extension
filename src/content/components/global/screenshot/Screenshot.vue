@@ -6,6 +6,7 @@
 
     <Modal :show="modal" @close="modal = !modal">
         <img :src="shownImage.image" alt="Screenshots" />
+
         <div
             v-show="showMark"
             id="mark"
@@ -25,6 +26,7 @@
                     >
                         Hide mark
                     </div>
+
                     <div class="images-counter" v-if="images.length > 1">
                         {{ shownImage.number }} of {{ images.length }}
                     </div>
@@ -39,7 +41,6 @@
     </Modal>
 </template>
 
-
 <script>
 import { computed, onMounted, ref, watch } from "vue";
 import Modal from "../modal/Modal.vue";
@@ -50,21 +51,29 @@ export default {
     props: {
         bug: Object,
     },
+    emits: ["loading"],
+
     setup(props, context) {
         const images = ref([{}]);
         const modal = ref(false);
         const showMark = ref(true);
-
         const counter = ref(0);
+
+        const setLoading = (value) => {
+            context.emit("loading", value);
+        };
 
         const previous = () => {
             if (counter.value > 0) counter.value--;
         };
+
         const next = () => {
             if (counter.value < images.value.length - 1) counter.value++;
         };
 
         const update = () => {
+            setLoading(true);
+
             chrome.runtime.sendMessage(
                 {
                     message: "getScreenshots",
@@ -73,6 +82,8 @@ export default {
                     },
                 },
                 (response) => {
+                    setLoading(false);
+
                     switch (response.message) {
                         case "error":
                             throw response.error;
@@ -144,6 +155,7 @@ export default {
             shownImage,
             priority,
             showMark,
+            setLoading,
             previous,
             next,
         };
