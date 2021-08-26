@@ -21,15 +21,16 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 		// If tab hasn't finished loading or it's not a legit one (http/https)
 		if (!(changeInfo.status === "complete" && /^http/.test(tab.url))) return;
 
+		// Get domain of the current page
+		let domain = new URL(tab.url).hostname;
+
 		// Get the project info from storage or remote (with cacheing if from remote)
 		getProject(tab.url)
 			.then((response) => {
-				// Get domain of the current page
-				let domain = new URL(tab.url).hostname;
 
 				console.log({ domain, response });
 
-				if (!response) return; // If no project exit
+				if (!response.id) return; // If no project exit
 
 				// Inject the scripts in page
 				// ! this may pose a problem later if there are any confilicts with the original page scripts
