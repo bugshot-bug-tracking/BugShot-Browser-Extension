@@ -1,19 +1,76 @@
+var baseURL = `https://bugshot.view4all.de`;
+var enableCache = true;
+
+/** Event listener on page update; injects content.js if there is a project for it */
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+	const loadScript = (tabId, scriptPath, name, domain) => {
+		chrome.scripting
+			.executeScript({
+				target: { tabId: tabId },
+				files: [scriptPath],
+			})
+			.then(() => {
+				console.log(`Injected ${name} in "${domain}".`);
+			});
+	};
+
+	logged().then((response) => {
+		// If not logged in exit
+		if (!response) return;
+
+		// If tab hasn't finished loading or it's not a legit one (http/https)
+		if (!(changeInfo.status === "complete" && /^http/.test(tab.url))) return;
+
+		// Get the project info from storage or remote (with cacheing if from remote)
+		getProject(tab.url)
+			.then((response) => {
+				// Get domain of the current page
+				let domain = new URL(tab.url).hostname;
+
+				console.log({ domain, response });
+
+				if (!response) return; // If no project exit
+
+				// Inject the scripts in page
+				// ! this may pose a problem later if there are any confilicts with the original page scripts
+				// ? isolate worlds possible solves this ! not tested ¡
+
+				loadScript(
+					tabId,
+					"libraries/webcomponents-bundle.js",
+					"WebComponents",
+					domain
+				); // For custom elements
+				loadScript(tabId, "manifest.js", "Manifest", domain); //
+				loadScript(tabId, "vendor.js", "Vendor", domain); // Node modules in one place not in every page script
+				loadScript(tabId, "content/content.js", "Content", domain); // The Bug-Shot in-page content(the sidebar)
+			})
+			.catch((err) => {
+				console.log({
+					domain,
+					result: err,
+					location: "Page Updated Listener",
+				});
+			});
+	});
+});
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	switch (request.message) {
 		case "login": //TODO validate inputs
 			logIn(request.payload)
 				.then((response) => {
 					/*
-										response data structure
-							  
-							  
-										response.data {
-											token: string,
-											user_id: int
-										}
-										response.message: string
-										response.success: boolean
-										*/
+						response data structure
+				
+				
+						response.data {
+							token: string,
+							user_id: int
+						}
+						response.message: string
+						response.success: boolean
+						*/
 
 					//TODO save the relevant info for other API calls
 
@@ -76,8 +133,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			break;
 
 		case "checkProject":
-			//TODO validate inputs //** determine if necessary or use direct calls on actions */
-			console.log({ request, sender });
 			getProject(sender.tab.url)
 				.then((response) => {
 					sendResponse({
@@ -86,65 +141,66 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 					});
 				})
 				.catch((err) => {
-					console.log(err);
 					sendResponse({
 						message: "error",
 						error: err,
 					});
+
+					console.error(err);
 				});
 
 			return true;
-			break;
 
 		case "getBugs":
 			getBugs(sender.tab.url)
 				.then((response) => {
-					if (response === null)
-						sendResponse({
-							message: "empty",
-						});
-					else
-						sendResponse({
-							message: "ok",
-							payload: response,
-						});
+					sendResponse({
+						message: "ok",
+						payload: response,
+					});
 				})
 				.catch((err) => {
 					sendResponse({
 						message: "error",
 						error: err,
 					});
+
+					console.error(err);
 				});
 
 			return true;
-			break;
 
 		case "openAdminPannel":
-			chrome.tabs.create({
-				url: `http://bugshot.view4all.de/`,
-			});
+			chrome.tabs
+				.create({
+					url: baseURL,
+				})
+				.then(() => {
+					sendResponse({
+						message: "ok",
+					});
+				});
 
-			sendResponse({
-				message: "ok",
-			});
-			break;
+			return true;
 
 		case "openProjectPannel":
-			let domain = new URL(sender.tab.url).hostname; // Get domain name of the sender
+			let domain = new URL(sender.tab.url).hostname; // Get domain from the sender URL
 
 			chrome.storage.local.get(domain, (data) => {
 				let project = Object.values(data)[0];
-				chrome.tabs.create({
-					url: `http://bugshot.view4all.de/companies/${project.company_id}/projects/${project.id}/statuses`,
-				});
 
-				sendResponse({
-					message: "ok",
-				});
+				chrome.tabs
+					.create({
+						url: `${baseURL}/companies/${project.company_id}/projects/${project.id}/statuses`,
+					})
+					.then(() => {
+						sendResponse({
+							message: "ok",
+						});
+					});
 			});
 
 			return true;
-			break;
 
 		case "takeScreenshot":
 			takeScreenshot(sender.tab.windowId)
@@ -155,15 +211,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 					});
 				})
 				.catch((err) => {
-					console.log(err);
-
 					sendResponse({
 						message: "error",
 						error: err,
 					});
+
+					console.error(err);
 				});
+
 			return true;
-			break;
 
 		case "getScreenshots":
 			getScreenshots(sender.tab.url, request.payload.bug_id)
@@ -174,16 +230,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 					});
 				})
 				.catch((err) => {
-					console.log(err);
-
 					sendResponse({
 						message: "error",
 						error: err,
 					});
-				});
 
+					console.error(err);
+				});
 			return true;
-			break;
 
 		case "sendBug":
 			let bug_details = {
@@ -197,7 +251,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 				mark_coords: request.payload.mark_coords, // this is an object {x, y}
 			};
 
-			console.log({ bug_details_from_content: bug_details });
 			sendBugDetails(bug_details)
 				.then((response) => {
 					sendBugScreenshot(bug_details, response.id).then(() => {
@@ -208,16 +261,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 					});
 				})
 				.catch((err) => {
-					console.log(err);
-
 					sendResponse({
 						message: "error",
 						error: err,
 					});
+
+					console.error(err);
 				});
 
 			return true;
-			break;
 
 		case "saveAttachment":
 			saveAttachment(
@@ -232,15 +284,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 					});
 				})
 				.catch((err) => {
-					console.log(err);
-
 					sendResponse({
 						message: "error",
 						error: err,
 					});
+
+					console.error(err);
 				});
+
 			return true;
-			break;
 
 		case "getAttachment":
 			getAttachment(sender.tab.url, request.payload.bug_id)
@@ -251,15 +303,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 					});
 				})
 				.catch((err) => {
-					console.log(err);
-
 					sendResponse({
 						message: "error",
 						error: err,
 					});
+
+					console.error(err);
 				});
+
 			return true;
-			break;
 
 		case "downloadAttachment":
 			downloadAttachment(
@@ -274,15 +326,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 					});
 				})
 				.catch((err) => {
-					console.log(err);
-
 					sendResponse({
 						message: "error",
 						error: err,
 					});
+
+					console.error(err);
 				});
+
 			return true;
-			break;
 
 		case "deleteAttachment":
 			deleteAttachment(
@@ -297,15 +349,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 					});
 				})
 				.catch((err) => {
-					console.log(err);
-
 					sendResponse({
 						message: "error",
 						error: err,
 					});
+
+					console.error(err);
 				});
+
 			return true;
-			break;
 
 		default:
 			sendResponse({
@@ -376,79 +428,58 @@ async function logged() {
 	return true;
 }
 
-/** Event listener on page update; injects content.js if there is a project for it */
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-	logged().then((response) => {
-		// If not logged in exit
-		if (!response) return;
+/**
+ * Check if the URL belong to a project and return the details
+ * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/*)
+ * @return {Promise} All info regarding current project or 'null' if not found
+ * @throws {Object} A 'message' and the 'response' object from fetch function
+ */
+async function getProject(projectURL) {
+	if (enableCache === false) return getProjectRemote(projectURL);
 
-		// If tab hasn't finished loading or it's not a legit one (http/https)
-		if (!(changeInfo.status === "complete" && /^http/.test(tab.url))) return;
+	let domain = new URL(projectURL).hostname; // Get domain from the URL
 
-		// Get domain name of the current page
-		let domain = new URL(tab.url).hostname;
+	// Check to see if it is already in local storage
+	let cacheProject = await getProjectFromCache(projectURL);
 
-		// Get the project info from storage or remote (with cacheing if from remote)
-		getProjectWithCache(tab.url)
-			.then((response) => {
-				console.log({ domain, response });
+	// If the domain is in cache but there is no porject asociated
+	if (cacheProject[domain] === null) return null;
 
-				if (!response) return; // If no project exit
+	// If the domain is in cache with a project
+	if (!!cacheProject[domain]) return cacheProject[domain];
 
-				// Inject the scripts in page
-				// ! this may pose a problem later if there are any confilicts with the original page scripts
-				// ? isolate worlds possible solves this ! not tested ¡
+	// If not get from remote
+	let remoteProject = getProjectRemote(projectURL);
 
-				loadScript(
-					tabId,
-					"libraries/webcomponents-bundle.js",
-					"WebComponents",
-					domain
-				);
-				loadScript(tabId, "manifest.js", "Manifest", domain);
-				loadScript(tabId, "vendor.js", "Vendor", domain);
-				loadScript(tabId, "content/content.js", "Content", domain);
-			})
-			.catch((err) => {
-				console.log({
-					domain,
-					result: err,
-					location: "getProjectWithCacheing",
-				});
-			});
-	});
-});
+	// Save in local storage {"the domain": {project info}}
+	// If no data from remote save null
+	let obj = {};
+	obj[domain] = remoteProject == null ? null : remoteProject;
 
-function loadScript(tabId, scriptPath, name, domain) {
-	chrome.scripting
-		.executeScript({
-			target: { tabId: tabId },
-			files: [scriptPath],
-		})
-		.then(() => {
-			console.log(`Injected ${name} in "${domain}".`);
-		});
+	chrome.storage.local.set(obj);
+
+	if (remoteProject == null) return null;
+
+	return remoteProject;
 }
 
 /**
- * Check if the URL belong to a project and return the details
- * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/)
+ * Check if the URL belong to a project and return the details from server
+ * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/*)
  * @return {Promise} All info regarding current project or 'null' if not found
- * @throws Will throw an error messaje in case of server problems (codes >= 500)
+ * @throws {Object} A 'message' and the 'response' object from fetch function
  */
-async function getProject(projectURL) {
-	let domain = new URL(projectURL).hostname; // Get domain name of the URL
+async function getProjectRemote(projectURL) {
+	let domain = new URL(projectURL).hostname; // Get domain from the URL
 
-	let requestURL = "http://bugshot.view4all.de/api/check-project";
-	let clientId = 5;
-	let verison = "1.0.0";
+	let requestURL = `${baseURL}/api/check-project`;
 
 	let response = await fetch(requestURL, {
 		method: "GET",
 		headers: {
 			"Content-type": "application/json",
-			clientId: clientId,
-			version: verison,
+			clientId: 5,
+			version: "1.0.0",
 			projectUrl: domain,
 			"Access-Control-Allow-Headers": "*",
 			"Access-Control-Allow-Origin": "*",
@@ -456,56 +487,27 @@ async function getProject(projectURL) {
 		},
 	});
 
-	if (response.status >= 200 && response.status < 300) {
+	if (response.ok) {
 		let json = await response.json();
+
 		if (json.success === false) return null;
 		else return json.data;
 	}
 
-	if (response.status >= 500) throw `Server error code: ${response.status}!`;
-
-	throw "Not a good response from server";
+	throw {
+		message: "Not a good response from server",
+		response: response,
+	};
 }
-
 /**
- * Check if the URL belong to a project and return the details with local storage check and cache if info received from remote
- * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/)
- * @return {Promise} All info regarding current project or 'null' if not found
- * @throws Will throw an error messaje in case of server problems (codes >= 500)
- */
-async function getProjectWithCache(projectURL) {
-	//TODO need some kind of check if the in memory data is still the same as remote(in case a project is deleted from remote but it's still in local)
-
-	let domain = new URL(projectURL).hostname; // Get domain name of the URL
-
-	let response = await checkIfProjectInCache(projectURL);
-
-	// If it is in storage return it
-	if (response[domain]) return response[domain];
-
-	// If the URL doesn't have a project but was cached return it
-	if (response[domain] === null) return response[domain];
-
-	// Else get the data from server
-	let project = await getProject(projectURL);
-
-	let obj = {};
-	obj[domain] = project;
-
-	chrome.storage.local.set(obj); // Save in memory the domain + prioject info
-
-	return project;
-}
-
-/**
- * Check if the project is registred in storage
- * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/)
+ * Check if the project is in local storage
+ * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/*)
  * @return {Promise} All info regarding current project from storage or '{}' if not found
  */
-function checkIfProjectInCache(projectURL) {
-	let domain = new URL(projectURL).hostname; // Get domain name of the URL
+async function getProjectFromCache(projectURL) {
+	let domain = new URL(projectURL).hostname; // Get domain from the URL
 
-	return new Promise(function (resolve, reject) {
+	return new Promise(function (resolve) {
 		chrome.storage.local.get(domain, (data) => {
 			resolve(data);
 		});
@@ -519,11 +521,11 @@ function checkIfProjectInCache(projectURL) {
  * @throws Will throw an error messaje in case of server problems (codes >= 500) from remote
  */
 async function getBugs(projectURL) {
-	project = await getProjectWithCache(projectURL); // Will throw error if project not in remote
+	project = await getProject(projectURL); // Will throw error if project not in remote
 
 	if (project === null) return null; // In case the project was taken from storage and no info is given
 
-	var url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs`;
+	var url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs`;
 
 	let response = await fetch(url, {
 		method: "GET",
@@ -535,25 +537,17 @@ async function getBugs(projectURL) {
 		},
 	});
 
-	response = await response.json();
+	if (!response.ok) return null;
 
+	response = await response.json();
 	return response.data;
 }
 
 async function takeScreenshot(windowID) {
-	let screenshot = await chrome.tabs.captureVisibleTab(windowID, {
+	return await chrome.tabs.captureVisibleTab(windowID, {
 		format: "jpeg",
 		quality: 100,
 	});
-
-	// console.log(screenshot);
-
-	// ? debatable if needed
-	// let obj = {};
-	// obj[windowID] = screenshot;
-	// chrome.storage.local.set(obj);
-
-	return screenshot;
 }
 
 async function getScreenshots(projectURL, bug_id) {
@@ -561,35 +555,37 @@ async function getScreenshots(projectURL, bug_id) {
 
 	let infos = await getScreenshotsInfo(projectURL, bug_id);
 
-	for (let index = 0; index < infos.data.length; index++) {
-		const info = infos.data[index];
+	if (infos === null) return null;
+
+	for (let index = 0; index < infos.length; index++) {
+		const info = infos[index];
 
 		let data = await getScreenshotsData(projectURL, bug_id, info.id);
+
+		if (data === null) continue;
 
 		let screenshot = {
 			id: info.id,
 			designation: info.designation,
 			data: `data:image/jpeg;base64,${data.data.base64}`,
 			position: {
-				x: data.data.position_x,
-				y: data.data.position_y,
+				x: data.position_x,
+				y: data.position_y,
 			},
 		};
 
 		screenArray.push(screenshot);
-
-		if (index === infos.data.length - 1) return screenArray;
 	}
 
-	return [];
+	return screenArray;
 }
 
 async function getScreenshotsInfo(projectURL, bug_id) {
-	let project = await getProjectWithCache(projectURL); // Will throw error if project not in remote
+	let project = await getProject(projectURL);
 
-	if (project === null) return null; // In case the project was taken from storage and no info is given
+	if (project === null) return null;
 
-	let url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/screenshots`;
+	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/screenshots`;
 
 	let response = await fetch(url, {
 		method: "GET",
@@ -599,17 +595,18 @@ async function getScreenshotsInfo(projectURL, bug_id) {
 		},
 	});
 
-	response = await response.json();
+	if (!response.ok) return null;
 
-	return response;
+	response = await response.json();
+	return response.data;
 }
 
 async function getScreenshotsData(projectURL, bug_id, screenshot_id) {
-	let project = await getProjectWithCache(projectURL); // Will throw error if project not in remote
+	let project = await getProject(projectURL);
 
-	if (project === null) return null; // In case the project was taken from storage and no info is given
+	if (project === null) return null;
 
-	let url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/screenshots/${screenshot_id}`;
+	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/screenshots/${screenshot_id}`;
 
 	let response = await fetch(url, {
 		method: "GET",
@@ -619,15 +616,16 @@ async function getScreenshotsData(projectURL, bug_id, screenshot_id) {
 		},
 	});
 
-	response = await response.json();
+	if (!response.ok) return null;
 
-	return response;
+	response = await response.json();
+	return response.data;
 }
 
 async function sendBugDetails(bug_details) {
-	let project = await getProjectWithCache(bug_details.url);
+	let project = await getProject(bug_details.url);
 
-	let url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs`;
+	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs`;
 
 	let osInfo = await getOS();
 	let browser = getBrowser();
@@ -651,20 +649,18 @@ async function sendBugDetails(bug_details) {
 		}),
 	});
 
-	let json = await response.json();
+	if (!response.ok) return null;
 
-	console.log({ bugDetails: json });
-
-	return json.data;
+	response = await response.json();
+	return response.data;
 }
 
 async function saveAttachment(data, projectURL, bug_id) {
-	console.log(data);
-	let project = await getProjectWithCache(projectURL); // Will throw error if project not in remote
+	let project = await getProject(projectURL);
 
-	if (project === null) return null; // In case the project was taken from storage and no info is given
+	if (project === null) return null;
 
-	let url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/attachments`;
+	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/attachments`;
 
 	let response = await fetch(url, {
 		method: "POST",
@@ -678,17 +674,19 @@ async function saveAttachment(data, projectURL, bug_id) {
 			base64: data.data,
 		}),
 	});
-	response = await response.json();
 
-	return response;
+	if (!response.ok) return null;
+
+	response = await response.json();
+	return response.data;
 }
 
 async function getAttachment(projectURL, bug_id) {
-	let project = await getProjectWithCache(projectURL); // Will throw error if project not in remote
+	let project = await getProject(projectURL);
 
-	if (project === null) return null; // In case the project was taken from storage and no info is given
+	if (project === null) return null;
 
-	let url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/attachments`;
+	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/attachments`;
 
 	let response = await fetch(url, {
 		method: "GET",
@@ -697,17 +695,19 @@ async function getAttachment(projectURL, bug_id) {
 			version: "1.0.0",
 		},
 	});
-	response = await response.json();
 
-	return response;
+	if (!response.ok) return null;
+
+	response = await response.json();
+	return response.data;
 }
 
 async function downloadAttachment(projectURL, bug_id, data) {
-	let project = await getProjectWithCache(projectURL); // Will throw error if project not in remote
+	let project = await getProjectWithCache(projectURL);
 
 	if (project === null) return null; // In case the project was taken from storage and no info is given
 
-	let url = `https://bugshot.view4all.de/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/attachments/${data.id}/download`;
+	let url = `${baseURL}/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/attachments/${data.id}/download`;
 
 	return await chrome.tabs.create({
 		url: url,
@@ -715,11 +715,11 @@ async function downloadAttachment(projectURL, bug_id, data) {
 }
 
 async function deleteAttachment(projectURL, bug_id, data) {
-	let project = await getProjectWithCache(projectURL); // Will throw error if project not in remote
+	let project = await getProject(projectURL);
 
-	if (project === null) return null; // In case the project was taken from storage and no info is given
+	if (project === null) return null;
 
-	let url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/attachments/${data.id}`;
+	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/attachments/${data.id}`;
 
 	let response = await fetch(url, {
 		method: "DELETE",
@@ -729,15 +729,18 @@ async function deleteAttachment(projectURL, bug_id, data) {
 		},
 	});
 
+	if (!response.ok) return null;
+
 	response = await response.json();
-	console.log(response);
-
-	return response;
+	return response.data;
 }
-async function sendBugScreenshot(bug_details, bugID) {
-	let project = await getProjectWithCache(bug_details.url);
 
-	let url = `https://bugshot.view4all.de/api/companies/${project.company_id}/projects/${project.id}/bugs/${bugID}/screenshots`;
+async function sendBugScreenshot(bug_details, bugID) {
+	let project = await getProject(bug_details.url);
+
+	if (project === null) return null;
+
+	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs/${bugID}/screenshots`;
 
 	let today = new Date();
 	let timestamp = today.toISOString();
@@ -751,7 +754,7 @@ async function sendBugScreenshot(bug_details, bugID) {
 			version: "1.0.0",
 		},
 		body: JSON.stringify({
-			base64: bug_details.screenshot.replace(/^data:image\/[a-z]+;base64,/, ""),
+			base64: bug_details.screenshot.replace(/^data:image\/[a-z]+;base64,/, ""), // Because ':' and ';' get lost in transit
 			designation: timestamp,
 			position_x: bug_details.mark_coords.x,
 			position_y: bug_details.mark_coords.y,
@@ -759,13 +762,13 @@ async function sendBugScreenshot(bug_details, bugID) {
 		}),
 	});
 
-	let json = await response.json();
-	console.log({ bugScreen: json });
+	if (!response.ok) return null;
 
-	console.log(json);
+	response = await response.json();
+	return response.data;
 }
 
-function getOS() {
+async function getOS() {
 	return new Promise((resolve, reject) => {
 		chrome.runtime.getPlatformInfo(function (info) {
 			resolve({ os: info.os, arch: info.arch });

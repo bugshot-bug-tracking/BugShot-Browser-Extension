@@ -266,7 +266,7 @@ export default {
                     switch (response.message) {
                         case "ok":
                             console.info("Request get attachments: ok!");
-                            attachments.value = response.payload.data;
+                            attachments.value = response.payload;
                             break;
 
                         case "error":
