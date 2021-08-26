@@ -567,7 +567,7 @@ async function getScreenshots(projectURL, bug_id) {
 		let screenshot = {
 			id: info.id,
 			designation: info.designation,
-			data: `data:image/jpeg;base64,${data.data.base64}`,
+			data: `data:image/jpeg;base64,${data.base64}`,
 			position: {
 				x: data.position_x,
 				y: data.position_y,
