@@ -78,7 +78,7 @@
 
             <div class="grid1x2 status">
                 <label>Status:</label>
-                <div class="content status">PH</div>
+                <div class="content status">{{ bug.status.designation }}</div>
             </div>
         </div>
 

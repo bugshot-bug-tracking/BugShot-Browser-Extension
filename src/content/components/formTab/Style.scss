@@ -7,11 +7,17 @@
     border: 1px solid #eee5fc;
     border-radius: 12px;
     margin: 10px 0px 10px 0px;
+    &:focus {
+      box-shadow: unset;
+    }
   }
 
   #bug-name {
     border: 1px solid #eee5fc;
     margin: 10px 0px 10px 0px;
+    &:focus {
+      box-shadow: unset;
+    }
   }
 
   #form-submit {
@@ -22,6 +28,10 @@
     &:hover {
       background: #0dac72 0% 0% no-repeat padding-box;
     }
+
+    &:focus {
+      box-shadow: unset;
+    }
   }
 
   #form-reset {
@@ -31,6 +41,10 @@
 
     &:hover {
       background: #0d4fac 0% 0% no-repeat padding-box;
+    }
+
+    &:focus {
+      box-shadow: unset;
     }
   }
 
@@ -45,6 +59,10 @@
     width: fit-content;
     background-color: #ffffff;
     background-image: none;
+
+    &:focus {
+      box-shadow: unset;
+    }
 
     &.critical {
       color: #f23838;

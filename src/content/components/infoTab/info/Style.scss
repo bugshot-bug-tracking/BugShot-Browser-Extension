@@ -129,6 +129,17 @@
     }
   }
 
+  .status {
+    .content {
+      text-align: center;
+      padding: 2px 0px;
+      color: white;
+      background-color: gray;
+      border-radius: 30px;
+      font-size: 14px;
+    }
+  }
+
   .grid1x2 {
     display: grid;
     grid-template-columns: 1fr 1fr;

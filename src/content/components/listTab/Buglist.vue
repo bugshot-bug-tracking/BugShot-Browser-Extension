@@ -74,6 +74,11 @@ export default {
 
                     stage.bugs.forEach((bug) => {
                         if (bug.deadline === null) bug.deadline = "no deadline";
+                        bug.status = {
+                            id: stage.id,
+                            designation: stage.designation,
+                            project_id: stage.project_id,
+                        };
                     });
                 });
             }

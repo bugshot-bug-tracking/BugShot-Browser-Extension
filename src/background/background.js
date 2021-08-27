@@ -1,5 +1,5 @@
 var baseURL = `https://bugshot.view4all.de`;
-var enableCache = true;
+var enableCache = false;
 
 /** Event listener on page update; injects content.js if there is a project for it */
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
