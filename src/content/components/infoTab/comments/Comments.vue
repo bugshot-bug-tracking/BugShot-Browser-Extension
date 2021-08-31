@@ -43,15 +43,21 @@ export default {
     props: {
         bug: Object,
     },
-    setup(props) {
+    emits: ["loading"],
+    setup(props, context) {
         const chars = ref("");
         const messages = ref([]);
         const msgs = ref(null);
         const bottom = ref(null);
 
+        const emitLoading = (value) => {
+            context.emit("loading", value);
+        };
+
         const update = () => {
             try {
                 messages.value = [];
+                emitLoading(true);
 
                 chrome.runtime.sendMessage(
                     {
@@ -61,6 +67,8 @@ export default {
                         },
                     },
                     (response) => {
+                        emitLoading(false);
+
                         switch (response.message) {
                             case "error":
                                 throw response.error;
@@ -85,12 +93,16 @@ export default {
                     }
                 );
             } catch (error) {
-                console.log(error);
+                emitLoading(false);
+
+                console.error(error);
             }
         };
 
         const postComment = () => {
             try {
+                emitLoading(true);
+
                 chrome.runtime.sendMessage(
                     {
                         message: "postComment",
@@ -103,6 +115,8 @@ export default {
                         },
                     },
                     (response) => {
+                        emitLoading(false);
+
                         switch (response.message) {
                             case "error":
                                 throw response.error;
@@ -116,6 +130,8 @@ export default {
                     }
                 );
             } catch (error) {
+                emitLoading(false);
+
                 console.error(error);
             }
         };

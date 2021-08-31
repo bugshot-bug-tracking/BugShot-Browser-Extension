@@ -24,7 +24,7 @@
         </div>
 
         <div class="screenshot">
-            <Screenshot :bug="bug" @loading="setLoading" />
+            <Screenshot :bug="bug" @loading="emitLoading" />
         </div>
 
         <div class="url">
@@ -101,11 +101,14 @@ export default {
     setup(props, context) {
         const open = ref(false);
 
-        const setLoading = (value) => {
+        const emitLoading = (value) => {
             context.emit("loading", value);
         };
 
-        return { open, setLoading };
+        return {
+            open,
+            emitLoading,
+        };
     },
 };
 </script>

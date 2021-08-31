@@ -1,23 +1,36 @@
 <template>
     <Tab>
-        <State :state="'loading'" :show="isLoading" />
-
         <Container>
-            <Info :bug="bug" @close="$emit('close')" @loading="infoLoading" />
+            <State :state="'mini-loading'" :show="isLoading.info" />
+            <Info
+                :bug="bug"
+                @close="$emit('close')"
+                @loading="setLoading($event, 'info')"
+            />
         </Container>
 
         <Container>
-            <Attachments :bug="bug" :isRemote="true" />
+            <State
+                :state="'mini-loading'"
+                :show="isLoading.attachments"
+                style="z-index: 0"
+            />
+            <Attachments
+                :bug="bug"
+                :isRemote="true"
+                @loading="setLoading($event, 'attachments')"
+            />
         </Container>
 
         <Container>
-            <Comments :bug="bug" />
+            <State :state="'mini-loading'" :show="isLoading.comments" />
+            <Comments :bug="bug" @loading="setLoading($event, 'comments')" />
         </Container>
     </Tab>
 </template>
 
 <script>
-import { ref } from "@vue/reactivity";
+import { reactive, ref } from "@vue/reactivity";
 
 import Tab from "../global/tab/Tab.vue";
 import Container from "../global/container/Container.vue";
@@ -32,15 +45,31 @@ export default {
     props: { bug: Object },
     emits: ["close"],
     setup() {
-        const isLoading = ref(false);
+        const isLoading = reactive({
+            info: true,
+            attachments: true,
+            comments: true,
+        });
 
-        const infoLoading = (value) => {
-            isLoading.value = value;
+        const setLoading = (value, place) => {
+            switch (place) {
+                case "info":
+                    isLoading.info = value;
+                    break;
+
+                case "attachments":
+                    isLoading.attachments = value;
+                    break;
+
+                case "comments":
+                    isLoading.comments = value;
+                    break;
+            }
         };
 
         return {
             isLoading,
-            infoLoading,
+            setLoading,
         };
     },
 };

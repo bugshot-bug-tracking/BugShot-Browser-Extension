@@ -266,12 +266,15 @@ __webpack_require__.r(__webpack_exports__);
     isRemote: Boolean // this is intended to be used as a use-case flag, if the data is send to db directly or locally in RAM
 
   },
-  emits: ["getLocal"],
+  emits: ["getLocal", "loading"],
   setup: function setup(props, context) {
     var files = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)([]);
     var attachments = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)([]);
     var err = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)("");
-    var isLoading = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(false);
+
+    var emitLoading = function emitLoading(value) {
+      context.emit("loading", value);
+    };
 
     var toBase64 = function toBase64(file) {
       return new Promise(function (resolve, reject) {
@@ -289,7 +292,7 @@ __webpack_require__.r(__webpack_exports__);
     };
 
     var upload = function upload(event) {
-      isLoading.value = true;
+      emitLoading(true);
       files.value = event.target.files;
       err.value = "";
       var fileInfos = [];
@@ -297,7 +300,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (files.value.length > 10 || attachments.value.length + files.value.length > 10) {
         err.value = "You are limited to a maximum of 10 files";
-        isLoading.value = false;
+        emitLoading(false);
         return;
       }
 
@@ -319,10 +322,10 @@ __webpack_require__.r(__webpack_exports__);
     };
 
     var uploadRemote = function uploadRemote(filesInfo) {
-      isLoading.value = true;
+      emitLoading(true);
       filesInfo.forEach(function (file) {
         try {
-          isLoading.value = true;
+          emitLoading(true);
           toBase64(file).then(function (data64) {
             chrome.runtime.sendMessage({
               message: "saveAttachment",
@@ -341,7 +344,7 @@ __webpack_require__.r(__webpack_exports__);
                   throw response.error;
 
                 case "ok":
-                  isLoading.value = false;
+                  emitLoading(false);
                   updateAttachments();
                   console.info("Attachment Uploaded.");
                   break;
@@ -349,7 +352,7 @@ __webpack_require__.r(__webpack_exports__);
             });
           });
         } catch (error) {
-          isLoading.value = false;
+          emitLoading(false);
           err.value = error;
           console.error(error);
         }
@@ -358,7 +361,7 @@ __webpack_require__.r(__webpack_exports__);
 
     var uploadLocal = function uploadLocal(filesInfo) {
       try {
-        isLoading.value = true;
+        emitLoading(true);
         var filesPromises = filesInfo.map(function (file) {
           return new Promise(function (resolve) {
             resolve(toBase64(file));
@@ -372,11 +375,11 @@ __webpack_require__.r(__webpack_exports__);
             });
           }
 
-          isLoading.value = false;
+          emitLoading(false);
           context.emit("getLocal", attachments);
         });
       } catch (error) {
-        isLoading.value = false;
+        emitLoading(false);
         console.error(error);
       }
     };
@@ -411,7 +414,7 @@ __webpack_require__.r(__webpack_exports__);
     };
 
     var deleteRemote = function deleteRemote(item) {
-      isLoading.value = true;
+      emitLoading(true);
       chrome.runtime.sendMessage({
         message: "deleteAttachment",
         payload: {
@@ -419,7 +422,7 @@ __webpack_require__.r(__webpack_exports__);
           data: item
         }
       }, function (response) {
-        isLoading.value = false;
+        emitLoading(false);
 
         switch (response.message) {
           case "ok":
@@ -446,14 +449,14 @@ __webpack_require__.r(__webpack_exports__);
     var updateAttachments = function updateAttachments() {
       err.value = "";
       if (props.isRemote === false) return;
-      isLoading.value = true;
+      emitLoading(true);
       chrome.runtime.sendMessage({
         message: "getAttachment",
         payload: {
           bug_id: props.bug.id
         }
       }, function (response) {
-        isLoading.value = false;
+        emitLoading(false);
 
         switch (response.message) {
           case "ok":
@@ -478,7 +481,6 @@ __webpack_require__.r(__webpack_exports__);
     });
     (0,vue__WEBPACK_IMPORTED_MODULE_0__.watch)(props, updateAttachments);
     return {
-      isLoading: isLoading,
       files: files,
       attachments: attachments,
       err: err,
@@ -602,15 +604,31 @@ __webpack_require__.r(__webpack_exports__);
   },
   emits: ["close"],
   setup: function setup() {
-    var isLoading = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_6__.ref)(false);
+    var isLoading = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_6__.reactive)({
+      info: true,
+      attachments: true,
+      comments: true
+    });
 
-    var infoLoading = function infoLoading(value) {
-      isLoading.value = value;
+    var setLoading = function setLoading(value, place) {
+      switch (place) {
+        case "info":
+          isLoading.info = value;
+          break;
+
+        case "attachments":
+          isLoading.attachments = value;
+          break;
+
+        case "comments":
+          isLoading.comments = value;
+          break;
+      }
     };
 
     return {
       isLoading: isLoading,
-      infoLoading: infoLoading
+      setLoading: setLoading
     };
   }
 });
@@ -641,21 +659,29 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     bug: Object
   },
-  setup: function setup(props) {
+  emits: ["loading"],
+  setup: function setup(props, context) {
     var chars = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_1__.ref)("");
     var messages = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_1__.ref)([]);
     var msgs = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_1__.ref)(null);
     var bottom = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_1__.ref)(null);
 
+    var emitLoading = function emitLoading(value) {
+      context.emit("loading", value);
+    };
+
     var update = function update() {
       try {
         messages.value = [];
+        emitLoading(true);
         chrome.runtime.sendMessage({
           message: "getComments",
           payload: {
             bug_id: props.bug.id
           }
         }, function (response) {
+          emitLoading(false);
+
           switch (response.message) {
             case "error":
               throw response.error;
@@ -679,12 +705,14 @@ __webpack_require__.r(__webpack_exports__);
           }
         });
       } catch (error) {
-        console.log(error);
+        emitLoading(false);
+        console.error(error);
       }
     };
 
     var postComment = function postComment() {
       try {
+        emitLoading(true);
         chrome.runtime.sendMessage({
           message: "postComment",
           payload: {
@@ -696,6 +724,8 @@ __webpack_require__.r(__webpack_exports__);
             }
           }
         }, function (response) {
+          emitLoading(false);
+
           switch (response.message) {
             case "error":
               throw response.error;
@@ -708,6 +738,7 @@ __webpack_require__.r(__webpack_exports__);
           }
         });
       } catch (error) {
+        emitLoading(false);
         console.error(error);
       }
     };
@@ -784,13 +815,13 @@ __webpack_require__.r(__webpack_exports__);
   setup: function setup(props, context) {
     var open = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(false);
 
-    var setLoading = function setLoading(value) {
+    var emitLoading = function emitLoading(value) {
       context.emit("loading", value);
     };
 
     return {
       open: open,
-      setLoading: setLoading
+      emitLoading: emitLoading
     };
   }
 });
@@ -1544,8 +1575,6 @@ var _hoisted_7 = {
   "class": "files"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  var _component_State = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("State");
-
   var _component_AttachmentItem = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("AttachmentItem");
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
@@ -1562,15 +1591,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* HYDRATE_EVENTS */
   )])]), $setup.err != '' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.err), 1
   /* TEXT */
-  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_State, {
-    state: 'mini-loading',
-    show: $setup.isLoading,
-    style: {
-      "z-index": "0"
-    }
-  }, null, 8
-  /* PROPS */
-  , ["show"]), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.attachments, function (item) {
+  )])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.attachments, function (item) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       "class": "item",
       key: item.id
@@ -1746,31 +1767,21 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Tab, null, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_State, {
-        state: 'loading',
-        show: $setup.isLoading
-      }, null, 8
-      /* PROPS */
-      , ["show"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Container, null, {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Container, null, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Info, {
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_State, {
+            state: 'mini-loading',
+            show: $setup.isLoading.info
+          }, null, 8
+          /* PROPS */
+          , ["show"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Info, {
             bug: $props.bug,
             onClose: _cache[0] || (_cache[0] = function ($event) {
               return _ctx.$emit('close');
             }),
-            onLoading: $setup.infoLoading
-          }, null, 8
-          /* PROPS */
-          , ["bug", "onLoading"])];
-        }),
-        _: 1
-        /* STABLE */
-
-      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Container, null, {
-        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Attachments, {
-            bug: $props.bug,
-            isRemote: true
+            onLoading: _cache[1] || (_cache[1] = function ($event) {
+              return $setup.setLoading($event, 'info');
+            })
           }, null, 8
           /* PROPS */
           , ["bug"])];
@@ -1780,8 +1791,39 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
       }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Container, null, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Comments, {
-            bug: $props.bug
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_State, {
+            state: 'mini-loading',
+            show: $setup.isLoading.attachments,
+            style: {
+              "z-index": "0"
+            }
+          }, null, 8
+          /* PROPS */
+          , ["show"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Attachments, {
+            bug: $props.bug,
+            isRemote: true,
+            onLoading: _cache[2] || (_cache[2] = function ($event) {
+              return $setup.setLoading($event, 'attachments');
+            })
+          }, null, 8
+          /* PROPS */
+          , ["bug"])];
+        }),
+        _: 1
+        /* STABLE */
+
+      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Container, null, {
+        "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_State, {
+            state: 'mini-loading',
+            show: $setup.isLoading.comments
+          }, null, 8
+          /* PROPS */
+          , ["show"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Comments, {
+            bug: $props.bug,
+            onLoading: _cache[3] || (_cache[3] = function ($event) {
+              return $setup.setLoading($event, 'comments');
+            })
           }, null, 8
           /* PROPS */
           , ["bug"])];
@@ -2116,7 +2158,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* TEXT */
   )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Screenshot, {
     bug: $props.bug,
-    onLoading: $setup.setLoading
+    onLoading: $setup.emitLoading
   }, null, 8
   /* PROPS */
   , ["bug", "onLoading"])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [_hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("a", {
