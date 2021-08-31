@@ -69,7 +69,7 @@ export default {
         const infoEvent = (bug) => {
             bugInfo.value = bug;
             if (showInfo.value !== true) showInfo.value = !showInfo.value;
-            console.info({ info: bug });
+            // console.info({ info: bug });
         };
 
         const closeInfo = () => {

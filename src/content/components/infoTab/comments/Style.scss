@@ -1,0 +1,106 @@
+@import "./message/Style.scss";
+
+.comments-component {
+  height: 500px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .comments-top {
+    .header {
+      font-weight: 500;
+      font-size: 20px;
+    }
+  }
+
+  .comments-center {
+    margin: 10px 0;
+    height: 100%;
+    overflow: auto;
+    scroll-behavior: auto;
+
+    > .content {
+      padding-right: 10px;
+    }
+
+    /* width */
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: hsl(230, 43%, 95%) 0% 0% no-repeat padding-box;
+      border-radius: 8px;
+    }
+
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      background: hsl(158, 80%, 47%) 0% 0% no-repeat padding-box;
+      border-radius: 8px;
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+      background: hsl(158, 80%, 37%) 0% 0% no-repeat padding-box;
+    }
+  }
+
+  .comments-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    .comments-bottom-header {
+      display: inline-flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin: 10px 0px;
+
+      > span {
+        font-weight: 500;
+      }
+
+      > div {
+        font-size: 12px;
+      }
+    }
+
+    > #comment-input {
+      width: 100%;
+      border: 1px solid hsl(265, 78%, 77%);
+      border-radius: 12px;
+      padding: 0px 10px;
+      font-size: 14px;
+      transition: ease-out 0.1s;
+      resize: none;
+      margin: 10px 0;
+      line-height: 1.5;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+
+      &:focus-visible {
+        outline: unset;
+        border: 1px solid hsl(265, 78%, 40%);
+        transition: ease-in 0.1s;
+      }
+    }
+
+    .comment-send-button {
+      background-color: hsl(158, 80%, 47%);
+      color: white;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 700;
+
+      &:hover {
+        background: hsl(158, 86%, 36%);
+        color: white;
+      }
+    }
+  }
+}

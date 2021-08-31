@@ -7,6 +7,7 @@
     border: 1px solid #eee5fc;
     border-radius: 12px;
     margin: 10px 0px 10px 0px;
+
     &:focus {
       box-shadow: unset;
     }
@@ -15,6 +16,7 @@
   #bug-name {
     border: 1px solid #eee5fc;
     margin: 10px 0px 10px 0px;
+
     &:focus {
       box-shadow: unset;
     }

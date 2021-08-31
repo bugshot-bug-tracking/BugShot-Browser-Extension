@@ -10,13 +10,9 @@
             <Attachments :bug="bug" :isRemote="true" />
         </Container>
 
-        <div v-if="false">
-            <!-- 
-				<Container>
-					<Comments :bug="bug"/>
-				</Container> 
-			-->
-        </div>
+        <Container>
+            <Comments :bug="bug" />
+        </Container>
     </Tab>
 </template>
 
@@ -28,9 +24,10 @@ import Container from "../global/container/Container.vue";
 import Info from "./info/Info.vue";
 import Attachments from "../global/attachment/Attachments.vue";
 import State from "../global/state/State.vue";
+import Comments from "./comments/Comments.vue";
 
 export default {
-    components: { Tab, Container, Info, Attachments, State },
+    components: { Tab, Container, Info, Attachments, State, Comments },
     name: "InfoTab",
     props: { bug: Object },
     emits: ["close"],
