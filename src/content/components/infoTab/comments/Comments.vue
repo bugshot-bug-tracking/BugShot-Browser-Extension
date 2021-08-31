@@ -5,11 +5,9 @@
         </div>
 
         <div class="comments-center">
-            <div class="content">
-                <div class="messages" ref="msgs" v-if="messages.length > 0">
-                    <Message v-for="msg in messages" :key="msg.id" :msg="msg" />
-                    <div />
-                </div>
+            <div class="content" ref="msgs" v-if="messages.length > 0">
+                <Message v-for="msg in messages" :key="msg.id" :msg="msg" />
+                <div />
             </div>
         </div>
 
@@ -107,17 +105,18 @@ export default {
 
         watch(props, update);
 
-        // watch(
-        //     messages,
-        //     () => {
-        //         nextTick(() => {
-        //             msgs.value?.lastChild.scrollIntoView({
-        //                 behavior: "smooth",
-        //             });
-        //         });
-        //     },
-        //     { deep: true }
-        // );
+        watch(
+            messages,
+            () => {
+                nextTick(() => {
+                    msgs.value?.parentNode.scrollBy({
+                        top: msgs.value?.scrollHeight,
+                        behavior: "smooth",
+                    });
+                });
+            },
+            { deep: true }
+        );
 
         return {
             messages,
