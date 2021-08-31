@@ -379,6 +379,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 			return true;
 
+		case "postComment":
+			postComment(sender.tab.url, request.payload.bug_id, request.payload.data)
+				.then((response) => {
+					sendResponse({
+						message: "ok",
+						payload: response,
+					});
+				})
+				.catch((err) => {
+					sendResponse({
+						message: "error",
+						error: err,
+					});
+
+					console.error(err);
+				});
+
+			return true;
+
 
 		default:
 			sendResponse({
@@ -769,6 +788,31 @@ async function getComments(projectURL, bug_id) {
 			clientId: "5",
 			version: "1.0.0",
 		},
+	});
+
+	if (!response.ok) return null;
+
+	response = await response.json();
+	return response.data;
+}
+
+async function postComment(projectURL, bug_id, data) {
+	let project = await getProject(projectURL);
+
+	if (project === null) return null;
+
+	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/comments`;
+
+	let response = await fetch(url, {
+		method: "POST",
+		headers: {
+			clientId: "5",
+			version: "1.0.0",
+			"Content-type": "application/json",
+		},
+		body: JSON.stringify({
+			content: data.content,
+		}),
 	});
 
 	if (!response.ok) return null;

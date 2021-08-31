@@ -642,8 +642,8 @@ __webpack_require__.r(__webpack_exports__);
     bug: Object
   },
   setup: function setup(props) {
-    var messages = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_1__.ref)([]);
     var chars = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_1__.ref)("");
+    var messages = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_1__.ref)([]);
     var msgs = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_1__.ref)(null);
     var bottom = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_1__.ref)(null);
 
@@ -683,18 +683,36 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
 
-    var msg = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_1__.ref)({
-      content: "Test messaage as sender",
-      timestamp: "2021-08-27 10:09:38",
-      creator: {
-        first_name: "Radu",
-        last_name: "Memetea"
-      },
-      sender: 0
-    });
-    (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_2__.onMounted)(function () {
-      update();
-    });
+    var postComment = function postComment() {
+      try {
+        chrome.runtime.sendMessage({
+          message: "postComment",
+          payload: {
+            bug_id: props.bug.id,
+            data: {
+              user_id: 2,
+              //! this will need to be changed when a user sesion will be available
+              content: chars.value
+            }
+          }
+        }, function (response) {
+          switch (response.message) {
+            case "error":
+              throw response.error;
+
+            case "ok":
+              console.info("Comment post request: ok!");
+              chars.value = "";
+              update();
+              break;
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_2__.onMounted)(update);
     (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_2__.watch)(props, update);
     (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_2__.watch)(messages, function () {
       (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_2__.nextTick)(function () {
@@ -711,9 +729,9 @@ __webpack_require__.r(__webpack_exports__);
     return {
       messages: messages,
       chars: chars,
-      msg: msg,
       bottom: bottom,
-      msgs: msgs
+      msgs: msgs,
+      postComment: postComment
     };
   }
 });
@@ -1857,8 +1875,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* NEED_PATCH */
   ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.chars]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "btn comment-send-button",
-    onClick: _cache[1] || (_cache[1] = function ($event) {
-      return $setup.messages.push($setup.msg);
+    onClick: _cache[1] || (_cache[1] = function () {
+      return $setup.postComment && $setup.postComment.apply($setup, arguments);
     })
   }, " Add Comment ")])]);
 }

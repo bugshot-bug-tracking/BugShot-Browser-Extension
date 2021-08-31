@@ -24,7 +24,7 @@
                 placeholder="Write comment..."
                 v-model="chars"
             />
-            <div class="btn comment-send-button" @click="messages.push(msg)">
+            <div class="btn comment-send-button" @click="postComment">
                 Add Comment
             </div>
         </div>
@@ -44,8 +44,8 @@ export default {
         bug: Object,
     },
     setup(props) {
-        const messages = ref([]);
         const chars = ref("");
+        const messages = ref([]);
         const msgs = ref(null);
         const bottom = ref(null);
 
@@ -89,19 +89,38 @@ export default {
             }
         };
 
-        const msg = ref({
-            content: "Test messaage as sender",
-            timestamp: "2021-08-27 10:09:38",
-            creator: {
-                first_name: "Radu",
-                last_name: "Memetea",
-            },
-            sender: 0,
-        });
+        const postComment = () => {
+            try {
+                chrome.runtime.sendMessage(
+                    {
+                        message: "postComment",
+                        payload: {
+                            bug_id: props.bug.id,
+                            data: {
+                                user_id: 2, //! this will need to be changed when a user sesion will be available
+                                content: chars.value,
+                            },
+                        },
+                    },
+                    (response) => {
+                        switch (response.message) {
+                            case "error":
+                                throw response.error;
 
-        onMounted(() => {
-            update();
-        });
+                            case "ok":
+                                console.info("Comment post request: ok!");
+                                chars.value = "";
+                                update();
+                                break;
+                        }
+                    }
+                );
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        onMounted(update);
 
         watch(props, update);
 
@@ -121,9 +140,9 @@ export default {
         return {
             messages,
             chars,
-            msg,
             bottom,
             msgs,
+            postComment,
         };
     },
 };
