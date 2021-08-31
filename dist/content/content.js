@@ -695,18 +695,18 @@ __webpack_require__.r(__webpack_exports__);
     (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_2__.onMounted)(function () {
       update();
     });
-    (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_2__.watch)(props, update);
-    (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_2__.watch)(messages, function () {
-      (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_2__.nextTick)(function () {
-        var _msgs$value;
+    (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_2__.watch)(props, update); // watch(
+    //     messages,
+    //     () => {
+    //         nextTick(() => {
+    //             msgs.value?.lastChild.scrollIntoView({
+    //                 behavior: "smooth",
+    //             });
+    //         });
+    //     },
+    //     { deep: true }
+    // );
 
-        (_msgs$value = msgs.value) === null || _msgs$value === void 0 ? void 0 : _msgs$value.lastChild.scrollIntoView({
-          behavior: "smooth"
-        });
-      });
-    }, {
-      deep: true
-    });
     return {
       messages: messages,
       chars: chars,

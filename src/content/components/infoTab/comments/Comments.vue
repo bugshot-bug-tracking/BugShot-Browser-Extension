@@ -107,17 +107,17 @@ export default {
 
         watch(props, update);
 
-        watch(
-            messages,
-            () => {
-                nextTick(() => {
-                    msgs.value?.lastChild.scrollIntoView({
-                        behavior: "smooth",
-                    });
-                });
-            },
-            { deep: true }
-        );
+        // watch(
+        //     messages,
+        //     () => {
+        //         nextTick(() => {
+        //             msgs.value?.lastChild.scrollIntoView({
+        //                 behavior: "smooth",
+        //             });
+        //         });
+        //     },
+        //     { deep: true }
+        // );
 
         return {
             messages,
