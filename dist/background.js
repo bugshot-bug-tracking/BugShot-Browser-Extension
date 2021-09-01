@@ -171,6 +171,25 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 			return true;
 
+		case "deleteBug":
+			deleteBug(sender.tab.url, request.payload.bug_id)
+				.then((response) => {
+					sendResponse({
+						message: "ok",
+						payload: response,
+					});
+				})
+				.catch((err) => {
+					sendResponse({
+						message: "error",
+						error: err,
+					});
+
+					console.error(err);
+				});
+
+			return true;
+
 		case "openAdminPannel":
 			chrome.tabs
 				.create({
@@ -571,6 +590,27 @@ async function getBugs(projectURL) {
 		method: "GET",
 		withCredentials: true,
 		credentials: "include",
+		headers: {
+			clientId: "5",
+			version: "1.0.0",
+		},
+	});
+
+	if (!response.ok) return null;
+
+	response = await response.json();
+	return response.data;
+}
+
+async function deleteBug(projectURL, bug_id) {
+	let project = await getProject(projectURL);
+
+	if (project === null) return null;
+
+	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}`;
+
+	let response = await fetch(url, {
+		method: "DELETE",
 		headers: {
 			clientId: "5",
 			version: "1.0.0",

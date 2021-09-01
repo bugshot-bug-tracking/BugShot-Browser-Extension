@@ -26,6 +26,12 @@
             <State :state="'mini-loading'" :show="isLoading.comments" />
             <Comments :bug="bug" @loading="setLoading($event, 'comments')" />
         </Container>
+        <div class="delete-btn-wrapper">
+            <div class="btn delete-bug-btn" @click="deleteBug">
+                <div class="delete-icon" />
+                <span> Delete Bug </span>
+            </div>
+        </div>
     </Tab>
 </template>
 
@@ -43,8 +49,8 @@ export default {
     components: { Tab, Container, Info, Attachments, State, Comments },
     name: "InfoTab",
     props: { bug: Object },
-    emits: ["close"],
-    setup() {
+    emits: ["close", "deleted"],
+    setup(props, context) {
         const isLoading = reactive({
             info: true,
             attachments: true,
@@ -67,9 +73,40 @@ export default {
             }
         };
 
+        const deleteBug = () => {
+            try {
+                chrome.runtime.sendMessage(
+                    {
+                        message: "deleteBug",
+                        payload: {
+                            bug_id: props.bug.id,
+                        },
+                    },
+                    (response) => {
+                        switch (response.message) {
+                            case "ok":
+                                console.info("Request delete bug: ok!");
+                                context.emit("close");
+
+                                // send an event to the list component to update the list
+                                emitter.emit("deleted");
+                                break;
+
+                            case "error":
+                                throw response.error;
+                                break;
+                        }
+                    }
+                );
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
         return {
             isLoading,
             setLoading,
+            deleteBug,
         };
     },
 };

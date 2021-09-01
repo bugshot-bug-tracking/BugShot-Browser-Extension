@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { reactive, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 
 import Tab from "../global/tab/Tab.vue";
 import State from "../global/state/State.vue";
@@ -38,51 +38,58 @@ export default {
         const bugs = reactive({ status: [], info: [] });
         const state = ref("loading");
 
-        chrome.runtime.sendMessage(
-            {
-                message: "getBugs",
-            },
-            (response) => {
-                state.value = null;
+        const update = () => {
+            chrome.runtime.sendMessage(
+                {
+                    message: "getBugs",
+                },
+                (response) => {
+                    state.value = null;
 
-                if (response.message === "error") {
-                    state.value = "error";
-                    console.error(response.error);
-                    return;
-                }
+                    if (response.message === "error") {
+                        state.value = "error";
+                        console.error(response.error);
+                        return;
+                    }
 
-                if (response.message === "empty") {
-                    console.log("No project buggs");
-                    return;
-                }
+                    if (response.message === "empty") {
+                        console.log("No project buggs");
+                        return;
+                    }
 
-                if (response.message !== "ok") {
-                    console.error("What was the message?");
-                    return;
-                }
+                    if (response.message !== "ok") {
+                        console.error("What was the message?");
+                        return;
+                    }
 
-                bugs.status = [];
-                bugs.info = [];
+                    bugs.status = [];
+                    bugs.info = [];
 
-                response.payload.forEach((stage) => {
-                    bugs.status.push({
-                        id: stage.id,
-                        name: stage.designation,
-                    });
-
-                    bugs.info[stage.id] = stage.bugs;
-
-                    stage.bugs.forEach((bug) => {
-                        if (bug.deadline === null) bug.deadline = "no deadline";
-                        bug.status = {
+                    response.payload.forEach((stage) => {
+                        bugs.status.push({
                             id: stage.id,
-                            designation: stage.designation,
-                            project_id: stage.project_id,
-                        };
+                            name: stage.designation,
+                        });
+
+                        bugs.info[stage.id] = stage.bugs;
+
+                        stage.bugs.forEach((bug) => {
+                            if (bug.deadline === null)
+                                bug.deadline = "no deadline";
+                            bug.status = {
+                                id: stage.id,
+                                designation: stage.designation,
+                                project_id: stage.project_id,
+                            };
+                        });
                     });
-                });
-            }
-        );
+                }
+            );
+        };
+
+        onMounted(update);
+
+        emitter.on("deleted", update);
 
         return {
             bugs,

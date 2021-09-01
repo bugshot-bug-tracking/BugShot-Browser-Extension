@@ -2,6 +2,9 @@ import * as Vue from 'vue';
 
 import Content from "./components/Content.vue";
 
+import mitt from 'mitt';
+window.emitter = mitt();
+
 var extensionOrigin = 'chrome-extension://' + chrome.runtime.id;
 
 if (location.ancestorOrigins.contains(extensionOrigin))
