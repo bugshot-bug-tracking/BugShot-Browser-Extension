@@ -582,6 +582,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _global_attachment_Attachments_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../global/attachment/Attachments.vue */ "./src/content/components/global/attachment/Attachments.vue");
 /* harmony import */ var _global_state_State_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../global/state/State.vue */ "./src/content/components/global/state/State.vue");
 /* harmony import */ var _comments_Comments_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./comments/Comments.vue */ "./src/content/components/infoTab/comments/Comments.vue");
+/* harmony import */ var _vue_runtime_core__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @vue/runtime-core */ "./node_modules/@vue/runtime-core/dist/runtime-core.esm-bundler.js");
+
 
 
 
@@ -608,6 +610,15 @@ __webpack_require__.r(__webpack_exports__);
       info: true,
       attachments: true,
       comments: true
+    });
+    var lFlag = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_6__.ref)(true);
+    var tabLoading = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_6__.computed)(function () {
+      if (!isLoading.info && !isLoading.attachments && !isLoading.comments && lFlag) {
+        lFlag.value = false;
+        return lFlag.value;
+      }
+
+      return lFlag.value;
     });
 
     var setLoading = function setLoading(value, place) {
@@ -652,8 +663,16 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
 
+    (0,_vue_runtime_core__WEBPACK_IMPORTED_MODULE_7__.watch)(props, function () {
+      // if the bug details change set the state to loading on the tab
+      isLoading.info = true;
+      isLoading.attachments = true;
+      isLoading.comments = true;
+      lFlag.value = true;
+    });
     return {
       isLoading: isLoading,
+      tabLoading: tabLoading,
       setLoading: setLoading,
       deleteBug: deleteBug
     };
@@ -1818,7 +1837,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_Tab, null, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Container, null, {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_State, {
+        state: 'loading',
+        show: $setup.tabLoading,
+        style: {
+          "z-index": "1000"
+        }
+      }, null, 8
+      /* PROPS */
+      , ["show"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Container, null, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
           return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_State, {
             state: 'mini-loading',
@@ -1840,7 +1867,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         _: 1
         /* STABLE */
 
-      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Container, null, {
+      }, 512
+      /* NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, !$setup.tabLoading]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Container, null, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
           return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_State, {
             state: 'mini-loading',
@@ -1863,7 +1892,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         _: 1
         /* STABLE */
 
-      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Container, null, {
+      }, 512
+      /* NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, !$setup.tabLoading]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Container, null, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
           return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_State, {
             state: 'mini-loading',
@@ -1882,12 +1913,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         _: 1
         /* STABLE */
 
-      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+      }, 512
+      /* NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, !$setup.tabLoading]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
         "class": "btn delete-bug-btn",
         onClick: _cache[4] || (_cache[4] = function () {
           return $setup.deleteBug && $setup.deleteBug.apply($setup, arguments);
         })
-      }, _hoisted_4)])];
+      }, _hoisted_4)], 512
+      /* NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, !$setup.tabLoading]])];
     }),
     _: 1
     /* STABLE */
