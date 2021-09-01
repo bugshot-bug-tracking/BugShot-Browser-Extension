@@ -5,7 +5,7 @@
                 <div class="content">{{ bug.designation }}</div>
             </div>
 
-            <img class="close-button btn" @click="$emit('close')" />
+            <div class="btn close-button" @click="$emit('close')" />
         </div>
 
         <div class="id">

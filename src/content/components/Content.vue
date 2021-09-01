@@ -6,9 +6,13 @@
             @add="addEvent"
             @list="listEvent"
         />
+
         <ListTab v-if="showList" @info="infoEvent" />
+
         <InfoTab v-if="showInfo" :bug="bugInfo" @close="closeInfo" />
+
         <FormTab v-if="showForm" :bug="bugDetails" @default="setDefault" />
+
         <Overlay
             v-if="showOverlay"
             :details="bugDetails"

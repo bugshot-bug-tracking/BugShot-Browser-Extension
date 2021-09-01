@@ -602,8 +602,8 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     bug: Object
   },
-  emits: ["close"],
-  setup: function setup() {
+  emits: ["close", "deleted"],
+  setup: function setup(props, context) {
     var isLoading = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_6__.reactive)({
       info: true,
       attachments: true,
@@ -626,9 +626,36 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
 
+    var deleteBug = function deleteBug() {
+      try {
+        chrome.runtime.sendMessage({
+          message: "deleteBug",
+          payload: {
+            bug_id: props.bug.id
+          }
+        }, function (response) {
+          switch (response.message) {
+            case "ok":
+              console.info("Request delete bug: ok!");
+              context.emit("close"); // send an event to the list component to update the list
+
+              emitter.emit("deleted");
+              break;
+
+            case "error":
+              throw response.error;
+              break;
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     return {
       isLoading: isLoading,
-      setLoading: setLoading
+      setLoading: setLoading,
+      deleteBug: deleteBug
     };
   }
 });
@@ -1023,45 +1050,51 @@ __webpack_require__.r(__webpack_exports__);
       info: []
     });
     var state = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)("loading");
-    chrome.runtime.sendMessage({
-      message: "getBugs"
-    }, function (response) {
-      state.value = null;
 
-      if (response.message === "error") {
-        state.value = "error";
-        console.error(response.error);
-        return;
-      }
+    var update = function update() {
+      chrome.runtime.sendMessage({
+        message: "getBugs"
+      }, function (response) {
+        state.value = null;
 
-      if (response.message === "empty") {
-        console.log("No project buggs");
-        return;
-      }
+        if (response.message === "error") {
+          state.value = "error";
+          console.error(response.error);
+          return;
+        }
 
-      if (response.message !== "ok") {
-        console.error("What was the message?");
-        return;
-      }
+        if (response.message === "empty") {
+          console.log("No project buggs");
+          return;
+        }
 
-      bugs.status = [];
-      bugs.info = [];
-      response.payload.forEach(function (stage) {
-        bugs.status.push({
-          id: stage.id,
-          name: stage.designation
-        });
-        bugs.info[stage.id] = stage.bugs;
-        stage.bugs.forEach(function (bug) {
-          if (bug.deadline === null) bug.deadline = "no deadline";
-          bug.status = {
+        if (response.message !== "ok") {
+          console.error("What was the message?");
+          return;
+        }
+
+        bugs.status = [];
+        bugs.info = [];
+        response.payload.forEach(function (stage) {
+          bugs.status.push({
             id: stage.id,
-            designation: stage.designation,
-            project_id: stage.project_id
-          };
+            name: stage.designation
+          });
+          bugs.info[stage.id] = stage.bugs;
+          stage.bugs.forEach(function (bug) {
+            if (bug.deadline === null) bug.deadline = "no deadline";
+            bug.status = {
+              id: stage.id,
+              designation: stage.designation,
+              project_id: stage.project_id
+            };
+          });
         });
       });
-    });
+    };
+
+    (0,vue__WEBPACK_IMPORTED_MODULE_0__.onMounted)(update);
+    emitter.on("deleted", update);
     return {
       bugs: bugs,
       state: state
@@ -1323,11 +1356,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
-var _hoisted_1 = {
-  id: "bug-form"
-};
 
-var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", {
+var _hoisted_1 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", {
   style: {
     "text-align": "center"
   }
@@ -1335,14 +1365,17 @@ var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 /* HOISTED */
 );
 
+var _hoisted_2 = {
+  "class": "form-group"
+};
 var _hoisted_3 = {
   "class": "form-group"
 };
 var _hoisted_4 = {
-  "class": "form-group"
+  "class": "form-group d-flex justify-content-between mb-lg-2"
 };
 var _hoisted_5 = {
-  "class": "form-group d-flex justify-content-between mb-lg-2"
+  "class": "form-check form-check-inline"
 };
 var _hoisted_6 = {
   "class": "form-check form-check-inline"
@@ -1354,20 +1387,22 @@ var _hoisted_8 = {
   "class": "form-check form-check-inline"
 };
 var _hoisted_9 = {
-  "class": "form-check form-check-inline"
+  "class": "d-inline-flex justify-content-evenly my-2"
 };
 
-var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Report Bug!", -1
+var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  id: "form-submit",
+  type: "submit",
+  "class": "btn btn-primary"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Report Bug!")], -1
 /* HOISTED */
 );
 
-var _hoisted_11 = [_hoisted_10];
-
-var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Cancel", -1
+var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, "Cancel", -1
 /* HOISTED */
 );
 
-var _hoisted_13 = [_hoisted_12];
+var _hoisted_12 = [_hoisted_11];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_State = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("State");
 
@@ -1388,7 +1423,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         key: 0
       }, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", _hoisted_1, [_hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+          return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+            id: "bug-form",
+            onSubmit: _cache[7] || (_cache[7] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
+              return $setup.submit && $setup.submit.apply($setup, arguments);
+            }, ["prevent"]))
+          }, [_hoisted_1, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
             type: "text",
             "class": "form-control",
             id: "bug-name",
@@ -1399,7 +1439,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             })
           }, null, 512
           /* NEED_PATCH */
-          ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $props.bug.name]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
+          ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $props.bug.name]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
             "class": "form-control",
             id: "bug-description",
             rows: "3",
@@ -1407,10 +1447,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             required: "",
             "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
               return $props.bug.description = $event;
-            })
+            }),
+            maxlength: "250"
           }, null, 512
           /* NEED_PATCH */
-          ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $props.bug.description]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+          ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $props.bug.description]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
             "class": "form-check-input option critical",
             type: "radio",
             name: "inlineRadioOptions",
@@ -1420,7 +1461,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             })
           }, null, 512
           /* NEED_PATCH */
-          ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $props.bug.priority]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+          ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $props.bug.priority]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
             "class": "form-check-input option important",
             type: "radio",
             name: "inlineRadioOptions",
@@ -1430,7 +1471,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             })
           }, null, 512
           /* NEED_PATCH */
-          ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $props.bug.priority]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+          ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $props.bug.priority]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
             "class": "form-check-input option normal",
             type: "radio",
             name: "inlineRadioOptions",
@@ -1441,7 +1482,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             checked: ""
           }, null, 512
           /* NEED_PATCH */
-          ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $props.bug.priority]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+          ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $props.bug.priority]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
             "class": "form-check-input option minoir",
             type: "radio",
             name: "inlineRadioOptions",
@@ -1451,21 +1492,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             })
           }, null, 512
           /* NEED_PATCH */
-          ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $props.bug.priority]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-            id: "form-submit",
-            type: "submit",
-            "class": "btn btn-primary mb-2",
-            onClick: _cache[6] || (_cache[6] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
-              return $setup.submit && $setup.submit.apply($setup, arguments);
-            }, ["prevent"]))
-          }, _hoisted_11), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+          ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $props.bug.priority]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [_hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
             id: "form-reset",
             type: "reset",
-            "class": "btn btn-secondary mb-2",
-            onClick: _cache[7] || (_cache[7] = function ($event) {
+            "class": "btn",
+            onClick: _cache[6] || (_cache[6] = function ($event) {
               return _ctx.$emit('default');
             })
-          }, _hoisted_13)])];
+          }, _hoisted_12)])], 32
+          /* HYDRATE_EVENTS */
+          )];
         }),
         _: 1
         /* STABLE */
@@ -1752,6 +1788,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
+var _hoisted_1 = {
+  "class": "delete-btn-wrapper"
+};
+
+var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "delete-icon"
+}, null, -1
+/* HOISTED */
+);
+
+var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, " Delete Bug ", -1
+/* HOISTED */
+);
+
+var _hoisted_4 = [_hoisted_2, _hoisted_3];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_State = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("State");
 
@@ -1831,7 +1882,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         _: 1
         /* STABLE */
 
-      })];
+      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+        "class": "btn delete-bug-btn",
+        onClick: _cache[4] || (_cache[4] = function () {
+          return $setup.deleteBug && $setup.deleteBug.apply($setup, arguments);
+        })
+      }, _hoisted_4)])];
     }),
     _: 1
     /* STABLE */
@@ -2145,8 +2201,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.bug.designation), 1
   /* TEXT */
-  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
-    "class": "close-button btn",
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "btn close-button",
     onClick: _cache[0] || (_cache[0] = function ($event) {
       return _ctx.$emit('close');
     })
@@ -2548,6 +2604,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 /* harmony import */ var _components_Content_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/Content.vue */ "./src/content/components/Content.vue");
+/* harmony import */ var mitt__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! mitt */ "./node_modules/mitt/dist/mitt.mjs");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2574,6 +2631,8 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
+
+window.emitter = (0,mitt__WEBPACK_IMPORTED_MODULE_2__.default)();
 var extensionOrigin = 'chrome-extension://' + chrome.runtime.id;
 if (location.ancestorOrigins.contains(extensionOrigin)) throw "";
 console.log(extensionOrigin);

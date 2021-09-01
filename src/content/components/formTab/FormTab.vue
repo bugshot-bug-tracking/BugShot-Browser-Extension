@@ -3,7 +3,7 @@
         <State :show="state !== null" :state="state" />
 
         <Container v-if="state === null">
-            <form id="bug-form">
+            <form id="bug-form" @submit.prevent="submit">
                 <h5 style="text-align: center">New Bug Report</h5>
 
                 <div class="form-group">
@@ -25,6 +25,7 @@
                         placeholder="Describe the bug."
                         required
                         v-model="bug.description"
+                        maxlength="250"
                     ></textarea>
                 </div>
 
@@ -70,24 +71,24 @@
                         />
                     </div>
                 </div>
+                <div class="d-inline-flex justify-content-evenly my-2">
+                    <button
+                        id="form-submit"
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        <span>Report Bug!</span>
+                    </button>
 
-                <button
-                    id="form-submit"
-                    type="submit"
-                    class="btn btn-primary mb-2"
-                    @click.prevent="submit"
-                >
-                    <span>Report Bug!</span>
-                </button>
-
-                <button
-                    id="form-reset"
-                    type="reset"
-                    class="btn btn-secondary mb-2"
-                    @click="$emit('default')"
-                >
-                    <span>Cancel</span>
-                </button>
+                    <button
+                        id="form-reset"
+                        type="reset"
+                        class="btn"
+                        @click="$emit('default')"
+                    >
+                        <span>Cancel</span>
+                    </button>
+                </div>
             </form>
         </Container>
 
