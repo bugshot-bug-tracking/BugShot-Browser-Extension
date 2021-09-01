@@ -1,10 +1,19 @@
+$green: hsl(158, 80%, 47%);
+$off-green: hsl(158, 80%, 42%);
+$red: hsl(0, 90%, 60%);
+$orange: hsl(32, 100%, 67%);
+$blue: hsl(218, 80%, 47%);
+$light-blue: hsl(188, 80%, 47%);
+$white-blue: hsl(240, 100%, 95%);
+$light-white-blue: hsl(240, 40%, 98%);
+
 #bug-form {
   display: flex;
   flex-direction: column;
   align-items: stretch;
 
   #bug-description {
-    border: 1px solid #eee5fc;
+    border: 1px solid $white-blue;
     border-radius: 12px;
     margin: 10px 0px 10px 0px;
 
@@ -14,7 +23,7 @@
   }
 
   #bug-name {
-    border: 1px solid #eee5fc;
+    border: 1px solid $white-blue;
     margin: 10px 0px 10px 0px;
 
     &:focus {
@@ -23,12 +32,12 @@
   }
 
   #form-submit {
-    background: #18d992 0% 0% no-repeat padding-box;
+    background: $green 0% 0% no-repeat padding-box;
     border-radius: 20px;
-    border-color: #18d992;
+    border-color: $green;
 
     &:hover {
-      background: #0dac72 0% 0% no-repeat padding-box;
+      background: $off-green 0% 0% no-repeat padding-box;
     }
 
     &:focus {
@@ -37,12 +46,13 @@
   }
 
   #form-reset {
-    background: #1872d9 0% 0% no-repeat padding-box;
+    background: hsl(0, 0%, 100%) 0% 0% no-repeat padding-box;
     border-radius: 20px;
-    border-color: #1872d9;
+    border-color: $off-green;
+    color: $off-green;
 
     &:hover {
-      background: #0d4fac 0% 0% no-repeat padding-box;
+      background: $light-white-blue 0% 0% no-repeat padding-box;
     }
 
     &:focus {
@@ -59,7 +69,7 @@
     padding: 3px 10px;
     height: 24px;
     width: fit-content;
-    background-color: #ffffff;
+    background-color: hsl(0, 0%, 100%);
     background-image: none;
 
     &:focus {
@@ -67,58 +77,58 @@
     }
 
     &.critical {
-      color: #f23838;
-      border-color: #f23838;
+      color: $red;
+      border-color: $red;
 
       &::after {
         content: "Critical";
       }
 
       &:checked {
-        background-color: #f23838;
-        color: #ffffff;
+        background-color: $red;
+        color: hsl(0, 0%, 100%);
       }
     }
 
     &.important {
-      color: #ffb157;
-      border-color: #ffb157;
+      color: $orange;
+      border-color: $orange;
 
       &::after {
         content: "Important";
       }
 
       &:checked {
-        background-color: #ffb157;
-        color: #ffffff;
+        background-color: $orange;
+        color: hsl(0, 0%, 100%);
       }
     }
 
     &.normal {
-      color: #185fd9;
-      border-color: #185fd9;
+      color: $blue;
+      border-color: $blue;
 
       &::after {
         content: "Normal";
       }
 
       &:checked {
-        background-color: #185fd9;
-        color: #ffffff;
+        background-color: $blue;
+        color: hsl(0, 0%, 100%);
       }
     }
 
     &.minoir {
-      color: #18c0d9;
-      border-color: #18c0d9;
+      color: $light-blue;
+      border-color: $light-blue;
 
       &::after {
         content: "Minor";
       }
 
       &:checked {
-        background-color: #18c0d9;
-        color: #ffffff;
+        background-color: $light-blue;
+        color: hsl(0, 0%, 100%);
       }
     }
   }
@@ -128,13 +138,13 @@
   font-weight: normal;
   font-size: 12px;
   line-height: 16px;
-  color: #ffffff;
+  color: hsl(0, 0%, 100%);
   border-radius: 30px;
   width: fit-content;
 
   &.p4 {
     padding: 3px 10px;
-    background-color: #f23838;
+    background-color: $red;
 
     &::after {
       content: "Critical";
@@ -143,7 +153,7 @@
 
   &.p3 {
     padding: 4px;
-    background-color: #ffb157;
+    background-color: $orange;
 
     &::after {
       content: "Important";
@@ -152,7 +162,7 @@
 
   &.p2 {
     padding: 3px 10px;
-    background-color: #185fd9;
+    background-color: $blue;
 
     &::after {
       content: "Normal";
@@ -161,7 +171,7 @@
 
   &.p1 {
     padding: 3px 10px;
-    background-color: #18c0d9;
+    background-color: $light-blue;
 
     &::after {
       content: "Minor";

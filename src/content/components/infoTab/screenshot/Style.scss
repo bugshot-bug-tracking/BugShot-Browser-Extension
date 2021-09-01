@@ -1,3 +1,5 @@
+$green: hsl(158, 80%, 47%);
+
 .thumbnail-wraper {
   cursor: pointer;
 
@@ -12,10 +14,10 @@
     z-index: 1;
     top: 0;
     left: 0;
-    background-image: url("/assets/icons/icn_zoom.svg");
+    background-image: url("/assets/icons/expand.svg");
     background-repeat: no-repeat;
     background-position: center;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: hsla(0, 0%, 0%, 0.15);
     background-size: 10%;
 
     opacity: 0;
@@ -43,7 +45,7 @@
 
   .controls {
     padding: 1vh 0.5vw;
-    background-color: white;
+    background-color: hsl(0, 0%, 100%);
     border-radius: 10px;
     box-shadow: 0 3px 6px rgb(0 0 0 / 10%);
     display: inline-flex;
@@ -54,24 +56,24 @@
     }
 
     > .btn-hide-mark {
-      border: 2px solid #18d992;
+      border: 2px solid $green;
       border-radius: 50px;
-      background-color: #ffffff;
+      background-color: hsl(0, 0%, 100%);
       width: 170px;
       height: 40px;
-      color: #18d992;
+      color: $green;
       font-weight: 500;
 
       &:hover {
-        background-color: #18d992;
-        color: #ffffff;
+        background-color: $green;
+        color: hsl(0, 0%, 100%);
         transition: all 0.2s ease;
         cursor: pointer;
       }
     }
 
     > .images-counter {
-      background-color: #ffffff;
+      background-color: hsl(0, 0%, 100%);
     }
   }
 }
@@ -93,12 +95,12 @@
     background-repeat: no-repeat;
     background-origin: content-box;
     background-position: center;
-    background-color: white;
-    border: 2px solid #18d992;
+    background-color: hsl(0, 0%, 100%);
+    border: 2px solid $green;
     border-radius: 100%;
 
     &:hover {
-      background-color: #18d992;
+      background-color: $green;
       transition: all 0.2s ease;
       cursor: pointer;
     }

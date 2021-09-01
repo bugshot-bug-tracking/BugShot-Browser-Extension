@@ -1,7 +1,10 @@
+$dark-blue: hsl(230, 40%, 20%);
+$light-dark-blue: hsl(230, 40%, 40%);
+
 #sidebar {
   display: flex;
   flex-direction: column;
-  background-color: rgba(26, 32, 64, 1);
+  background-color: $dark-blue;
   min-width: 65px;
   min-height: 60px;
   width: 4vw;
@@ -26,7 +29,7 @@
   }
 
   #logo {
-    background-image: url("/assets/images/global/logo_bugshot.svg");
+    background-image: url("/assets/global/logo_bugshot.svg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -39,46 +42,46 @@
   }
 
   #bug-list-button {
-    background-image: url("/assets/images/sidebar/bug_list_default.svg");
+    background-image: url("/assets/sidebar/bug_list_default.svg");
     background-position: center;
     background-repeat: no-repeat;
 
     &:hover {
-      background-color: #3e4d9a;
+      background-color: $light-dark-blue;
       cursor: pointer;
     }
   }
 
   #admin-button {
-    background-image: url("/assets/images/sidebar/admin_icn_default.svg");
+    background-image: url("/assets/sidebar/admin_icn_default.svg");
     background-position: center;
     background-repeat: no-repeat;
 
     &:hover {
-      background-color: #3e4d9a;
+      background-color: $light-dark-blue;
       cursor: pointer;
     }
   }
 
   #project-button {
-    background-image: url("/assets/images/sidebar/project_icn_default.svg");
+    background-image: url("/assets/sidebar/project_icn_default.svg");
     background-position: center;
     background-repeat: no-repeat;
 
     &:hover {
-      background-color: #3e4d9a;
+      background-color: $light-dark-blue;
       cursor: pointer;
     }
   }
 
   #add-button {
-    background-image: url("/assets/images/sidebar/new_bug_default.svg");
+    background-image: url("/assets/sidebar/new_bug_default.svg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
 
     &:hover {
-      background-image: url("/assets/images/sidebar/new_bug_hover.svg");
+      background-image: url("/assets/sidebar/new_bug_hover.svg");
       cursor: pointer;
     }
   }

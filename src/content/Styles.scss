@@ -11,3 +11,23 @@
 @import "./components/listTab/Style.scss";
 @import "./components/formTab/Style.scss";
 @import "./components/overlay/Style.scss";
+
+$green: hsl(158, 80%, 47%);
+$off-green: hsl(158, 80%, 42%);
+$off-off-green: hsl(158, 80%, 37%);
+$light-green: hsl(158, 79%, 87%);
+
+$red: hsl(0, 90%, 60%);
+$orange: hsl(32, 100%, 67%);
+
+$blue: hsl(218, 80%, 47%);
+$light-blue: hsl(188, 80%, 47%);
+$dark-blue: hsl(230, 40%, 20%);
+$gray-blue: hsl(230, 45%, 75%);
+$white-blue: hsl(240, 100%, 95%);
+$light-white-blue: hsl(240, 40%, 98%);
+
+$purple: hsl(265, 80%, 50%);
+$light-purple: hsl(265, 80%, 80%);
+
+$light-gray: hsl(230, 43%, 95%);

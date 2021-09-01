@@ -1,5 +1,11 @@
 @import "./message/Style.scss";
 
+$white-blue: hsl(240, 100%, 95%);
+$green: hsl(158, 80%, 47%);
+$off-off-green: hsl(158, 80%, 37%);
+$purple: hsl(265, 80%, 50%);
+$light-purple: hsl(265, 80%, 80%);
+
 .comments-component {
   height: 500px;
 
@@ -31,19 +37,19 @@
 
     /* Track */
     &::-webkit-scrollbar-track {
-      background: hsl(230, 43%, 95%) 0% 0% no-repeat padding-box;
+      background: $white-blue 0% 0% no-repeat padding-box;
       border-radius: 8px;
     }
 
     /* Handle */
     &::-webkit-scrollbar-thumb {
-      background: hsl(158, 80%, 47%) 0% 0% no-repeat padding-box;
+      background: $green 0% 0% no-repeat padding-box;
       border-radius: 8px;
     }
 
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
-      background: hsl(158, 80%, 37%) 0% 0% no-repeat padding-box;
+      background: $off-off-green 0% 0% no-repeat padding-box;
     }
   }
 
@@ -70,7 +76,7 @@
 
     > #comment-input {
       width: 100%;
-      border: 1px solid hsl(265, 78%, 77%);
+      border: 1px solid $light-purple;
       border-radius: 12px;
       padding: 0px 10px;
       font-size: 14px;
@@ -85,21 +91,21 @@
 
       &:focus-visible {
         outline: unset;
-        border: 1px solid hsl(265, 78%, 40%);
+        border: 1px solid $purple;
         transition: ease-in 0.1s;
       }
     }
 
     .comment-send-button {
-      background-color: hsl(158, 80%, 47%);
-      color: white;
+      background-color: $green;
+      color: hsl(0, 0%, 100%);
       border-radius: 20px;
       font-size: 14px;
       font-weight: 700;
 
       &:hover {
-        background: hsl(158, 86%, 36%);
-        color: white;
+        background: $off-off-green;
+        color: hsl(0, 0%, 100%);
       }
     }
   }

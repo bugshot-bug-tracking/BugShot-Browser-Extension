@@ -1,3 +1,37 @@
 @import "./info/Style.scss";
 @import "./screenshot/Style.scss";
 @import "./comments/Style.scss";
+
+$red: hsl(0, 90%, 60%);
+
+.delete-btn-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  .btn.delete-bug-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    > .delete-icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 6px;
+      background-image: url("/assets/icons/trash.svg");
+      background-repeat: no-repeat;
+      background-position: center;
+
+      filter: invert(46%) sepia(72%) saturate(6900%) hue-rotate(343deg)
+        brightness(110%) contrast(93%);
+      // color: #f53d3d;
+    }
+
+    > span {
+      color: $red;
+      text-transform: capitalize;
+      font-weight: 600;
+      font-size: 20px;
+    }
+  }
+}

@@ -1,3 +1,5 @@
+$light-white-blue: hsl(240, 40%, 98%);
+
 .state-wraper {
   position: absolute;
   width: 100%;
@@ -18,7 +20,7 @@
     height: inherit;
     width: inherit;
     position: relative;
-    background-color: #f8f8fc;
+    background-color: $light-white-blue;
 
     > .logo {
       align-self: center;
@@ -40,21 +42,21 @@
 
     &.success {
       .logo {
-        background-image: url("/assets/images/gif/bug_confirmation.gif");
+        background-image: url("/assets/gif/bug_confirmation.gif");
       }
 
       .message {
-        background-image: url("/assets/images/global/success.svg");
+        background-image: url("/assets/global/success.svg");
       }
     }
 
     &.error {
       .logo {
-        background-image: url("/assets/images/gif/error_bug.gif");
+        background-image: url("/assets/gif/error_bug.gif");
       }
 
       .message {
-        background-image: url("/assets/images/global/oops.svg");
+        background-image: url("/assets/global/oops.svg");
       }
     }
 
@@ -64,7 +66,7 @@
         background-size: contain;
         background-repeat: no-repeat;
 
-        background-image: url("/assets/images/global/loading.svg");
+        background-image: url("/assets/global/loading.svg");
       }
 
       > .message {
@@ -81,7 +83,7 @@
         background-size: contain;
         background-repeat: no-repeat;
 
-        background-image: url("/assets/images/global/loading.svg");
+        background-image: url("/assets/global/loading.svg");
       }
 
       > .message {

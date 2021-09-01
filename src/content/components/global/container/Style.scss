@@ -1,12 +1,14 @@
+$white-blue: hsl(240, 100%, 95%);
+
 .content-container {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  background: #ffffff 0% 0% no-repeat padding-box;
-  border: 1px solid #eee5fc;
+  background: hsl(0, 0%, 100%) 0% 0% no-repeat padding-box;
+  border: 1px solid $white-blue;
   border-radius: 20px;
   padding: 20px;
-  box-shadow: #00000059 10px 10px 10px -11px;
+  box-shadow: hsla(0, 0%, 0%, 0.35) 10px 10px 10px -11px;
   margin-bottom: 0.5em;
   position: relative;
 }

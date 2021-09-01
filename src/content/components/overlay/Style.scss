@@ -1,11 +1,11 @@
 #overlay {
-  background-color: rgba(248, 248, 252, 0.5);
+  background-color: hsla(0, 0%, 100%, 0.5);
   width: 100vw;
   height: 100vh;
   cursor: crosshair;
 
   &.marked {
-    background-color: rgba(248, 248, 252, 0.3) !important;
+    background-color: hsla(0, 0%, 100%, 0.3) !important;
     z-index: -1 !important;
     cursor: not-allowed !important;
     flex: 1;
@@ -23,18 +23,18 @@
   background-repeat: no-repeat;
 
   &.critical {
-    background-image: url("/assets/images/marks/mark_crit.svg");
+    background-image: url("/assets/marks/mark_crit.svg");
   }
 
   &.important {
-    background-image: url("/assets/images/marks/mark_imp.svg");
+    background-image: url("/assets/marks/mark_imp.svg");
   }
 
   &.normal {
-    background-image: url("/assets/images/marks/mark_normal.svg");
+    background-image: url("/assets/marks/mark_normal.svg");
   }
 
   &.minor {
-    background-image: url("/assets/images/marks/mark_min.svg");
+    background-image: url("/assets/marks/mark_min.svg");
   }
 }
