@@ -76,7 +76,7 @@ $light-white-blue: hsl(240, 40%, 98%);
 
     &.mini-loading {
       z-index: -1;
-      background-color: transparent;
+      background-color: hsla(0, 0%, 100%, 0.5);
 
       > .logo {
         background-position: center;
