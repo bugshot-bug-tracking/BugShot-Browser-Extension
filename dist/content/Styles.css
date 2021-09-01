@@ -651,8 +651,24 @@
   justify-content: space-between;
 }
 .comments-component .comments-top .header {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.comments-component .comments-top .header > span {
   font-weight: 500;
   font-size: 20px;
+}
+.comments-component .comments-top .header > .refresh-button {
+  background-image: url("/assets/icons/arrow-repeat.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 16px;
+  height: 16px;
+}
+.comments-component .comments-top .header > .refresh-button:hover {
+  filter: invert(18%) sepia(63%) saturate(5695%) hue-rotate(265deg) brightness(82%) contrast(109%);
 }
 .comments-component .comments-center {
   margin: 10px 0;

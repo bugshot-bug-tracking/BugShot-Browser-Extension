@@ -1,7 +1,10 @@
 <template>
     <div class="comments-component">
         <div class="comments-top">
-            <div class="header">Comments</div>
+            <div class="header">
+                <span>Comments</span>
+                <div class="btn refresh-button" @click="update" />
+            </div>
         </div>
 
         <div class="comments-center">
@@ -56,7 +59,6 @@ export default {
 
         const update = () => {
             try {
-                messages.value = [];
                 emitLoading(true);
 
                 chrome.runtime.sendMessage(
@@ -68,6 +70,7 @@ export default {
                     },
                     (response) => {
                         emitLoading(false);
+                        messages.value = [];
 
                         switch (response.message) {
                             case "error":
@@ -159,6 +162,7 @@ export default {
             bottom,
             msgs,
             postComment,
+            update,
         };
     },
 };
