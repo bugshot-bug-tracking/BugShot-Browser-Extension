@@ -10,11 +10,10 @@
 	.st4{fill:none;stroke:#000000;stroke-width:2;stroke-linejoin:round;stroke-miterlimit:10;}
 </style>
 <g>
-	<line class="st1" x1="9" y1="8" x2="9" y2="19"/>
-	<line class="st1" x1="15" y1="8" x2="15" y2="19"/>
-	<line class="st1" x1="1" y1="5" x2="23" y2="5"/>
-	<polyline class="st1" points="6,5 10,2 14,2 18,5 	"/>
-	<polyline class="st1" points="4,5 4,20 8,22 16,22 20,20 20,5 	"/>
+	<polygon class="st1" points="4,9 4,18 12,22 20,18 20,9 	"/>
+	<circle cx="12" cy="14" r="2"/>
+	<path class="st1" d="M12,13v5V13z"/>
+	<path class="st1" d="M8,9V7V6c0-2.2,1.8-4,4-4s4,1.8,4,4l0,0"/>
 	<rect class="st0" width="24" height="24"/>
 </g>
 </svg>

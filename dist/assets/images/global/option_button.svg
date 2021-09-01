@@ -1,8 +1,0 @@
-<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'>
-    <g transform='translate(6.667 1.333)'>
-        <circle cx='1.333' cy='1.333' r='1.333' fill='#1a2040'/>
-        <circle cx='1.333' cy='1.333' r='1.333' transform='translate(0 10.667)' fill='#1a2040'/>
-        <circle cx='1.333' cy='1.333' r='1.333' transform='translate(0 5.333)' fill='#1a2040'/>
-    </g>
-    <rect width='16' height='16' fill='none'/>
-</svg>
