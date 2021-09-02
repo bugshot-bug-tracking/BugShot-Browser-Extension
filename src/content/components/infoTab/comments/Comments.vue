@@ -112,7 +112,6 @@ export default {
                         payload: {
                             bug_id: props.bug.id,
                             data: {
-                                user_id: 2, //! this will need to be changed when a user sesion will be available
                                 content: chars.value,
                             },
                         },

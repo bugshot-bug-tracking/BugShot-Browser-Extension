@@ -24,7 +24,7 @@
             />
         </Container>
 
-        <Container v-show="!tabLoading">
+        <Container>
             <State :state="'mini-loading'" :show="isLoading.comments" />
             <Comments :bug="bug" @loading="setLoading($event, 'comments')" />
         </Container>

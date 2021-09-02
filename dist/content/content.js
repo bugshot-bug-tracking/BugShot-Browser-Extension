@@ -764,8 +764,6 @@ __webpack_require__.r(__webpack_exports__);
           payload: {
             bug_id: props.bug.id,
             data: {
-              user_id: 2,
-              //! this will need to be changed when a user sesion will be available
               content: chars.value
             }
           }
@@ -1895,7 +1893,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
       }, 512
       /* NEED_PATCH */
-      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, !$setup.tabLoading]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Container, null, {
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, !$setup.tabLoading]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Container, null, {
         "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
           return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_State, {
             state: 'mini-loading',
@@ -1914,9 +1912,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         _: 1
         /* STABLE */
 
-      }, 512
-      /* NEED_PATCH */
-      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vShow, !$setup.tabLoading]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+      }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
         "class": "btn delete-bug-btn",
         onClick: _cache[4] || (_cache[4] = function () {
           return $setup.deleteBug && $setup.deleteBug.apply($setup, arguments);
