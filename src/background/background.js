@@ -204,21 +204,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			return true;
 
 		case "openProjectPannel":
-			let domain = new URL(sender.tab.url).hostname; // Get domain from the sender URL
-
-			chrome.storage.local.get(domain, (data) => {
-				let project = Object.values(data)[0];
-
-				chrome.tabs
-					.create({
-						url: `${baseURL}/companies/${project.company_id}/projects/${project.id}/statuses`,
-					})
-					.then(() => {
-						sendResponse({
-							message: "ok",
+			getProject(sender.tab.url).then(
+				(project) => {
+					chrome.tabs
+						.create({
+							url: `${baseURL}/companies/${project.company_id}/projects/${project.id}/statuses`,
+						})
+						.then(() => {
+							sendResponse({
+								message: "ok",
+							});
 						});
-					});
-			});
+				}
+			);
 
 			return true;
 

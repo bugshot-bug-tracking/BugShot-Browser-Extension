@@ -91,52 +91,60 @@ export default {
                 fileInfos.push(file);
             });
 
+            emitLoading(false);
+
+            if (errFlag == true) return;
+
             if (props.isRemote) uploadRemote(fileInfos);
             else uploadLocal(fileInfos);
         };
 
         const uploadRemote = (filesInfo) => {
-            emitLoading(true);
+            if (filesInfo.length > 0) {
+                emitLoading(true);
 
-            filesInfo.forEach((file) => {
-                try {
-                    emitLoading(true);
-                    toBase64(file).then((data64) => {
-                        chrome.runtime.sendMessage(
-                            {
-                                message: "saveAttachment",
-                                payload: {
-                                    data: {
-                                        name: file.name,
-                                        data: data64,
+                filesInfo.forEach((file) => {
+                    try {
+                        emitLoading(true);
+                        toBase64(file).then((data64) => {
+                            chrome.runtime.sendMessage(
+                                {
+                                    message: "saveAttachment",
+                                    payload: {
+                                        data: {
+                                            name: file.name,
+                                            data: data64,
+                                        },
+                                        bug_id: props.bug.id,
                                     },
-                                    bug_id: props.bug.id,
                                 },
-                            },
-                            (response) => {
-                                console.log(response);
+                                (response) => {
+                                    console.log(response);
 
-                                switch (response.message) {
-                                    case "error":
-                                        throw response.error;
+                                    switch (response.message) {
+                                        case "error":
+                                            throw response.error;
 
-                                    case "ok":
-                                        emitLoading(false);
+                                        case "ok":
+                                            emitLoading(false);
 
-                                        updateAttachments();
-                                        console.info("Attachment Uploaded.");
-                                        break;
+                                            updateAttachments();
+                                            console.info(
+                                                "Attachment Uploaded."
+                                            );
+                                            break;
+                                    }
                                 }
-                            }
-                        );
-                    });
-                } catch (error) {
-                    emitLoading(false);
+                            );
+                        });
+                    } catch (error) {
+                        emitLoading(false);
 
-                    err.value = error;
-                    console.error(error);
-                }
-            });
+                        err.value = error;
+                        console.error(error);
+                    }
+                });
+            }
         };
 
         const uploadLocal = (filesInfo) => {

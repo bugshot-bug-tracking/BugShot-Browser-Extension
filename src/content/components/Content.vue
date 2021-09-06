@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { nextTick, ref } from "vue";
 
 import Sidebar from "./sidebar/Sidebar.vue";
 import ListTab from "./listTab/Buglist.vue";
@@ -51,6 +51,7 @@ export default {
             showInfo.value = false;
             showForm.value = false;
             showOverlay.value = false;
+
             bugInfo.value = {};
             bugDetails.value = {};
         };
@@ -59,7 +60,7 @@ export default {
             setDefault();
 
             // wait for the values to change to default then execute this
-            setTimeout(() => {
+            nextTick(() => {
                 showSidebar.value = false;
                 showOverlay.value = true;
             }, 1);

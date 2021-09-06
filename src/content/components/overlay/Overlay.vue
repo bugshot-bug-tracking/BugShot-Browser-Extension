@@ -19,7 +19,7 @@ import { ref, computed } from "vue";
 
 export default {
     name: "Overlay",
-    props: ["details"],
+    props: ["details", "default", "sidebar"],
     setup(props, context) {
         const lock = ref(false);
         const showOverlay = ref(true);

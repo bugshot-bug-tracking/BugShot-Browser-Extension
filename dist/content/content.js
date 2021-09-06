@@ -53,7 +53,7 @@ __webpack_require__.r(__webpack_exports__);
     var addEvent = function addEvent() {
       setDefault(); // wait for the values to change to default then execute this
 
-      setTimeout(function () {
+      (0,vue__WEBPACK_IMPORTED_MODULE_0__.nextTick)(function () {
         showSidebar.value = false;
         showOverlay.value = true;
       }, 1);
@@ -318,45 +318,49 @@ __webpack_require__.r(__webpack_exports__);
 
         fileInfos.push(file);
       });
+      emitLoading(false);
+      if (errFlag == true) return;
       if (props.isRemote) uploadRemote(fileInfos);else uploadLocal(fileInfos);
     };
 
     var uploadRemote = function uploadRemote(filesInfo) {
-      emitLoading(true);
-      filesInfo.forEach(function (file) {
-        try {
-          emitLoading(true);
-          toBase64(file).then(function (data64) {
-            chrome.runtime.sendMessage({
-              message: "saveAttachment",
-              payload: {
-                data: {
-                  name: file.name,
-                  data: data64
-                },
-                bug_id: props.bug.id
-              }
-            }, function (response) {
-              console.log(response);
+      if (filesInfo.length > 0) {
+        emitLoading(true);
+        filesInfo.forEach(function (file) {
+          try {
+            emitLoading(true);
+            toBase64(file).then(function (data64) {
+              chrome.runtime.sendMessage({
+                message: "saveAttachment",
+                payload: {
+                  data: {
+                    name: file.name,
+                    data: data64
+                  },
+                  bug_id: props.bug.id
+                }
+              }, function (response) {
+                console.log(response);
 
-              switch (response.message) {
-                case "error":
-                  throw response.error;
+                switch (response.message) {
+                  case "error":
+                    throw response.error;
 
-                case "ok":
-                  emitLoading(false);
-                  updateAttachments();
-                  console.info("Attachment Uploaded.");
-                  break;
-              }
+                  case "ok":
+                    emitLoading(false);
+                    updateAttachments();
+                    console.info("Attachment Uploaded.");
+                    break;
+                }
+              });
             });
-          });
-        } catch (error) {
-          emitLoading(false);
-          err.value = error;
-          console.error(error);
-        }
-      });
+          } catch (error) {
+            emitLoading(false);
+            err.value = error;
+            console.error(error);
+          }
+        });
+      }
     };
 
     var uploadLocal = function uploadLocal(filesInfo) {
@@ -1136,7 +1140,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Overlay",
-  props: ["details"],
+  props: ["details", "default", "sidebar"],
   setup: function setup(props, context) {
     var lock = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(false);
     var showOverlay = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(true);
