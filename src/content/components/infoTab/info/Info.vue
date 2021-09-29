@@ -2,7 +2,7 @@
     <div id="info" class="d-flex flex-column no-wrap">
         <div class="justify-content-between mb-2">
             <div class="title">
-                <div class="content">{{ bug.designation }}</div>
+				<div class="content">{{ bug.attributes.designation }}</div>
             </div>
 
             <div class="btn close-button" @click="$emit('close')" />
@@ -16,7 +16,11 @@
         <div class="justify-content-between">
             <div class="creator">
                 <label>Creator:</label>
-                <div class="content">{{ bug.user_id }}</div>
+				<div class="content">
+					{{
+						`${bug.attributes.user.first_name} ${bug.attributes.user.last_name}`
+					}}
+				</div>
             </div>
             <div class="date">
                 <div class="content">{{ bug.created_at }}</div>
@@ -30,13 +34,13 @@
         <div class="url">
             <label>URL:</label>
             <div class="content">
-                <a :href="bug.url">{{ bug.url }}</a>
+				<a :href="bug.url">{{ bug.attributes.url }}</a>
             </div>
         </div>
 
         <div class="description">
             <label>Description:</label>
-            <div class="content">{{ bug.description }}</div>
+			<div class="content">{{ bug.attributes.description }}</div>
         </div>
 
         <div id="technical" :class="{ open: open }">
@@ -50,22 +54,26 @@
             <div class="technical-info">
                 <div class="os">
                     <label>Operating System:</label>
-                    <div class="content">{{ bug.operating_system }}</div>
+					<div class="content">
+						{{ bug.attributes.operating_system }}
+					</div>
                 </div>
 
                 <div class="browser">
                     <label>Browser:</label>
-                    <div class="content">{{ bug.browser }}</div>
+					<div class="content">{{ bug.attributes.browser }}</div>
                 </div>
 
                 <div class="selector">
                     <label>Selector:</label>
-                    <div class="content">{{ bug.selector }}</div>
+					<div class="content">{{ bug.attributes.selector }}</div>
                 </div>
 
                 <div class="resolution">
                     <label>Resolution:</label>
-                    <div class="content">{{ bug.resolution }}</div>
+					<div class="content">
+						{{ bug.attributes.resolution }}
+					</div>
                 </div>
             </div>
         </div>
@@ -73,12 +81,17 @@
         <div class="grid1x2 my-3">
             <div class="deadline grid1x2">
                 <label>Priority:</label>
-                <div class="content priority" :class="'p' + bug.priority_id" />
+				<div
+					class="content priority"
+					:class="'p' + bug.attributes.priority.id"
+				/>
             </div>
 
             <div class="grid1x2 status">
                 <label>Status:</label>
-                <div class="content status">{{ bug.status.designation }}</div>
+				<div class="content status">
+					{{ bug.attributes.status.designation }}
+				</div>
             </div>
         </div>
 

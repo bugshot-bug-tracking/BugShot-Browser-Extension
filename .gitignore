@@ -1,7 +1,6 @@
 .DS_Store
 node_modules
 
-
 # local env files
 .env.local
 .env.*.local
@@ -26,7 +25,6 @@ pnpm-debug.log*
 *.pub
 *.zip
 /artifacts
-
 
 package-lock.json
 mix-manifest.json

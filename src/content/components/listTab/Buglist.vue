@@ -1,24 +1,24 @@
 <template>
-    <Tab style="width: 17vw">
-        <State :show="state !== null" :state="state" />
+	<Tab style="width: 17vw">
+		<State :show="state !== null" :state="state" />
 
-        <BugGroup
-            v-for="status in bugs.status"
-            :key="status.id"
-            :name="status.name"
-        >
-            <BugCard
-                v-for="bug in bugs.info[status.id]"
-                :key="bug.id"
-                :bug="bug"
-                @info="$emit('info', $event)"
-            />
-        </BugGroup>
-    </Tab>
+		<BugGroup
+			v-for="status in statuses"
+			:key="status.id"
+			:name="status.attributes.designation"
+		>
+			<BugCard
+				v-for="bug in status.bugs"
+				:key="bug.id"
+				:bug="bug"
+				@info="$emit('info', $event)"
+			/>
+		</BugGroup>
+	</Tab>
 </template>
 
 <script>
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, ref } from "vue";
 
 import Tab from "../global/tab/Tab.vue";
 import State from "../global/state/State.vue";
@@ -26,76 +26,55 @@ import BugGroup from "./BugGroup.vue";
 import BugCard from "./BugCard.vue";
 
 export default {
-    name: "Buglist",
-    components: {
-        Tab,
-        State,
-        BugGroup,
-        BugCard,
-    },
-    emits: ["info"],
-    setup() {
-        const bugs = reactive({ status: [], info: [] });
-        const state = ref("loading");
+	name: "Buglist",
+	components: {
+		Tab,
+		State,
+		BugGroup,
+		BugCard,
+	},
+	emits: ["info"],
+	setup() {
+		const statuses = ref([]);
+		const state = ref("loading");
 
-        const update = () => {
-            chrome.runtime.sendMessage(
-                {
-                    message: "getBugs",
-                },
-                (response) => {
-                    state.value = null;
+		const update = () => {
+			chrome.runtime.sendMessage(
+				{
+					message: "getStatusesAndBugs",
+					payload: {
+						project_id: 1, // ! Need to get the proper project here
+					},
+				},
+				(response) => {
+					state.value = null;
+					console.log(response);
 
-                    if (response.message === "error") {
-                        state.value = "error";
-                        console.error(response.error);
-                        return;
-                    }
+					if (response.message === "error") {
+						state.value = "error";
+						console.error(response.error);
+						return;
+					}
 
-                    if (response.message === "empty") {
-                        console.log("No project buggs");
-                        return;
-                    }
+					if (response.message !== "ok") {
+						console.error("What was the message?");
+						return;
+					}
 
-                    if (response.message !== "ok") {
-                        console.error("What was the message?");
-                        return;
-                    }
+					statuses.value = response.payload;
+				}
+			);
+		};
 
-                    bugs.status = [];
-                    bugs.info = [];
+		onMounted(update);
 
-                    response.payload.forEach((stage) => {
-                        bugs.status.push({
-                            id: stage.id,
-                            name: stage.designation,
-                        });
+		emitter.on("deleted", update);
 
-                        bugs.info[stage.id] = stage.bugs;
-
-                        stage.bugs.forEach((bug) => {
-                            if (bug.deadline === null)
-                                bug.deadline = "no deadline";
-                            bug.status = {
-                                id: stage.id,
-                                designation: stage.designation,
-                                project_id: stage.project_id,
-                            };
-                        });
-                    });
-                }
-            );
-        };
-
-        onMounted(update);
-
-        emitter.on("deleted", update);
-
-        return {
-            bugs,
-            state,
-        };
-    },
+		return {
+			statuses,
+			state,
+		};
+	},
 };
 </script>
 

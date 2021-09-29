@@ -1,5 +1,13 @@
-var baseURL = `https://bugshot.view4all.de`;
+var baseURL = `http://localhost:8000`;
+var webURL = `${baseURL}/`;
+var apiURL = `${baseURL}/api/v1`;
 var enableCache = false;
+var token = `1|q3mY7GOjvHheVtJ2TkNChXCd31Xa4NJUWUO4MaYe`;
+var defaultHeaders = {
+	"Authorization": `Bearer ${token}`,
+	"Accept": "application/json",
+}
+
 
 /** Event listener on page update; injects content.js if there is a project for it */
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
@@ -30,18 +38,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
 				console.log({ domain, response });
 
-				if (!response.id) return; // If no project exit
+				if (response === null) return; // If no project exit
 
 				// Inject the scripts in page
-				// ! this may pose a problem later if there are any confilicts with the original page scripts
+				// ! this MAY pose a problem later if there are any confilicts with the original page scripts
 				// ? isolate worlds possible solves this ! not tested ¡
 
-				loadScript(
-					tabId,
-					"libraries/webcomponents-bundle.js",
-					"WebComponents",
-					domain
-				); // For custom elements
+				loadScript(tabId, "libraries/webcomponents-bundle.js", "WebComponents", domain); // For custom elements
 				loadScript(tabId, "manifest.js", "Manifest", domain); //
 				loadScript(tabId, "vendor.js", "Vendor", domain); // Node modules in one place not in every page script
 				loadScript(tabId, "content/content.js", "Content", domain); // The Bug-Shot in-page content(the sidebar)
@@ -146,14 +149,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 						message: "error",
 						error: err,
 					});
-
 					console.error(err);
 				});
 
 			return true;
 
 		case "getBugs":
-			getBugs(sender.tab.url)
+			getBugs(request.payload.project_id)
 				.then((response) => {
 					sendResponse({
 						message: "ok",
@@ -165,14 +167,31 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 						message: "error",
 						error: err,
 					});
+					console.error(err);
+				});
 
+			return true;
+
+		case "getStatusesAndBugs":
+			getStatusesAndBugs(request.payload.project_id)
+				.then((response) => {
+					sendResponse({
+						message: "ok",
+						payload: response,
+					});
+				})
+				.catch((err) => {
+					sendResponse({
+						message: "error",
+						error: err,
+					});
 					console.error(err);
 				});
 
 			return true;
 
 		case "deleteBug":
-			deleteBug(sender.tab.url, request.payload.bug_id)
+			deleteBug(request.payload.bug_id)
 				.then((response) => {
 					sendResponse({
 						message: "ok",
@@ -193,7 +212,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 		case "openAdminPannel":
 			chrome.tabs
 				.create({
-					url: baseURL,
+					url: webURL,
 				})
 				.then(() => {
 					sendResponse({
@@ -205,10 +224,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 		case "openProjectPannel":
 			getProject(sender.tab.url).then(
-				(project) => {
+				(response) => {
 					chrome.tabs
 						.create({
-							url: `${baseURL}/companies/${project.company_id}/projects/${project.id}/statuses`,
+							url: `${webURL}/companies/${response.project.attributes.company_id}/projects/${response.project.id}/statuses`,
 						})
 						.then(() => {
 							sendResponse({
@@ -233,14 +252,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 						message: "error",
 						error: err,
 					});
-
 					console.error(err);
 				});
 
 			return true;
 
 		case "getScreenshots":
-			getScreenshots(sender.tab.url, request.payload.bug_id)
+			getScreenshots(request.payload.bug_id)
 				.then((response) => {
 					sendResponse({
 						message: "ok",
@@ -252,26 +270,34 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 						message: "error",
 						error: err,
 					});
-
 					console.error(err);
 				});
+
 			return true;
 
 		case "sendBug":
 			let bug_details = {
-				screenshot: request.payload.screenshot,
+				project_id: request.payload.project_id,
+				priority_id: request.payload.priority,
 				designation: request.payload.name,
 				description: request.payload.description,
 				url: sender.tab.url,
-				priority_id: request.payload.priority,
 				selector: request.payload.selector,
 				resolution: request.payload.resolution, // this is an object {width, height}
+				screenshot: request.payload.screenshot,
 				mark_coords: request.payload.mark_coords, // this is an object {x, y}
 			};
 
 			sendBugDetails(bug_details)
 				.then((response) => {
-					sendBugScreenshot(bug_details, response.id).then(() => {
+					console.log(response);
+
+					let data = {
+						screenshot: bug_details.screenshot,
+						mark_coords: bug_details.mark_coords
+					}
+
+					sendBugScreenshot(response.id, data).then(() => {
 						sendResponse({
 							message: "ok",
 							payload: response,
@@ -283,18 +309,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 						message: "error",
 						error: err,
 					});
-
 					console.error(err);
 				});
 
 			return true;
 
 		case "saveAttachment":
-			saveAttachment(
-				request.payload.data,
-				sender.tab.url,
-				request.payload.bug_id
-			)
+			saveAttachment(request.payload.bug_id, request.payload.data,)
 				.then((response) => {
 					sendResponse({
 						message: "ok",
@@ -306,14 +327,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 						message: "error",
 						error: err,
 					});
-
 					console.error(err);
 				});
 
 			return true;
 
-		case "getAttachment":
-			getAttachment(sender.tab.url, request.payload.bug_id)
+		case "getAttachments":
+			getAttachments(request.payload.bug_id)
 				.then((response) => {
 					sendResponse({
 						message: "ok",
@@ -325,22 +345,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 						message: "error",
 						error: err,
 					});
-
 					console.error(err);
 				});
 
 			return true;
 
 		case "downloadAttachment":
-			downloadAttachment(
-				sender.tab.url,
-				request.payload.bug_id,
-				request.payload.data
-			)
-				.then((response) => {
+			downloadAttachment(request.payload.attachment_id)
+				.then(() => {
 					sendResponse({
 						message: "ok",
-						payload: response,
 					});
 				})
 				.catch((err) => {
@@ -348,18 +362,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 						message: "error",
 						error: err,
 					});
-
 					console.error(err);
 				});
 
 			return true;
 
 		case "deleteAttachment":
-			deleteAttachment(
-				sender.tab.url,
-				request.payload.bug_id,
-				request.payload.data
-			)
+			deleteAttachment(request.payload.attachment_id)
 				.then((response) => {
 					sendResponse({
 						message: "ok",
@@ -371,14 +380,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 						message: "error",
 						error: err,
 					});
-
 					console.error(err);
 				});
 
 			return true;
 
 		case "getComments":
-			getComments(sender.tab.url, request.payload.bug_id)
+			getComments(request.payload.bug_id)
 				.then((response) => {
 					sendResponse({
 						message: "ok",
@@ -390,14 +398,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 						message: "error",
 						error: err,
 					});
-
 					console.error(err);
 				});
 
 			return true;
 
 		case "postComment":
-			postComment(sender.tab.url, request.payload.bug_id, request.payload.data)
+			postComment(request.payload.bug_id, request.payload.content)
 				.then((response) => {
 					sendResponse({
 						message: "ok",
@@ -409,7 +416,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 						message: "error",
 						error: err,
 					});
-
 					console.error(err);
 				});
 
@@ -485,225 +491,257 @@ async function logged() {
 	return true;
 }
 
+
+
+
+
+
+//** --------- GET --------- */
+
 /**
  * Check if the URL belong to a project and return the details
  * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/*)
- * @return {Promise} All info regarding current project or 'null' if not found
- * @throws {Object} A 'message' and the 'response' object from fetch function
+ * @return {Array} All info regarding projects on the URL or 'null' if not found
+ * @throws {Object} A 'message' and the 'response' object from fetch function in case response code != 2xx or 404
  */
 async function getProject(projectURL) {
-	if (enableCache === false) return getProjectRemote(projectURL);
+	let origin = new URL(projectURL).origin; // Get url origin from the URL
 
-	let domain = new URL(projectURL).hostname; // Get domain from the URL
-
-	// Check to see if it is already in local storage
-	let cacheProject = await getProjectFromCache(projectURL);
-
-	// If the domain is in cache but there is no porject asociated
-	if (cacheProject[domain] === null) return null;
-
-	// If the domain is in cache with a project
-	if (!!cacheProject[domain]) return cacheProject[domain];
-
-	// If not get from remote
-	let remoteProject = getProjectRemote(projectURL);
-
-	// Save in local storage {"the domain": {project info}}
-	// If no data from remote save null
-	let obj = {};
-	obj[domain] = remoteProject == null ? null : remoteProject;
-
-	chrome.storage.local.set(obj);
-
-	if (remoteProject == null) return null;
-
-	return remoteProject;
-}
-
-/**
- * Check if the URL belong to a project and return the details from server
- * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/*)
- * @return {Promise} All info regarding current project or 'null' if not found
- * @throws {Object} A 'message' and the 'response' object from fetch function
- */
-async function getProjectRemote(projectURL) {
-	let domain = new URL(projectURL).hostname; // Get domain from the URL
-
-	let requestURL = `${baseURL}/api/check-project`;
+	let requestURL = `${apiURL}/check-project`;
 
 	let response = await fetch(requestURL, {
-		method: "GET",
+		method: "POST",
 		headers: {
-			"Content-type": "application/json",
-			clientId: 5,
-			version: "1.0.0",
-			projectUrl: domain,
-			"Access-Control-Allow-Headers": "*",
-			"Access-Control-Allow-Origin": "*",
-			"Access-Control-Allow-Methods": "*",
+			"Authorization": `Bearer ${token}`,
+			"Accept": "application/json",
+			"Content-type": "application/json"
 		},
+		body: JSON.stringify({
+			url: origin
+		}),
 	});
 
 	if (response.ok) {
-		let json = await response.json();
+		let res = await response.json();
 
-		if (json.success === false) return null;
-		else return json.data;
+		if (res.data.length === 1)
+			return res.data[0];
+
+		return res.data;
 	}
+
+	if (!response.ok && response.status === 404) // Expect 404 to mean no project found
+		return null;
 
 	throw {
 		message: "Not a good response from server",
 		response: response,
 	};
 }
-/**
- * Check if the project is in local storage
- * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/*)
- * @return {Promise} All info regarding current project from storage or '{}' if not found
- */
-async function getProjectFromCache(projectURL) {
-	let domain = new URL(projectURL).hostname; // Get domain from the URL
-
-	return new Promise(function (resolve) {
-		chrome.storage.local.get(domain, (data) => {
-			resolve(data);
-		});
-	});
-}
 
 /**
- * Get the stage list and their bug list associated with a project
- * @param  {String} projectURL The URL of the project (Ex: https://www.google.com/)
- * @return {Promise} Array with all the curent stages (columns) and their respective list of bugs, null otherwise
- * @throws Will throw an error messaje in case of server problems (codes >= 500) from remote
+ * Get the bug list associated with a project
+ * @param  {String} project_id The id of the project
+ * @return {Array} Array with all the bugs associated with a project, null if project not found
+ * @throws {Object} A 'message' and the 'response' object from fetch function in case response code != 2xx or 404
  */
-async function getBugs(projectURL) {
-	project = await getProject(projectURL); // Will throw error if project not in remote
+async function getBugs(project_id) {
 
-	if (project === null) return null; // In case the project was taken from storage and no info is given
-
-	var url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs`;
+	let url = `${apiURL}/project/${project_id}/bugs`;
 
 	let response = await fetch(url, {
 		method: "GET",
-		withCredentials: true,
-		credentials: "include",
-		headers: {
-			clientId: "5",
-			version: "1.0.0",
-		},
+		headers: defaultHeaders,
 	});
 
-	if (!response.ok) return null;
+	if (response.ok) {
+		let res = await response.json();
+		return res;
+	}
 
-	response = await response.json();
-	return response.data;
+	if (!response.ok && response.status === 404) // Expect 404 to mean no project found
+		return null;
+
+	throw {
+		message: "Not a good response from server",
+		response: response,
+	};
 }
 
-async function deleteBug(projectURL, bug_id) {
-	let project = await getProject(projectURL);
+async function getStatusesAndBugs(project_id) {
+	let statuses = await getStatuses(project_id);
 
-	if (project === null) return null;
+	if (statuses === null) return null;
 
-	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}`;
+	for (let index = 0; index < statuses.length; index++) {
+		const status = statuses[index];
+		status["bugs"] = await getBugsByStatus(status.id);
+	}
+
+	return statuses;
+}
+
+async function getStatuses(project_id) {
+	let url = `${apiURL}/project/${project_id}/statuses`;
 
 	let response = await fetch(url, {
-		method: "DELETE",
-		headers: {
-			clientId: "5",
-			version: "1.0.0",
-		},
+		method: "GET",
+		headers: defaultHeaders,
 	});
 
-	if (!response.ok) return null;
+	if (response.ok) {
+		let res = await response.json();
+		return res;
+	}
 
-	response = await response.json();
-	return response.data;
+	if (!response.ok && response.status === 404) // Expect 404 to mean no project found
+		return null;
+
+	throw {
+		message: "Not a good response from server",
+		response: response,
+	};
 }
 
-async function takeScreenshot(windowID) {
-	return await chrome.tabs.captureVisibleTab(windowID, {
-		format: "jpeg",
-		quality: 100,
+async function getBugsByStatus(status_id) {
+
+	let url = `${apiURL}/status/${status_id}/bugs`;
+
+	let response = await fetch(url, {
+		method: "GET",
+		headers: defaultHeaders,
 	});
+
+	if (response.ok) {
+		let res = await response.json();
+		return res;
+	}
+
+	if (!response.ok && response.status === 404) // Expect 404 to mean no project found
+		return null;
+
+	throw {
+		message: "Not a good response from server",
+		response: response,
+	};
 }
 
-async function getScreenshots(projectURL, bug_id) {
+async function getScreenshots(bug_id) {
 	let screenArray = [];
 
-	let infos = await getScreenshotsInfo(projectURL, bug_id);
+	let infos = await getScreenshotsInfo(bug_id);
 
 	if (infos === null) return null;
 
 	for (let index = 0; index < infos.length; index++) {
 		const info = infos[index];
 
-		let data = await getScreenshotsData(projectURL, bug_id, info.id);
+		let data = await getScreenshotsData(info.id);
 
 		if (data === null) continue;
 
-		let screenshot = {
-			id: info.id,
-			designation: info.designation,
-			data: `data:image/jpeg;base64,${data.base64}`,
-			position: {
-				x: data.position_x,
-				y: data.position_y,
-			},
-		};
+		info["attributes"]["data"] = data
+		let screenshot = info;
 
 		screenArray.push(screenshot);
 	}
 
+	console.log(screenArray);
 	return screenArray;
 }
 
-async function getScreenshotsInfo(projectURL, bug_id) {
-	let project = await getProject(projectURL);
-
-	if (project === null) return null;
-
-	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/screenshots`;
+async function getScreenshotsData(screenshot_id) {
+	let url = `${apiURL}/screenshot/${screenshot_id}/download`;
 
 	let response = await fetch(url, {
 		method: "GET",
-		headers: {
-			clientId: "5",
-			version: "1.0.0",
-		},
+		headers: defaultHeaders,
 	});
 
-	if (!response.ok) return null;
+	if (response.ok) {
+		let res = await (await response.blob()).text();
+		return res;
+	}
 
-	response = await response.json();
-	return response.data;
+	if (!response.ok && response.status === 404) // Expect 404 to mean no screenshot found
+		return null;
+
+	throw {
+		message: "Not a good response from server",
+		response: response,
+	};
 }
 
-async function getScreenshotsData(projectURL, bug_id, screenshot_id) {
-	let project = await getProject(projectURL);
-
-	if (project === null) return null;
-
-	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/screenshots/${screenshot_id}`;
+async function getScreenshotsInfo(bug_id) {
+	let url = `${apiURL}/bug/${bug_id}/screenshots`;
 
 	let response = await fetch(url, {
 		method: "GET",
-		headers: {
-			clientId: "5",
-			version: "1.0.0",
-		},
+		headers: defaultHeaders,
 	});
 
-	if (!response.ok) return null;
+	if (response.ok) {
+		let res = await response.json();
+		return res;
+	}
 
-	response = await response.json();
-	return response.data;
+	if (!response.ok && response.status === 404) // Expect 404 to mean no project found
+		return null;
+
+	throw {
+		message: "Not a good response from server",
+		response: response,
+	};
 }
 
-async function sendBugDetails(bug_details) {
-	let project = await getProject(bug_details.url);
+async function getAttachments(bug_id) {
+	let url = `${apiURL}/bug/${bug_id}/attachments`;
 
-	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs`;
+	let response = await fetch(url, {
+		method: "GET",
+		headers: defaultHeaders,
+	});
+
+	if (response.ok) {
+		let res = await response.json();
+		return res;
+	}
+
+	if (!response.ok && response.status === 404) // Expect 404 to mean no bug found
+		return null;
+
+	throw {
+		message: "Not a good response from server",
+		response: response,
+	};
+}
+
+async function getComments(bug_id) {
+	let url = `${apiURL}/bug/${bug_id}/comments`;
+
+	let response = await fetch(url, {
+		method: "GET",
+		headers: defaultHeaders,
+	});
+
+	if (response.ok) {
+		let res = await response.json();
+		return res;
+	}
+
+	if (!response.ok && response.status === 404) // Expect 404 to mean no bug found
+		return null;
+
+	throw {
+		message: "Not a good response from server",
+		response: response,
+	};
+}
+
+
+//** --------- POST --------- */
+async function sendBugDetails(data) {
+	let url = `${apiURL}/bug`;
 
 	let osInfo = await getOS();
 	let browser = getBrowser();
@@ -711,185 +749,196 @@ async function sendBugDetails(bug_details) {
 	let response = await fetch(url, {
 		method: "POST",
 		headers: {
+			"Authorization": `Bearer ${token}`,
+			"Accept": "application/json",
 			"Content-type": "application/json",
-			clientId: "5",
-			version: "1.0.0",
 		},
 		body: JSON.stringify({
-			designation: bug_details.designation,
-			description: bug_details.description,
-			url: bug_details.url,
-			priority_id: bug_details.priority_id,
+			project_id: data.project_id,
+			priority_id: data.priority_id,
+			designation: data.designation,
+			description: data.description,
+			url: data.url,
 			operating_system: `${osInfo.os} ${osInfo.arch}`,
 			browser: `${browser.name} ${browser.version}`,
-			selector: bug_details.selector,
-			resolution: `${bug_details.resolution.width}x${bug_details.resolution.height}`,
+			selector: data.selector,
+			resolution: `${data.resolution.width}x${data.resolution.height}`,
+			// deadline: null,
 		}),
 	});
 
-	if (!response.ok) return null;
+	if (response.ok) {
+		let res = await response.json();
+		return res.data;
+	}
 
-	response = await response.json();
-	return response.data;
+	if (!response.ok && response.status === 404) // Expect 404 to mean no project found
+		return null;
+
+	throw {
+		message: "Not a good response from server",
+		response: response,
+	};
 }
 
-async function saveAttachment(data, projectURL, bug_id) {
-	let project = await getProject(projectURL);
-
-	if (project === null) return null;
-
-	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/attachments`;
+async function postComment(bug_id, content) {
+	let url = `${apiURL}/comment`;
 
 	let response = await fetch(url, {
 		method: "POST",
 		headers: {
-			clientId: "5",
-			version: "1.0.0",
+			"Authorization": `Bearer ${token}`,
+			"Accept": "application/json",
 			"Content-type": "application/json",
 		},
 		body: JSON.stringify({
-			designation: data.name,
-			base64: data.data,
+			bug_id: bug_id,
+			content: content,
 		}),
 	});
 
-	if (!response.ok) return null;
+	if (response.ok) {
+		let res = await response.json();
+		return res.data;
+	}
 
-	response = await response.json();
-	return response.data;
+	if (!response.ok && response.status === 404) // Expect 404 to mean no bug found
+		return null;
+
+	throw {
+		message: "Not a good response from server",
+		response: response,
+	};
 }
 
-async function getAttachment(projectURL, bug_id) {
-	let project = await getProject(projectURL);
+async function sendBugScreenshot(bug_id, data) {
 
-	if (project === null) return null;
-
-	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/attachments`;
-
-	let response = await fetch(url, {
-		method: "GET",
-		headers: {
-			clientId: "5",
-			version: "1.0.0",
-		},
-	});
-
-	if (!response.ok) return null;
-
-	response = await response.json();
-	return response.data;
-}
-
-async function downloadAttachment(projectURL, bug_id, data) {
-	let project = await getProjectWithCache(projectURL);
-
-	if (project === null) return null; // In case the project was taken from storage and no info is given
-
-	let url = `${baseURL}/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/attachments/${data.id}/download`;
-
-	return await chrome.tabs.create({
-		url: url,
-	});
-}
-
-async function deleteAttachment(projectURL, bug_id, data) {
-	let project = await getProject(projectURL);
-
-	if (project === null) return null;
-
-	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/attachments/${data.id}`;
-
-	let response = await fetch(url, {
-		method: "DELETE",
-		headers: {
-			clientId: "5",
-			version: "1.0.0",
-		},
-	});
-
-	if (!response.ok) return null;
-
-	response = await response.json();
-	return response.data;
-}
-
-async function getComments(projectURL, bug_id) {
-	let project = await getProject(projectURL);
-
-	if (project === null) return null;
-
-	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/comments`;
-
-	let response = await fetch(url, {
-		method: "GET",
-		headers: {
-			clientId: "5",
-			version: "1.0.0",
-		},
-	});
-
-	if (!response.ok) return null;
-
-	response = await response.json();
-	return response.data;
-}
-
-async function postComment(projectURL, bug_id, data) {
-	let project = await getProject(projectURL);
-
-	if (project === null) return null;
-
-	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs/${bug_id}/comments`;
-
-	let response = await fetch(url, {
-		method: "POST",
-		headers: {
-			clientId: "5",
-			version: "1.0.0",
-			"Content-type": "application/json",
-		},
-		body: JSON.stringify({
-			content: data.content,
-		}),
-	});
-
-	if (!response.ok) return null;
-
-	response = await response.json();
-	return response.data;
-}
-
-async function sendBugScreenshot(bug_details, bugID) {
-	let project = await getProject(bug_details.url);
-
-	if (project === null) return null;
-
-	let url = `${baseURL}/api/companies/${project.company_id}/projects/${project.id}/bugs/${bugID}/screenshots`;
+	let url = `${apiURL}/screenshot`;
 
 	let today = new Date();
 	let timestamp = today.toISOString();
 	timestamp += ".jpg";
 
+	let formData = new FormData();
+	formData.append("bug_id", bug_id);
+	formData.append("position_x", data.mark_coords.x);
+	formData.append("position_y", data.mark_coords.y);
+	formData.append("file", new Blob([data.screenshot], { type: 'image/jpeg' }), timestamp);
+
 	let response = await fetch(url, {
 		method: "POST",
-		headers: {
-			"Content-type": "application/json",
-			clientId: "5",
-			version: "1.0.0",
-		},
-		body: JSON.stringify({
-			base64: bug_details.screenshot.replace(/^data:image\/[a-z]+;base64,/, ""), // Because ':' and ';' get lost in transit
-			designation: timestamp,
-			position_x: bug_details.mark_coords.x,
-			position_y: bug_details.mark_coords.y,
-			// TODO moidify the API endpoint and request to set the page_XY coords
-		}),
+		headers: defaultHeaders,
+		body: formData
 	});
 
-	if (!response.ok) return null;
+	if (response.ok) {
+		let res = await response.json();
+		return res;
+	}
 
-	response = await response.json();
-	return response.data;
+	if (!response.ok && response.status === 404) // Expect 404 to mean no bug found
+		return null;
+
+	throw {
+		message: "Not a good response from server",
+		response: response,
+	};
+}
+
+async function saveAttachment(bug_id, data) {
+	let url = `${apiURL}/attachment`;
+
+	// for base64 to binary array
+	let binary = await (await fetch(data.data)).arrayBuffer();
+	let formData = new FormData();
+	formData.append("bug_id", bug_id);
+	formData.append("file", new File([binary], data.designation));
+
+	let response = await fetch(url, {
+		method: "POST",
+		headers: defaultHeaders,
+		body: formData
+	});
+
+	if (response.ok) {
+		let res = await response.json();
+		return res;
+	}
+
+	if (!response.ok && response.status === 404) // Expect 404 to mean no bug found
+		return null;
+
+	throw {
+		message: "Not a good response from server",
+		response: response,
+	};
+}
+
+
+//** --------- PUT --------- */
+//** --------- DELETE --------- */
+
+async function deleteBug(bug_id) {
+	let url = `${apiURL}/bug/${bug_id}`;
+
+	let response = await fetch(url, {
+		method: "DELETE",
+		headers: defaultHeaders,
+	});
+
+	if (response.ok)
+		return true; // Delete returns 204
+
+	if (!response.ok && response.status === 404) // Expect 404 to mean no bug found
+		return null;
+
+	throw {
+		message: "Not a good response from server",
+		response: response,
+	};
+}
+
+async function deleteAttachment(attachment_id) {
+	let url = `${apiURL}/attachment/${attachment_id}`;
+
+	let response = await fetch(url, {
+		method: "DELETE",
+		headers: defaultHeaders,
+	});
+
+	if (response.ok)
+		return true; // Delete returns 204
+
+	if (!response.ok && response.status === 404) // Expect 404 to mean no bug found
+		return null;
+
+	throw {
+		message: "Not a good response from server",
+		response: response,
+	};
+}
+
+
+//** --------- Download --------- */
+
+async function downloadAttachment(attachment_id) {
+	return chrome.downloads.download({
+		url: `${apiURL}/attachment/${attachment_id}/download`,
+		method: "GET",
+		headers: [
+			{ name: "Authorization", value: `Bearer ${token}` },
+			{ name: "Accept", value: "application/json" },
+		],
+	});
+}
+
+//** --------- Others --------- */
+
+async function takeScreenshot(windowID) {
+	return await chrome.tabs.captureVisibleTab(windowID, {
+		format: "jpeg",
+		quality: 100,
+	});
 }
 
 async function getOS() {

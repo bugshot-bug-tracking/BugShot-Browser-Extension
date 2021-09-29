@@ -2,7 +2,7 @@
     <div class="bug-card">
         <div class="card">
             <div class="card-header bug-title" @click="$emit('info', bug)">
-                {{ bug.designation }}
+				{{ bug.attributes.designation }}
             </div>
 
             <div class="card-body">
@@ -12,7 +12,7 @@
                     </div>
                     <div
                         class="bug priority"
-                        :class="'p' + bug.priority_id"
+						:class="'p' + bug.attributes.priority.id"
                     ></div>
                 </div>
             </div>
