@@ -8,173 +8,174 @@ $white-blue: hsl(240, 100%, 95%);
 $light-white-blue: hsl(240, 40%, 98%);
 
 #bug-form {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
 
-  #bug-description {
-    border: 1px solid $white-blue;
-    border-radius: 12px;
-    margin: 10px 0px 10px 0px;
+	#bug-description {
+		border: 1px solid $white-blue;
+		border-radius: 12px;
+		margin: 10px 0px 10px 0px;
 
-    &:focus {
-      box-shadow: unset;
-    }
-  }
+		&:focus {
+			box-shadow: unset;
+		}
+	}
 
-  #bug-name {
-    border: 1px solid $white-blue;
-    margin: 10px 0px 10px 0px;
+	#bug-name {
+		border: 1px solid $white-blue;
+		margin: 10px 0px 10px 0px;
 
-    &:focus {
-      box-shadow: unset;
-    }
-  }
+		&:focus {
+			box-shadow: unset;
+		}
+	}
 
-  #form-submit {
-    background: $green 0% 0% no-repeat padding-box;
-    border-radius: 20px;
-    border-color: $green;
+	#form-submit {
+		background: $green 0% 0% no-repeat padding-box;
+		border-radius: 20px;
+		border-color: $green;
 
-    &:hover {
-      background: $off-green 0% 0% no-repeat padding-box;
-    }
+		&:hover {
+			background: $off-green 0% 0% no-repeat padding-box;
+		}
 
-    &:focus {
-      box-shadow: unset;
-    }
-  }
+		&:focus {
+			box-shadow: unset;
+		}
+	}
 
-  #form-reset {
-    background: hsl(0, 0%, 100%) 0% 0% no-repeat padding-box;
-    border-radius: 20px;
-    border-color: $off-green;
-    color: $off-green;
+	#form-reset {
+		background: hsl(0, 0%, 100%) 0% 0% no-repeat padding-box;
+		border-radius: 20px;
+		border-color: $off-green;
+		color: $off-green;
 
-    &:hover {
-      background: $light-white-blue 0% 0% no-repeat padding-box;
-    }
+		&:hover {
+			background: $light-white-blue 0% 0% no-repeat padding-box;
+		}
 
-    &:focus {
-      box-shadow: unset;
-    }
-  }
+		&:focus {
+			box-shadow: unset;
+		}
+	}
 
-  .option {
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 16px;
-    text-align: center;
-    border-radius: 30px;
-    padding: 3px 10px;
-    height: 24px;
-    width: fit-content;
-    background-color: hsl(0, 0%, 100%);
-    background-image: none;
+	.option {
+		font-weight: normal;
+		font-size: 12px;
+		line-height: 16px;
+		text-align: center;
+		border-radius: 30px;
+		padding: 3px 10px;
+		height: 24px;
+		width: fit-content;
+		background-color: hsl(0, 0%, 100%);
+		background-image: none;
 
-    &:focus {
-      box-shadow: unset;
-    }
+		&:focus {
+			box-shadow: unset;
+		}
 
-    &.critical {
-      color: $red;
-      border-color: $red;
+		&.critical {
+			color: $red;
+			border-color: $red;
 
-      &::after {
-        content: "Critical";
-      }
+			&::after {
+				content: "Critical";
+			}
 
-      &:checked {
-        background-color: $red;
-        color: hsl(0, 0%, 100%);
-      }
-    }
+			&:checked {
+				background-color: $red;
+				color: hsl(0, 0%, 100%);
+			}
+		}
 
-    &.important {
-      color: $orange;
-      border-color: $orange;
+		&.important {
+			color: $orange;
+			border-color: $orange;
 
-      &::after {
-        content: "Important";
-      }
+			&::after {
+				content: "Important";
+			}
 
-      &:checked {
-        background-color: $orange;
-        color: hsl(0, 0%, 100%);
-      }
-    }
+			&:checked {
+				background-color: $orange;
+				color: hsl(0, 0%, 100%);
+			}
+		}
 
-    &.normal {
-      color: $blue;
-      border-color: $blue;
+		&.normal {
+			color: $blue;
+			border-color: $blue;
 
-      &::after {
-        content: "Normal";
-      }
+			&::after {
+				content: "Normal";
+			}
 
-      &:checked {
-        background-color: $blue;
-        color: hsl(0, 0%, 100%);
-      }
-    }
+			&:checked {
+				background-color: $blue;
+				color: hsl(0, 0%, 100%);
+			}
+		}
 
-    &.minoir {
-      color: $light-blue;
-      border-color: $light-blue;
+		&.minoir {
+			color: $light-blue;
+			border-color: $light-blue;
 
-      &::after {
-        content: "Minor";
-      }
+			&::after {
+				content: "Minor";
+			}
 
-      &:checked {
-        background-color: $light-blue;
-        color: hsl(0, 0%, 100%);
-      }
-    }
-  }
+			&:checked {
+				background-color: $light-blue;
+				color: hsl(0, 0%, 100%);
+			}
+		}
+	}
 }
 
 .priority {
-  font-weight: normal;
-  font-size: 12px;
-  line-height: 16px;
-  color: hsl(0, 0%, 100%);
-  border-radius: 30px;
-  width: fit-content;
+	font-weight: normal;
+	font-size: 12px;
+	line-height: 16px;
+	color: hsl(0, 0%, 100%);
+	border-radius: 30px;
+	width: fit-content;
+	height: fit-content;
 
-  &.p4 {
-    padding: 3px 10px;
-    background-color: $red;
+	&.p4 {
+		padding: 3px 10px;
+		background-color: $red;
 
-    &::after {
-      content: "Critical";
-    }
-  }
+		&::after {
+			content: "Critical";
+		}
+	}
 
-  &.p3 {
-    padding: 4px;
-    background-color: $orange;
+	&.p3 {
+		padding: 4px;
+		background-color: $orange;
 
-    &::after {
-      content: "Important";
-    }
-  }
+		&::after {
+			content: "Important";
+		}
+	}
 
-  &.p2 {
-    padding: 3px 10px;
-    background-color: $blue;
+	&.p2 {
+		padding: 3px 10px;
+		background-color: $blue;
 
-    &::after {
-      content: "Normal";
-    }
-  }
+		&::after {
+			content: "Normal";
+		}
+	}
 
-  &.p1 {
-    padding: 3px 10px;
-    background-color: $light-blue;
+	&.p1 {
+		padding: 3px 10px;
+		background-color: $light-blue;
 
-    &::after {
-      content: "Minor";
-    }
-  }
+		&::after {
+			content: "Minor";
+		}
+	}
 }
