@@ -3,6 +3,7 @@ var webURL = `${baseURL}/`;
 var apiURL = `${baseURL}/api/v1`;
 var enableCache = false;
 var token = `1|q3mY7GOjvHheVtJ2TkNChXCd31Xa4NJUWUO4MaYe`;
+var token2 = `2|rCCCfjBQxdsF1NVWaSJh7Jls3IXgwKUCLChoxjXu`;
 var defaultHeaders = {
 	"Authorization": `Bearer ${token}`,
 	"Accept": "application/json",
@@ -22,41 +23,44 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 			});
 	};
 
-	logged().then((response) => {
-		// If not logged in exit
-		if (!response) return;
+	// If not logged in exit
+	if (!logged()) return;
 
-		// If tab hasn't finished loading or it's not a legit one (http/https)
-		if (!(changeInfo.status === "complete" && /^http/.test(tab.url))) return;
+	// If thab loading is not complete exit
+	if (!(changeInfo.status === "complete")) return;
 
-		// Get domain of the current page
-		let domain = new URL(tab.url).hostname;
+	// If tab url is not http/https or https exit
+	if (!(/^http/.test(tab.url))) return;
 
-		// Get the project info from storage or remote (with cacheing if from remote)
-		getProject(tab.url)
-			.then((response) => {
 
-				console.log({ domain, response });
+	managedProject(tab.url)
+		.then(response => {
 
-				if (response === null) return; // If no project exit
+			// Get origin of the current page
+			let origin = new URL(tab.url).origin;
 
-				// Inject the scripts in page
-				// ! this MAY pose a problem later if there are any confilicts with the original page scripts
-				// ? isolate worlds possible solves this ! not tested ¡
+			console.log({ origin, response });
 
-				loadScript(tabId, "libraries/webcomponents-bundle.js", "WebComponents", domain); // For custom elements
-				loadScript(tabId, "manifest.js", "Manifest", domain); //
-				loadScript(tabId, "vendor.js", "Vendor", domain); // Node modules in one place not in every page script
-				loadScript(tabId, "content/content.js", "Content", domain); // The Bug-Shot in-page content(the sidebar)
-			})
-			.catch((err) => {
-				console.log({
-					domain,
-					result: err,
-					location: "Page Updated Listener",
-				});
+			// If no project exit
+			if (response === null) return;
+
+			// Inject the scripts in page
+			// ! this MAY pose a problem later if there are any confilicts with the original page scripts
+			// ? isolate worlds possible solves this ! not tested ¡
+
+			loadScript(tabId, "libraries/webcomponents-bundle.js", "WebComponents", origin); // For custom elements
+			loadScript(tabId, "manifest.js", "Manifest", origin); //
+			loadScript(tabId, "vendor.js", "Vendor", origin); // Node modules in one place not in every page script
+			loadScript(tabId, "content/content.js", "Content", origin); // The Bug-Shot in-page content(the sidebar)
+		})
+		.catch((err) => {
+			let origin = new URL(tab.url).origin;
+			console.log({
+				origin,
+				result: err,
+				location: "Page onUpdated Listener",
 			});
-	});
+		});
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -137,7 +141,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			break;
 
 		case "checkProject":
-			getProject(sender.tab.url)
+			managedProject(sender.tab.url)
 				.then((response) => {
 					sendResponse({
 						message: "ok",
@@ -155,38 +159,42 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			return true;
 
 		case "getBugs":
-			getBugs(request.payload.project_id)
-				.then((response) => {
-					sendResponse({
-						message: "ok",
-						payload: response,
+			managedProject(sender.tab.url).then(project => {
+				getBugs(project.project.id)
+					.then((response) => {
+						sendResponse({
+							message: "ok",
+							payload: response,
+						});
+					})
+					.catch((err) => {
+						sendResponse({
+							message: "error",
+							error: err,
+						});
+						console.error(err);
 					});
-				})
-				.catch((err) => {
-					sendResponse({
-						message: "error",
-						error: err,
-					});
-					console.error(err);
-				});
+			});
 
 			return true;
 
 		case "getStatusesAndBugs":
-			getStatusesAndBugs(request.payload.project_id)
-				.then((response) => {
-					sendResponse({
-						message: "ok",
-						payload: response,
+			managedProject(sender.tab.url).then(project => {
+				getStatusesAndBugs(project.project.id)
+					.then((response) => {
+						sendResponse({
+							message: "ok",
+							payload: response,
+						});
+					})
+					.catch((err) => {
+						sendResponse({
+							message: "error",
+							error: err,
+						});
+						console.error(err);
 					});
-				})
-				.catch((err) => {
-					sendResponse({
-						message: "error",
-						error: err,
-					});
-					console.error(err);
-				});
+			});
 
 			return true;
 
@@ -276,41 +284,44 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			return true;
 
 		case "sendBug":
-			let bug_details = {
-				project_id: request.payload.project_id,
-				priority_id: request.payload.priority,
-				designation: request.payload.name,
-				description: request.payload.description,
-				url: sender.tab.url,
-				selector: request.payload.selector,
-				resolution: request.payload.resolution, // this is an object {width, height}
-				screenshot: request.payload.screenshot,
-				mark_coords: request.payload.mark_coords, // this is an object {x, y}
-			};
 
-			sendBugDetails(bug_details)
-				.then((response) => {
-					console.log(response);
+			managedProject(sender.tab.url).then(project => {
+				let bug_details = {
+					project_id: project.project.id,
+					priority_id: request.payload.priority,
+					designation: request.payload.name,
+					description: request.payload.description,
+					url: sender.tab.url,
+					selector: request.payload.selector,
+					resolution: request.payload.resolution, // this is an object {width, height}
+					screenshot: request.payload.screenshot,
+					mark_coords: request.payload.mark_coords, // this is an object {x, y}
+				};
 
-					let data = {
-						screenshot: bug_details.screenshot,
-						mark_coords: bug_details.mark_coords
-					}
+				sendBugDetails(bug_details)
+					.then((response) => {
+						console.log(response);
 
-					sendBugScreenshot(response.id, data).then(() => {
-						sendResponse({
-							message: "ok",
-							payload: response,
+						let data = {
+							screenshot: bug_details.screenshot,
+							mark_coords: bug_details.mark_coords
+						}
+
+						sendBugScreenshot(response.id, data).then(() => {
+							sendResponse({
+								message: "ok",
+								payload: response,
+							});
 						});
+					})
+					.catch((err) => {
+						sendResponse({
+							message: "error",
+							error: err,
+						});
+						console.error(err);
 					});
-				})
-				.catch((err) => {
-					sendResponse({
-						message: "error",
-						error: err,
-					});
-					console.error(err);
-				});
+			});
 
 			return true;
 
@@ -523,10 +534,6 @@ async function getProject(projectURL) {
 
 	if (response.ok) {
 		let res = await response.json();
-
-		if (res.data.length === 1)
-			return res.data[0];
-
 		return res.data;
 	}
 
@@ -974,4 +981,119 @@ function getBrowser() {
 		name: M[0],
 		version: M[1],
 	};
+}
+
+async function managedProject(url) {
+
+	// get latest data from server
+	let projects = await getProject(url);
+
+	// if there is no project on the page return null
+	if (projects === null || projects.length === 0) return null;
+
+	// if it is only one project return it
+	if (projects.length === 1) return projects[0];
+
+	// if there are more on the page look for a record on localstorage
+	let storage = await getLocalProjects(url);
+
+	// if no projects in storage, create a record and return first project
+	if (storage === null) {
+		await storeProjects(url, projects)
+		return projects[0];
+	}
+
+	// * if there is a record
+
+	// if the data is the same from server and localstorage return the prefered project
+	if (await areProjectsEqual(JSON.stringify(projects), storage.json))
+		return projects[storage.option];
+
+	// if data is not the same, first try to find the prefered project in the new data
+	let pref = -1;
+	for (let index = 0; index < projects.length; index++) {
+		const project = projects[index].project;
+		if (project.id === storage.projects[storage.option].project.id) {
+			pref = index;
+			break;
+		}
+	}
+
+	// if the prefered project was not found update data and set the prefered to first project
+	if (pref === -1) {
+		await updateProjects(url, projects, 0);
+		return projects[0];
+	}
+
+	// else update data in storage and set the new prefered to the new index
+	await updateProjects(url, projects, pref);
+	return projects[pref];
+}
+
+async function storeProjects(url, projects) {
+	let origin = new URL(url).origin;
+
+	let record = {};
+	record[origin] = {
+		url: origin,
+		option: 0,
+		projects: projects,
+		json: JSON.stringify(projects)
+	}
+
+	return await chrome.storage.local.set(record);
+}
+
+async function getLocalProjects(url) {
+	let origin = new URL(url).origin;
+
+	// get try to get a record from localStorage
+	let record = await new Promise((resolve) => {
+		(chrome.storage.local.get(origin, (result) => {
+			resolve(result)
+		}));
+	});
+
+	// if the record was empty
+	if (record && Object.keys(record).length === 0 && Object.getPrototypeOf(record) === Object.prototype)
+		return null;
+
+	// else return the record object
+	return Object.values(record)[0];
+}
+
+async function updateProjects(url, projects, index) {
+	let origin = new URL(url).origin;
+
+	let record = {};
+	record[origin] = {
+		url: origin,
+		option: index,
+		projects: projects,
+		json: JSON.stringify(projects)
+	}
+
+	return await chrome.storage.local.set(record);
+}
+
+// not the best method but it works for now.
+async function areProjectsEqual(json1, json2) {
+	let check = 0;
+
+	if (json1 === json2)
+		check += 1;
+
+	let sum = 0;
+	for (let index = 0; index < json1.length; index++)
+		sum += json1.charCodeAt(index);
+	for (let index = 0; index < json2.length; index++)
+		sum -= json2.charCodeAt(index);
+
+	if (sum === 0)
+		check += 1;
+
+	if (check === 2)
+		return true;
+
+	return false;
 }

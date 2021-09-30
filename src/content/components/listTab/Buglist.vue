@@ -42,9 +42,6 @@ export default {
 			chrome.runtime.sendMessage(
 				{
 					message: "getStatusesAndBugs",
-					payload: {
-						project_id: 1, // ! Need to get the proper project here
-					},
 				},
 				(response) => {
 					state.value = null;

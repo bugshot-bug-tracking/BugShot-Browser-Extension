@@ -121,7 +121,6 @@ export default {
 
 		const submit = () => {
 			props.bug.priority = Number(props.bug.priority);
-			props.bug.project_id = 1; //!!!!!!!!!!!!  Get the proper project id
 
 			state.value = "loading";
 
