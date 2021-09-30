@@ -8,14 +8,6 @@ mix
 	.options({
 		processCssUrls: false
 	})
-	.webpackConfig({
-		plugins: [
-			new webpack.DefinePlugin({
-				__VUE_OPTIONS_API__: false,
-				__VUE_PROD_DEVTOOLS__: true,
-			}),
-		],
-	})
 	.disableNotifications();
 
 mix.extract({ to: './dist/vendor.js', }).options({ runtimeChunkPath: './dist' });
