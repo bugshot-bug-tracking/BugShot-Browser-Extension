@@ -2,7 +2,7 @@
 	background-color: hsla(0, 0%, 100%, 0.5);
 	width: 100vw;
 	height: 100vh;
-	cursor: crosshair;
+	cursor: url("/assets/icons/pin.png") 20 40, auto;
 
 	&.marked {
 		background-color: hsla(0, 0%, 100%, 0.3) !important;
