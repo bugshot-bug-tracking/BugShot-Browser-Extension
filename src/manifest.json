@@ -4,10 +4,12 @@
 	"version": "0.1.0",
 	"manifest_version": 3,
 	"icons": {
-		"16": "assets/extension_icons/get_started16.png",
-		"32": "assets/extension_icons/get_started32.png",
-		"48": "assets/extension_icons/get_started48.png",
-		"128": "assets/extension_icons/get_started128.png"
+		"16": "assets/extension_icons/icon_16x16.png",
+		"32": "assets/extension_icons/icon_32x32.png",
+		"48": "assets/extension_icons/icon_48x48.png",
+		"96": "assets/extension_icons/icon_96x96.png",
+		"128": "assets/extension_icons/icon_128x128.png",
+		"256": "assets/extension_icons/icon_256x256.png"
 	},
 	"background": {
 		"service_worker": "background.js"
