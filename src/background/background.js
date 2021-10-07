@@ -1,46 +1,27 @@
 var baseURL = `http://localhost:8000`;
 var webURL = `${baseURL}/`;
 var apiURL = `${baseURL}/api/v1`;
-var enableCache = false;
 var token = `1|q3mY7GOjvHheVtJ2TkNChXCd31Xa4NJUWUO4MaYe`;
 var token2 = `2|rCCCfjBQxdsF1NVWaSJh7Jls3IXgwKUCLChoxjXu`;
 var defaultHeaders = {
-	"Authorization": `Bearer ${token}`,
-	"Accept": "application/json",
-}
-
+	Authorization: `Bearer ${token}`,
+	Accept: "application/json",
+};
 
 /** Event listener on page update; injects content.js if there is a project for it */
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-	const loadScript = (tabId, scriptPath, name, domain) => {
-		chrome.scripting
-			.executeScript({
-				target: { tabId: tabId },
-				files: [scriptPath],
-			})
-			.then(() => {
-				console.log(`Injected ${name} in "${domain}".`);
-			});
-	};
-
-	// If not logged in exit
-	if (!logged()) return;
-
 	// If thab loading is not complete exit
 	if (!(changeInfo.status === "complete")) return;
 
 	// If tab url is not http/https or https exit
-	if (!(/^http/.test(tab.url))) return;
+	if (!/^http/.test(tab.url)) return;
 
+	// If not logged in exit
+	logged().then((isLogged) => {
+		if (!isLogged) return;
 
 	managedProject(tab.url)
-		.then(response => {
-
-			// Get origin of the current page
-			let origin = new URL(tab.url).origin;
-
-			console.log({ origin, response });
-
+		.then((response) => {
 			// If no project exit
 			if (response === null) return;
 
@@ -48,10 +29,29 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 			// ! this MAY pose a problem later if there are any confilicts with the original page scripts
 			// ? isolate worlds possible solves this ! not tested ¡
 
-			loadScript(tabId, "libraries/webcomponents-bundle.js", "WebComponents", origin); // For custom elements
-			loadScript(tabId, "manifest.js", "Manifest", origin); //
-			loadScript(tabId, "vendor.js", "Vendor", origin); // Node modules in one place not in every page script
-			loadScript(tabId, "content/content.js", "Content", origin); // The Bug-Shot in-page content(the sidebar)
+				const loadScript = (tabId, scriptPath, name) => {
+					// Get origin of the current page
+					let origin = new URL(tab.url).origin;
+
+					chrome.scripting
+						.executeScript({
+							target: { tabId: tabId },
+							files: [scriptPath],
+						})
+						.then(() => {
+							console.log(`Injected ${name} in "${origin}".`);
+						});
+				};
+
+				// For custom elements
+			loadScript(
+				tabId,
+				"libraries/webcomponents-bundle.js",
+					"WebComponents"
+				);
+				loadScript(tabId, "manifest.js", "Manifest"); //
+				loadScript(tabId, "vendor.js", "Vendor"); // Node modules in one place not in every page script
+				loadScript(tabId, "content/content.js", "Content"); // The Bug-Shot in-page content(the sidebar)
 		})
 		.catch((err) => {
 			let origin = new URL(tab.url).origin;
@@ -62,147 +62,14 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 			});
 		});
 });
+});
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-	switch (request.message) {
-		case "login": //TODO validate inputs
-			logIn(request.payload)
-				.then((response) => {
-					/*
-						response data structure
-				
-				
-						response.data {
-							token: string,
-							user_id: int
-						}
-						response.message: string
-						response.success: boolean
-						*/
-
-					//TODO save the relevant info for other API calls
-
-					chrome.storage.local.set({ user_id: response.data.user_id });
-
-					sendResponse({
-						message: "login",
-					});
-				})
-				.catch((err) => {
-					console.log(err);
-
-					sendResponse({
-						message: "error",
-						error: err,
-					});
-				});
-
-			return true; // needed to keep the conection alive while the function runs asyncronus
-			break;
-
-		case "logout":
-			logOut()
-				.then(() => {
-					sendResponse({
-						message: "logout",
-					});
-				})
-				.catch((err) => {
-					console.log(err);
-					sendResponse({
-						message: "error",
-						error: err,
-					});
-				});
-
-			return true; // needed to keep the conection alive while the function runs asyncronus
-
-			break;
-
-		case "logged":
-			//TODO somehow extract method from this
-			chrome.storage.local.get("user_id", (data) => {
-				if (chrome.runtime.lastError) {
-					sendResponse({
-						message: "error",
-						error: chrome.runtime.lastError,
-					});
-					return;
-				}
-
-				if (data.user_id > 0)
-					sendResponse({
-						message: "logged",
-					});
-				sendResponse({});
-			});
-
-			return true;
-			break;
-
-		case "checkProject":
-			managedProject(sender.tab.url)
+	function sendResponseWrapper(fn, args) {
+		fn(...args)
 				.then((response) => {
 					sendResponse({
-						message: "ok",
-						project: response,
-					});
-				})
-				.catch((err) => {
-					sendResponse({
-						message: "error",
-						error: err,
-					});
-					console.error(err);
-				});
-
-			return true;
-
-		case "getBugs":
-			managedProject(sender.tab.url).then(project => {
-				getBugs(project.project.id)
-					.then((response) => {
-						sendResponse({
-							message: "ok",
-							payload: response,
-						});
-					})
-					.catch((err) => {
-						sendResponse({
-							message: "error",
-							error: err,
-						});
-						console.error(err);
-					});
-			});
-
-			return true;
-
-		case "getStatusesAndBugs":
-			managedProject(sender.tab.url).then(project => {
-				getStatusesAndBugs(project.project.id)
-					.then((response) => {
-						sendResponse({
-							message: "ok",
-							payload: response,
-						});
-					})
-					.catch((err) => {
-						sendResponse({
-							message: "error",
-							error: err,
-						});
-						console.error(err);
-					});
-			});
-
-			return true;
-
-		case "deleteBug":
-			deleteBug(request.payload.bug_id)
-				.then((response) => {
-					sendResponse({
-						message: "ok",
+					message: "ok",
 						payload: response,
 					});
 				})
@@ -211,13 +78,44 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 						message: "error",
 						error: err,
 					});
-
-					console.error(err);
+				console.error(err);
 				});
+		return true;
+	}
+
+	switch (request.message) {
+		case "login":
+			return sendResponseWrapper(logIn, [request.payload]);
+
+		case "logout":
+			return sendResponseWrapper(logOut, []);
+
+		case "logged":
+			return sendResponseWrapper(logged, []);
+
+		case "checkProject":
+			return sendResponseWrapper(managedProject, [sender.tab.url]);
+
+		case "getBugs":
+			managedProject(sender.tab.url).then((project) => {
+				sendResponseWrapper(getBugs, [project.project.id]);
+			});
 
 			return true;
 
+		case "getStatusesAndBugs":
+			managedProject(sender.tab.url).then((project) => {
+				sendResponseWrapper(getStatusesAndBugs, [project.project.id]);
+			});
+
+			return true;
+
+		case "deleteBug":
+			return sendResponseWrapper(deleteBug, [request.payload.bug_id]);
+
+		// ! WIP for when the web dashboard is done
 		case "openAdminPannel":
+			return true;
 			chrome.tabs
 				.create({
 					url: webURL,
@@ -230,62 +128,33 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 			return true;
 
+		// ! WIP for when the web dashboard is done
 		case "openProjectPannel":
-			getProject(sender.tab.url).then(
-				(response) => {
-					chrome.tabs
-						.create({
-							url: `${webURL}/companies/${response.project.attributes.company_id}/projects/${response.project.id}/statuses`,
-						})
-						.then(() => {
-							sendResponse({
-								message: "ok",
-							});
+			return true;
+			getProject(sender.tab.url).then((response) => {
+				chrome.tabs
+					.create({
+						url: `${webURL}/companies/${response.project.attributes.company_id}/projects/${response.project.id}/statuses`,
+					})
+					.then(() => {
+						sendResponse({
+							message: "ok",
 						});
-				}
-			);
+					});
+			});
 
 			return true;
 
 		case "takeScreenshot":
-			takeScreenshot(sender.tab.windowId)
-				.then((response) => {
-					sendResponse({
-						message: "ok",
-						payload: response,
-					});
-				})
-				.catch((err) => {
-					sendResponse({
-						message: "error",
-						error: err,
-					});
-					console.error(err);
-				});
-
-			return true;
+			return sendResponseWrapper(takeScreenshot, [sender.tab.windowId]);
 
 		case "getScreenshots":
-			getScreenshots(request.payload.bug_id)
-				.then((response) => {
-					sendResponse({
-						message: "ok",
-						payload: response,
-					});
-				})
-				.catch((err) => {
-					sendResponse({
-						message: "error",
-						error: err,
-					});
-					console.error(err);
-				});
-
-			return true;
+			return sendResponseWrapper(getScreenshots, [
+				request.payload.bug_id,
+			]);
 
 		case "sendBug":
-
-			managedProject(sender.tab.url).then(project => {
+			managedProject(sender.tab.url).then((project) => {
 				let bug_details = {
 					project_id: project.project.id,
 					priority_id: request.payload.priority,
@@ -304,8 +173,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 						let data = {
 							screenshot: bug_details.screenshot,
-							mark_coords: bug_details.mark_coords
-						}
+							mark_coords: bug_details.mark_coords,
+						};
 
 						sendBugScreenshot(response.id, data).then(() => {
 							sendResponse({
@@ -326,112 +195,34 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			return true;
 
 		case "saveAttachment":
-			saveAttachment(request.payload.bug_id, request.payload.data,)
-				.then((response) => {
-					sendResponse({
-						message: "ok",
-						payload: response,
-					});
-				})
-				.catch((err) => {
-					sendResponse({
-						message: "error",
-						error: err,
-					});
-					console.error(err);
-				});
-
-			return true;
+			return sendResponseWrapper(saveAttachment, [
+				request.payload.bug_id,
+				request.payload.data,
+			]);
 
 		case "getAttachments":
-			getAttachments(request.payload.bug_id)
-				.then((response) => {
-					sendResponse({
-						message: "ok",
-						payload: response,
-					});
-				})
-				.catch((err) => {
-					sendResponse({
-						message: "error",
-						error: err,
-					});
-					console.error(err);
-				});
-
-			return true;
+			return sendResponseWrapper(getAttachments, [
+				request.payload.bug_id,
+			]);
 
 		case "downloadAttachment":
-			downloadAttachment(request.payload.attachment_id)
-				.then(() => {
-					sendResponse({
-						message: "ok",
-					});
-				})
-				.catch((err) => {
-					sendResponse({
-						message: "error",
-						error: err,
-					});
-					console.error(err);
-				});
-
-			return true;
+			return sendResponseWrapper(downloadAttachment, [
+				request.payload.attachment_id,
+			]);
 
 		case "deleteAttachment":
-			deleteAttachment(request.payload.attachment_id)
-				.then((response) => {
-					sendResponse({
-						message: "ok",
-						payload: response,
-					});
-				})
-				.catch((err) => {
-					sendResponse({
-						message: "error",
-						error: err,
-					});
-					console.error(err);
-				});
-
-			return true;
+			return sendResponseWrapper(deleteAttachment, [
+				request.payload.attachment_id,
+			]);
 
 		case "getComments":
-			getComments(request.payload.bug_id)
-				.then((response) => {
-					sendResponse({
-						message: "ok",
-						payload: response,
-					});
-				})
-				.catch((err) => {
-					sendResponse({
-						message: "error",
-						error: err,
-					});
-					console.error(err);
-				});
-
-			return true;
+			return sendResponseWrapper(getComments, [request.payload.bug_id]);
 
 		case "postComment":
-			postComment(request.payload.bug_id, request.payload.content)
-				.then((response) => {
-					sendResponse({
-						message: "ok",
-						payload: response,
-					});
-				})
-				.catch((err) => {
-					sendResponse({
-						message: "error",
-						error: err,
-					});
-					console.error(err);
-				});
-
-			return true;
-
+			return sendResponseWrapper(postComment, [
+				request.payload.bug_id,
+				request.payload.content,
+			]);
 
 		default:
 			sendResponse({
@@ -502,11 +293,6 @@ async function logged() {
 	return true;
 }
 
-
-
-
-
-
 //** --------- GET --------- */
 
 /**
@@ -523,12 +309,12 @@ async function getProject(projectURL) {
 	let response = await fetch(requestURL, {
 		method: "POST",
 		headers: {
-			"Authorization": `Bearer ${token}`,
-			"Accept": "application/json",
-			"Content-type": "application/json"
+			Authorization: `Bearer ${token}`,
+			Accept: "application/json",
+			"Content-type": "application/json",
 		},
 		body: JSON.stringify({
-			url: origin
+			url: origin,
 		}),
 	});
 
@@ -537,8 +323,8 @@ async function getProject(projectURL) {
 		return res.data;
 	}
 
-	if (!response.ok && response.status === 404) // Expect 404 to mean no project found
-		return null;
+		// Expect 404 to mean no project found
+	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -553,7 +339,6 @@ async function getProject(projectURL) {
  * @throws {Object} A 'message' and the 'response' object from fetch function in case response code != 2xx or 404
  */
 async function getBugs(project_id) {
-
 	let url = `${apiURL}/project/${project_id}/bugs`;
 
 	let response = await fetch(url, {
@@ -566,8 +351,8 @@ async function getBugs(project_id) {
 		return res;
 	}
 
-	if (!response.ok && response.status === 404) // Expect 404 to mean no project found
-		return null;
+	// Expect 404 to mean no project found
+	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -601,8 +386,8 @@ async function getStatuses(project_id) {
 		return res;
 	}
 
-	if (!response.ok && response.status === 404) // Expect 404 to mean no project found
-		return null;
+	// Expect 404 to mean no project found
+	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -611,7 +396,6 @@ async function getStatuses(project_id) {
 }
 
 async function getBugsByStatus(status_id) {
-
 	let url = `${apiURL}/status/${status_id}/bugs`;
 
 	let response = await fetch(url, {
@@ -624,8 +408,8 @@ async function getBugsByStatus(status_id) {
 		return res;
 	}
 
-	if (!response.ok && response.status === 404) // Expect 404 to mean no project found
-		return null;
+	// Expect 404 to mean no project found
+	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -647,7 +431,7 @@ async function getScreenshots(bug_id) {
 
 		if (data === null) continue;
 
-		info["attributes"]["data"] = data
+		info["attributes"]["data"] = data;
 		let screenshot = info;
 
 		screenArray.push(screenshot);
@@ -670,8 +454,8 @@ async function getScreenshotsData(screenshot_id) {
 		return res;
 	}
 
-	if (!response.ok && response.status === 404) // Expect 404 to mean no screenshot found
-		return null;
+	// Expect 404 to mean no screenshot found
+	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -692,8 +476,8 @@ async function getScreenshotsInfo(bug_id) {
 		return res;
 	}
 
-	if (!response.ok && response.status === 404) // Expect 404 to mean no project found
-		return null;
+	// Expect 404 to mean no project found
+	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -714,8 +498,8 @@ async function getAttachments(bug_id) {
 		return res;
 	}
 
-	if (!response.ok && response.status === 404) // Expect 404 to mean no bug found
-		return null;
+	// Expect 404 to mean no bug found
+	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -736,15 +520,14 @@ async function getComments(bug_id) {
 		return res;
 	}
 
-	if (!response.ok && response.status === 404) // Expect 404 to mean no bug found
-		return null;
+	// Expect 404 to mean no bug found
+	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
 		response: response,
 	};
 }
-
 
 //** --------- POST --------- */
 async function sendBugDetails(data) {
@@ -756,8 +539,8 @@ async function sendBugDetails(data) {
 	let response = await fetch(url, {
 		method: "POST",
 		headers: {
-			"Authorization": `Bearer ${token}`,
-			"Accept": "application/json",
+			Authorization: `Bearer ${token}`,
+			Accept: "application/json",
 			"Content-type": "application/json",
 		},
 		body: JSON.stringify({
@@ -779,8 +562,8 @@ async function sendBugDetails(data) {
 		return res.data;
 	}
 
-	if (!response.ok && response.status === 404) // Expect 404 to mean no project found
-		return null;
+	// Expect 404 to mean no project found
+	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -794,8 +577,8 @@ async function postComment(bug_id, content) {
 	let response = await fetch(url, {
 		method: "POST",
 		headers: {
-			"Authorization": `Bearer ${token}`,
-			"Accept": "application/json",
+			Authorization: `Bearer ${token}`,
+			Accept: "application/json",
 			"Content-type": "application/json",
 		},
 		body: JSON.stringify({
@@ -809,8 +592,8 @@ async function postComment(bug_id, content) {
 		return res.data;
 	}
 
-	if (!response.ok && response.status === 404) // Expect 404 to mean no bug found
-		return null;
+	// Expect 404 to mean no bug found
+	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -819,7 +602,6 @@ async function postComment(bug_id, content) {
 }
 
 async function sendBugScreenshot(bug_id, data) {
-
 	let url = `${apiURL}/screenshot`;
 
 	let today = new Date();
@@ -830,12 +612,16 @@ async function sendBugScreenshot(bug_id, data) {
 	formData.append("bug_id", bug_id);
 	formData.append("position_x", data.mark_coords.x);
 	formData.append("position_y", data.mark_coords.y);
-	formData.append("file", new Blob([data.screenshot], { type: 'image/jpeg' }), timestamp);
+	formData.append(
+		"file",
+		new Blob([data.screenshot], { type: "image/jpeg" }),
+		timestamp
+	);
 
 	let response = await fetch(url, {
 		method: "POST",
 		headers: defaultHeaders,
-		body: formData
+		body: formData,
 	});
 
 	if (response.ok) {
@@ -843,8 +629,8 @@ async function sendBugScreenshot(bug_id, data) {
 		return res;
 	}
 
-	if (!response.ok && response.status === 404) // Expect 404 to mean no bug found
-		return null;
+	// Expect 404 to mean no bug found
+	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -864,7 +650,7 @@ async function saveAttachment(bug_id, data) {
 	let response = await fetch(url, {
 		method: "POST",
 		headers: defaultHeaders,
-		body: formData
+		body: formData,
 	});
 
 	if (response.ok) {
@@ -872,15 +658,14 @@ async function saveAttachment(bug_id, data) {
 		return res;
 	}
 
-	if (!response.ok && response.status === 404) // Expect 404 to mean no bug found
-		return null;
+	// Expect 404 to mean no bug found
+	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
 		response: response,
 	};
 }
-
 
 //** --------- PUT --------- */
 //** --------- DELETE --------- */
@@ -893,11 +678,10 @@ async function deleteBug(bug_id) {
 		headers: defaultHeaders,
 	});
 
-	if (response.ok)
-		return true; // Delete returns 204
+	if (response.ok) return true; // Delete returns 204
 
-	if (!response.ok && response.status === 404) // Expect 404 to mean no bug found
-		return null;
+	// Expect 404 to mean no bug found
+	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -913,18 +697,16 @@ async function deleteAttachment(attachment_id) {
 		headers: defaultHeaders,
 	});
 
-	if (response.ok)
-		return true; // Delete returns 204
+	if (response.ok) return true; // Delete returns 204
 
-	if (!response.ok && response.status === 404) // Expect 404 to mean no bug found
-		return null;
+	// Expect 404 to mean no bug found
+	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
 		response: response,
 	};
 }
-
 
 //** --------- Download --------- */
 
@@ -984,7 +766,6 @@ function getBrowser() {
 }
 
 async function managedProject(url) {
-
 	// get latest data from server
 	let projects = await getProject(url);
 
@@ -999,7 +780,7 @@ async function managedProject(url) {
 
 	// if no projects in storage, create a record and return first project
 	if (storage === null) {
-		await storeProjects(url, projects)
+		await storeProjects(url, projects);
 		return projects[0];
 	}
 
@@ -1038,8 +819,8 @@ async function storeProjects(url, projects) {
 		url: origin,
 		option: 0,
 		projects: projects,
-		json: JSON.stringify(projects)
-	}
+		json: JSON.stringify(projects),
+	};
 
 	return await chrome.storage.local.set(record);
 }
@@ -1047,15 +828,17 @@ async function storeProjects(url, projects) {
 async function getLocalProjects(url) {
 	let origin = new URL(url).origin;
 
-	// get try to get a record from localStorage
-	let record = await new Promise((resolve) => {
-		(chrome.storage.local.get(origin, (result) => {
-			resolve(result)
-		}));
-	});
+	// try to get a record from localStorage
+	let record = await new Promise((resolve) =>
+		chrome.storage.local.get(origin, resolve)
+	);
 
 	// if the record was empty
-	if (record && Object.keys(record).length === 0 && Object.getPrototypeOf(record) === Object.prototype)
+	if (
+		record &&
+		Object.keys(record).length === 0 &&
+		Object.getPrototypeOf(record) === Object.prototype
+	)
 		return null;
 
 	// else return the record object
@@ -1070,8 +853,8 @@ async function updateProjects(url, projects, index) {
 		url: origin,
 		option: index,
 		projects: projects,
-		json: JSON.stringify(projects)
-	}
+		json: JSON.stringify(projects),
+	};
 
 	return await chrome.storage.local.set(record);
 }
@@ -1080,8 +863,7 @@ async function updateProjects(url, projects, index) {
 async function areProjectsEqual(json1, json2) {
 	let check = 0;
 
-	if (json1 === json2)
-		check += 1;
+	if (json1 === json2) check += 1;
 
 	let sum = 0;
 	for (let index = 0; index < json1.length; index++)
@@ -1089,11 +871,9 @@ async function areProjectsEqual(json1, json2) {
 	for (let index = 0; index < json2.length; index++)
 		sum -= json2.charCodeAt(index);
 
-	if (sum === 0)
-		check += 1;
+	if (sum === 0) check += 1;
 
-	if (check === 2)
-		return true;
+	if (check === 2) return true;
 
 	return false;
 }
