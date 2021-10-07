@@ -233,63 +233,108 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 /**
- * Authenticate user and get coocies for communication
- * @param  {{username, password}} credentials The credentials for authentication
- * @return {Promise} All info regarding the user or '{}' if not found
- * @throws Will throw an error messaje in case of non-existance (codes >=500)
+ * Authenticate user and get token for communication
+ * @param  {{email, password}} credentials The credentials for authentication
+ * @return {Promise} All info regarding the user
+ * @throws {Object} A 'message' and the 'response' object from fetch function in case response code !== 2xx
  */
 async function logIn(credentials) {
-	let url = "https://bugshot.view4all.de/api/user/login";
+	let url = `${apiURL}/auth/login`;
 
 	let response = await fetch(url, {
 		method: "POST",
-		redirect: "follow",
 		headers: {
+			Authorization: `Bearer ${token}`,
+			Accept: "application/json",
 			"Content-type": "application/json",
-			clientId: "5",
-			version: "1.0.0",
 		},
 		body: JSON.stringify({
-			email: credentials.username,
+			email: credentials.email,
 			password: credentials.password,
 		}),
 	});
 
-	if (response.status >= 200 && response.status < 300)
-		return await response.json();
+	if (response.ok) {
+		let res = await response.json();
+		await chrome.storage.local.set({ auth: res.data });
+		return res.data;
+	}
 
-	if (response.status >= 500) throw `Server error code: ${response.status}!`;
-
-	throw "Not a good response from server";
+	if (!response.ok)
+		throw {
+			message: "Not a good response from server",
+			response: response,
+			code: response.status,
+		};
 }
 
-/**
- * Reset the environment to default
- */
 async function logOut() {
-	//TODO Implement the cleanup of localStorage after saving something in it
-	chrome.storage.local.clear();
+	let url = `${apiURL}/auth/logout`;
+
+	// send a token destroy request, response not realy important
+	await fetch(url, {
+		method: "POST",
+		headers: {
+			Authorization: `Bearer ${token}`,
+			Accept: "application/json",
+			"Content-type": "application/json",
+		},
+	});
+
+	// clean the local storage
+	await chrome.storage.local.clear();
+
+	// return something
+	return true;
 }
 
 /**
- * Check to see if the apropriate informations are available for comunication to consider the state as logged in
- * @return {Boolean} True if everything is ok, false otherwise
+ * Check the state of authentication inforamtions to determined if a communication can be made
+ * @return {Promise<Boolean>} True if everything is ok, false otherwise
  */
 async function logged() {
-	// return new Promise((resolve, reject) => {
-	//     chrome.storage.local.get("user_id", item => {
-	//         if (chrome.runtime.lastError)
-	//             console.log('Error getting');
+	// get the auth record from storage
+	let record = await new Promise((resolve) =>
+		chrome.storage.local.get("auth", resolve)
+	);
 
-	//         if (Object.values(item) != undefined) {
-	//             resolve(Object.values(item).val);
-	//         } else {
-	//             reject();
-	//         }
+	// if the record was empty
+	if (
+		record &&
+		Object.keys(record).length === 0 &&
+		Object.getPrototypeOf(record) === Object.prototype
+	)
+		return false;
 
-	//         console.log(item);
-	//     })
-	// })
+	record = record.auth;
+
+	// make a request to see if the token is still valid
+	let url = `${apiURL}/auth/user`;
+	let response = await fetch(url, {
+		method: "POST",
+		headers: {
+			Authorization: `Bearer ${record.token}`,
+			Accept: "application/json",
+			"Content-type": "application/json",
+		},
+	});
+
+	// if token expired
+	if (!response.ok) return false;
+
+	// get user from response
+	response = (await response.json()).data;
+
+	// check if server data is still up to date with local
+	if (
+		response.id !== record.user.id ||
+		response.type !== record.user.type ||
+		response.attributes.email !== record.user.attributes.email ||
+		response.attributes.first_name !== record.user.attributes.first_name ||
+		response.attributes.last_name !== record.user.attributes.last_name
+	)
+		return false;
+
 	return true;
 }
 
