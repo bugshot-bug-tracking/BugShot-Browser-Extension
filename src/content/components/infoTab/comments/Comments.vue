@@ -57,51 +57,63 @@ export default {
 			context.emit("loading", value);
 		};
 
-		const update = () => {
+		const update = async () => {
 			try {
 				emitLoading(true);
-				chrome.runtime.sendMessage(
-					{
-						message: "getComments",
-						payload: {
-							bug_id: props.bug.id,
+
+				let response = await new Promise((resolve) => {
+					chrome.runtime.sendMessage(
+						{
+							message: "getComments",
+							payload: {
+								bug_id: props.bug.id,
+							},
 						},
-					},
-					(response) => {
+						resolve
+					);
+				});
+
+				switch (response.message) {
+					case "error":
 						emitLoading(false);
+						throw response.error;
+
+					case "ok":
+						console.info("Request get comments: ok!");
 						messages.value = [];
 
-						switch (response.message) {
-							case "error":
-								throw response.error;
+						let user = await new Promise((resolve) => {
+							chrome.runtime.sendMessage(
+								{
+									message: "user",
+								},
+								resolve
+							);
+						});
 
-							case "ok":
-								console.info("Request get comments: ok!");
-
-								response.payload.forEach((comment) => {
-									messages.value.push({
-										id: comment.id,
-										content: comment.attributes.content,
-										timestamp:
-											comment.attributes.created_at,
-										creator: {
-											first_name:
-												comment.attributes.user
-													.first_name,
-											last_name:
-												comment.attributes.user
-													.last_name,
-										},
-										sender: 1, // ! Here should be a comparasion with the auth user to see if it is the creator
-									});
-								});
-								break;
-						}
-					}
-				);
+						response.payload.forEach((comment) => {
+							messages.value.push({
+								id: comment.id,
+								content: comment.attributes.content,
+								timestamp: comment.attributes.created_at,
+								creator: {
+									first_name:
+										comment.attributes.user.first_name,
+									last_name:
+										comment.attributes.user.last_name,
+								},
+								sender:
+									comment.attributes.user.id ===
+									user.payload.id
+										? 0
+										: 1,
+							});
+						});
+						emitLoading(false);
+						break;
+				}
 			} catch (error) {
 				emitLoading(false);
-
 				console.error(error);
 			}
 		};
