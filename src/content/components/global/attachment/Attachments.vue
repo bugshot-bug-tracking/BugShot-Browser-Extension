@@ -113,8 +113,9 @@ export default {
 									payload: {
 										bug_id: props.bug.id,
 										data: {
-											name: file.name,
+											designation: file.name,
 											data: data64,
+											type: file.type,
 										},
 									},
 								},
@@ -306,4 +307,3 @@ export default {
 	},
 };
 </script>
-
