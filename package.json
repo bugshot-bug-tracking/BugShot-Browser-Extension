@@ -9,17 +9,16 @@
 		"update": "ncu -u"
 	},
 	"devDependencies": {
-		"@vue/compiler-sfc": "^3.2.19",
 		"cross-env": "^7.0.3",
-		"laravel-mix": "^6.0.31",
+		"laravel-mix": "^6.0.34",
 		"resolve-url-loader": "^4.0.0",
-		"sass": "^1.42.1",
-		"sass-loader": "^12.1.0",
+		"sass": "^1.43.2",
+		"sass-loader": "^12.2.0",
 		"vue-loader": "^16.5.0"
 	},
 	"dependencies": {
 		"@webcomponents/webcomponentsjs": "^2.6.0",
 		"mitt": "^3.0.0",
-		"vue": "^3.1.5"
+		"vue": "^3.2.20"
 	}
 }

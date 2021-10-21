@@ -1,47 +1,40 @@
-import * as Vue from 'vue';
-
+import * as Vue from "vue";
 import Content from "./components/Content.vue";
+import mitt from "mitt";
 
-import mitt from 'mitt';
 window.emitter = mitt();
 
-var extensionOrigin = 'chrome-extension://' + chrome.runtime.id;
+var extensionOrigin = "chrome-extension://" + chrome.runtime.id;
 
-if (location.ancestorOrigins.contains(extensionOrigin))
-	throw "";
-
+if (location.ancestorOrigins.contains(extensionOrigin)) throw "";
 
 console.log(extensionOrigin);
-
 
 class BugShot extends HTMLElement {
 	constructor() {
 		super();
-		this.attachShadow({ mode: 'open' });
+		this.attachShadow({ mode: "open" });
 
 		Vue.createApp(Content).mount(this.shadowRoot);
 
-		setCSS(this.shadowRoot)
+		setCSS(this.shadowRoot);
 	}
-
 }
-
 
 // Add CSS stylesheet links in the provided DOM
 function setCSS(dom) {
 	let styleSheet = [
 		chrome.runtime.getURL("/libraries/bootstrap.css"),
-		chrome.runtime.getURL("/content/Styles.css")
+		chrome.runtime.getURL("/content/Styles.css"),
 	];
 
-	styleSheet.forEach(sheet => {
-		let link = document.createElement('link');
-		link.setAttribute('rel', 'stylesheet');
-		link.setAttribute('href', sheet);
+	styleSheet.forEach((sheet) => {
+		let link = document.createElement("link");
+		link.setAttribute("rel", "stylesheet");
+		link.setAttribute("href", sheet);
 		dom.prepend(link);
 	});
 }
-
 
 window.customElements.define("bug-shot", BugShot);
 

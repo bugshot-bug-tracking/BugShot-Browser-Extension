@@ -7,126 +7,126 @@ $purple: hsl(265, 80%, 50%);
 $light-purple: hsl(265, 80%, 80%);
 
 .comments-component {
-  height: 500px;
+	height: 500px;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 
-  .comments-top {
-    .header {
-      display: inline-flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
+	.comments-top {
+		.header {
+			display: inline-flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
 
-      > span {
-        font-weight: 500;
-        font-size: 20px;
-      }
+			> span {
+				font-weight: 500;
+				font-size: 20px;
+			}
 
-      > .refresh-button {
-        background-image: url("/assets/icons/arrow-repeat.svg");
-        background-repeat: no-repeat;
-        background-position: center;
-        width: 16px;
-        height: 16px;
+			> .refresh-button {
+				background-image: url("/assets/icons/refresh.svg");
+				background-repeat: no-repeat;
+				background-position: center;
+				width: 24px;
+				height: 24px;
 
-        &:hover {
-          filter: invert(18%) sepia(63%) saturate(5695%) hue-rotate(265deg)
-            brightness(82%) contrast(109%);
-        }
-      }
-    }
-  }
+				&:hover {
+					filter: invert(55%) sepia(54%) saturate(630%)
+						hue-rotate(106deg) brightness(112%) contrast(90%);
+				}
+			}
+		}
+	}
 
-  .comments-center {
-    margin: 10px 0;
-    height: 100%;
-    overflow: auto;
-    scroll-behavior: auto;
+	.comments-center {
+		margin: 10px 0;
+		height: 100%;
+		overflow: auto;
+		scroll-behavior: auto;
 
-    > .content {
-      padding-right: 10px;
-    }
+		> .content {
+			padding-right: 10px;
+		}
 
-    /* width */
-    &::-webkit-scrollbar {
-      width: 6px;
-    }
+		/* width */
+		&::-webkit-scrollbar {
+			width: 6px;
+		}
 
-    /* Track */
-    &::-webkit-scrollbar-track {
-      background: $white-blue 0% 0% no-repeat padding-box;
-      border-radius: 8px;
-    }
+		/* Track */
+		&::-webkit-scrollbar-track {
+			background: $white-blue 0% 0% no-repeat padding-box;
+			border-radius: 8px;
+		}
 
-    /* Handle */
-    &::-webkit-scrollbar-thumb {
-      background: $green 0% 0% no-repeat padding-box;
-      border-radius: 8px;
-    }
+		/* Handle */
+		&::-webkit-scrollbar-thumb {
+			background: $green 0% 0% no-repeat padding-box;
+			border-radius: 8px;
+		}
 
-    /* Handle on hover */
-    &::-webkit-scrollbar-thumb:hover {
-      background: $off-off-green 0% 0% no-repeat padding-box;
-    }
-  }
+		/* Handle on hover */
+		&::-webkit-scrollbar-thumb:hover {
+			background: $off-off-green 0% 0% no-repeat padding-box;
+		}
+	}
 
-  .comments-bottom {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+	.comments-bottom {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
 
-    .comments-bottom-header {
-      display: inline-flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      margin: 10px 0px;
+		.comments-bottom-header {
+			display: inline-flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+			margin: 10px 0px;
 
-      > span {
-        font-weight: 500;
-      }
+			> span {
+				font-weight: 500;
+			}
 
-      > div {
-        font-size: 12px;
-      }
-    }
+			> div {
+				font-size: 12px;
+			}
+		}
 
-    > #comment-input {
-      width: 100%;
-      border: 1px solid $light-purple;
-      border-radius: 12px;
-      padding: 0px 10px;
-      font-size: 14px;
-      transition: ease-out 0.1s;
-      resize: none;
-      margin: 10px 0;
-      line-height: 1.5;
+		> #comment-input {
+			width: 100%;
+			border: 1px solid $light-purple;
+			border-radius: 12px;
+			padding: 0px 10px;
+			font-size: 14px;
+			transition: ease-out 0.1s;
+			resize: none;
+			margin: 10px 0;
+			line-height: 1.5;
 
-      &::-webkit-scrollbar {
-        display: none;
-      }
+			&::-webkit-scrollbar {
+				display: none;
+			}
 
-      &:focus-visible {
-        outline: unset;
-        border: 1px solid $purple;
-        transition: ease-in 0.1s;
-      }
-    }
+			&:focus-visible {
+				outline: unset;
+				border: 1px solid $purple;
+				transition: ease-in 0.1s;
+			}
+		}
 
-    .comment-send-button {
-      background-color: $green;
-      color: hsl(0, 0%, 100%);
-      border-radius: 20px;
-      font-size: 14px;
-      font-weight: 700;
+		.comment-send-button {
+			background-color: $green;
+			color: hsl(0, 0%, 100%);
+			border-radius: 20px;
+			font-size: 14px;
+			font-weight: 700;
 
-      &:hover {
-        background: $off-off-green;
-        color: hsl(0, 0%, 100%);
-      }
-    }
-  }
+			&:hover {
+				background: $off-off-green;
+				color: hsl(0, 0%, 100%);
+			}
+		}
+	}
 }
