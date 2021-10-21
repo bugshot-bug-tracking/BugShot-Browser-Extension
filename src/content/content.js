@@ -63,5 +63,41 @@ div.appendChild(document.createElement("bug-shot"));
 
 document.body.append(div);
 
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+	if (sender.id !== chrome.runtime.id) console.error(sender);
 
+	switch (request.message) {
+		case "getStatus":
+			sendResponse({
+				message: "ok",
+				payload: { status: !div.hidden },
+			});
 
+			break;
+
+		case "setStatus":
+			div.hidden = !request.payload.status;
+			sendResponse({
+				message: "ok",
+				payload: { status: !div.hidden },
+			});
+
+			break;
+
+		case "refresh":
+			div.innerHTML = "";
+			div.appendChild(document.createElement("bug-shot"));
+			sendResponse({
+				message: "ok",
+				payload: 1,
+			});
+
+			break;
+
+		case "updateProject":
+			emitter.emit("updateProject");
+			break;
+	}
+
+	return true;
+});

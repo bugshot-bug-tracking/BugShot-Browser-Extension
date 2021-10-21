@@ -2,6 +2,10 @@
 	<Tab>
 		<State :show="state !== null" :state="state" />
 
+		<Container>
+			<ProjectShow />
+		</Container>
+
 		<Container v-if="state === null">
 			<form id="bug-form" @submit.prevent="submit">
 				<h5 style="text-align: center">New Bug Report</h5>
@@ -25,14 +29,21 @@
 						id="bug-description"
 						rows="3"
 						placeholder="Describe the bug."
-						required
 						v-model="bug.description"
 						minlength="5"
 						maxlength="250"
 					></textarea>
 				</div>
 
-				<div class="form-group d-flex justify-content-between mb-lg-2">
+				<div
+					class="
+						form-group
+						d-flex
+						justify-content-evenly
+						mb-lg-2
+						flex-wrap
+					"
+				>
 					<div class="form-check form-check-inline">
 						<input
 							class="form-check-input option critical"
@@ -108,9 +119,10 @@ import Tab from "../global/tab/Tab.vue";
 import Container from "../global/container/Container.vue";
 import State from "../global/state/State.vue";
 import Attachments from "../global/attachment/Attachments.vue";
+import ProjectShow from "../global/project/ProjectShow.vue";
 
 export default {
-	components: { State, Tab, Container, Attachments },
+	components: { State, Tab, Container, Attachments, ProjectShow },
 	name: "FormTab",
 	props: { bug: Object },
 	emits: ["default"],

@@ -1,4 +1,4 @@
-var baseURL = `http://localhost:8000`;
+var baseURL = `http://localhost:80`;
 var webURL = `${baseURL}/`;
 var apiURL = `${baseURL}/api/v1`;
 
@@ -117,6 +117,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 				return sendResponseWrapper(getUserFromStorage, []);
 
 			case "checkProject":
+				return sendResponseWrapper(managedProject, [
+					request.payload.url,
+				]);
+
+			case "getProject":
+				return sendResponseWrapper(getProject, [request.payload.url]);
+
+			case "currentProject":
 				return sendResponseWrapper(managedProject, [sender.tab.url]);
 
 			case "getBugs":
@@ -253,6 +261,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 					request.payload.content,
 				]);
 
+			case "setPrefered":
+				return sendResponseWrapper(setPrefered, [
+					request.payload.project_id,
+					request.payload.url,
+				]);
+
 			default:
 				sendResponse({
 					message: "Message not recognized as a command!",
@@ -294,7 +308,7 @@ async function logIn(credentials) {
 	if (!response.ok)
 		throw {
 			message: "Not a good response from server",
-			response: response,
+			response: await response.json(),
 			code: response.status,
 		};
 }
@@ -986,19 +1000,7 @@ async function updateProjects(url, projects, index) {
 
 // not the best method but it works for now.
 async function areProjectsEqual(json1, json2) {
-	let check = 0;
-
-	if (json1 === json2) check += 1;
-
-	let sum = 0;
-	for (let index = 0; index < json1.length; index++)
-		sum += json1.charCodeAt(index);
-	for (let index = 0; index < json2.length; index++)
-		sum -= json2.charCodeAt(index);
-
-	if (sum === 0) check += 1;
-
-	if (check === 2) return true;
+	if (json1 === json2) return true;
 
 	return false;
 }
@@ -1014,5 +1016,35 @@ async function getUserFromStorage() {
 	let record = await new Promise((resolve) =>
 		chrome.storage.local.get("auth", resolve)
 	);
-	return record.auth.user;
+	return record.auth?.user;
+}
+
+async function setPrefered(option, url) {
+	// get current project record from storage
+	let record = await getLocalProjects(url);
+
+	// if the record doesn't exist return null
+	if (record === null) return null;
+
+	// set new prefered project INDEX
+	let newPref = -1;
+
+	// look for the project that has id === "option"
+	for (let index = 0; index < record.projects.length; index++) {
+		const project = record.projects[index];
+		if (project.project.id === option) {
+			newPref = index;
+			break;
+		}
+	}
+
+	// if no project with the id found return null and exit
+	if (newPref === -1) return null;
+
+	// update storage record with the new prefered option
+	record.option = newPref;
+	let newRec = {};
+	newRec[new URL(url).origin] = record;
+
+	return await chrome.storage.local.set(newRec);
 }

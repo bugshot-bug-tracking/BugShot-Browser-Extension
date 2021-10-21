@@ -2,6 +2,10 @@
 	<Tab style="width: 17vw">
 		<State :show="state !== null" :state="state" />
 
+		<Container>
+			<ProjectShow @update="update" />
+		</Container>
+
 		<BugGroup
 			v-for="status in statuses"
 			:key="status.id"
@@ -18,12 +22,14 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 
 import Tab from "../global/tab/Tab.vue";
 import State from "../global/state/State.vue";
 import BugGroup from "./BugGroup.vue";
 import BugCard from "./BugCard.vue";
+import ProjectShow from "../global/project/ProjectShow.vue";
+import Container from "../global/container/Container.vue";
 
 export default {
 	name: "Buglist",
@@ -32,13 +38,19 @@ export default {
 		State,
 		BugGroup,
 		BugCard,
+		ProjectShow,
+		Container,
 	},
 	emits: ["info"],
 	setup() {
 		const statuses = ref([]);
-		const state = ref("loading");
+		const state = ref(null);
 
 		const update = () => {
+			if (state.value === "loading") return;
+
+			state.value = "loading";
+
 			chrome.runtime.sendMessage(
 				{
 					message: "getStatusesAndBugs",
@@ -63,15 +75,20 @@ export default {
 			);
 		};
 
-		onMounted(update);
+		onMounted(() => {
+			update();
+			emitter.on("deleted", update);
+		});
 
-		emitter.on("deleted", update);
+		onUnmounted(() => {
+			emitter.off("deleted", update);
+		});
 
 		return {
 			statuses,
 			state,
+			update,
 		};
 	},
 };
 </script>
-
