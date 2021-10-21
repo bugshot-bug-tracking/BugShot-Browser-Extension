@@ -26,13 +26,13 @@
 			/>
 			<img
 				class="password-img"
-				v-if="!showPassword"
+				v-if="showPassword"
 				@click="togglePassword"
 				src="/assets/icons/hide_password.svg"
 			/>
 			<img
 				class="password-img"
-				v-if="showPassword"
+				v-if="!showPassword"
 				@click="togglePassword"
 				src="/assets/icons/show_password.svg"
 			/>
@@ -173,6 +173,17 @@ export default {
 		&:hover {
 			border-color: hsl(265, 79%, 41%);
 			outline-color: hsl(265, 79%, 41%);
+		}
+	}
+
+	.email-img {
+		width: 20px;
+	}
+
+	#password {
+		&::-ms-reveal,
+		&::-ms-clear {
+			display: none;
 		}
 	}
 

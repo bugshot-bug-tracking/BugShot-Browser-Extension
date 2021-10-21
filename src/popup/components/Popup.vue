@@ -142,10 +142,14 @@ body {
 	width: 100%;
 	height: 100px;
 	justify-content: center;
-	border-bottom: 3px solid hsl(240, 100%, 95%);
 
 	&.logged {
 		height: 50px;
+		border-bottom: 2px solid hsl(240, 100%, 95%);
+	}
+
+	> img {
+		width: 70%;
 	}
 }
 
@@ -174,9 +178,9 @@ body {
 	position: relative;
 	display: inline-flex;
 	width: 100%;
-	height: 40px;
+	height: 50px;
 	align-items: center;
 	justify-content: center;
-	border-top: 3px solid hsl(240, 100%, 95%);
+	border-top: 2px solid hsl(240, 100%, 95%);
 }
 </style>
