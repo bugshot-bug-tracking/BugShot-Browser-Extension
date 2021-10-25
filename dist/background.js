@@ -1,4 +1,4 @@
-var baseURL = `http://localhost:80`;
+var baseURL = `http://165.232.70.214`;
 var webURL = `${baseURL}/`;
 var apiURL = `${baseURL}/api/v1`;
 
