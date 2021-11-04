@@ -1,0 +1,159 @@
+<template>
+	<div class="thumbnail-wraper" @click="modal = !modal">
+		<img class="thumbnail" :src="thumbnail" alt="Screenshots" />
+		<div class="enlarge" />
+	</div>
+
+	<Modal :show="modal" @close="modal = !modal">
+		<img :src="shownImage.image" alt="Screenshots" />
+
+		<div
+			v-show="showMark"
+			class="marker"
+			:class="priority"
+			:style="` 
+			left: calc(${shownImage.mark.x}% - 16px);
+			top: calc(${shownImage.mark.y}% - 56px);			
+			`"
+		/>
+
+		<template v-slot:extra>
+			<div class="controls-bottom">
+				<div class="controls">
+					<div
+						class="btn btn-hide-mark"
+						@click="showMark = !showMark"
+					>
+						{{ showMark ? "Hide" : "Show" }} mark
+					</div>
+
+					<div class="images-counter" v-if="images.length > 1">
+						{{ shownImage.number }} of {{ images.length }}
+					</div>
+				</div>
+			</div>
+
+			<div class="controls-side" v-if="images.length > 1">
+				<div class="btn btn-side-arrow arrow-left" @click="previous" />
+				<div class="btn btn-side-arrow arrow-right" @click="next" />
+			</div>
+		</template>
+	</Modal>
+</template>
+
+<script>
+import { computed, onMounted, ref, watch } from "vue";
+import Modal from "../../global/modal/Modal.vue";
+
+export default {
+	components: { Modal },
+	name: "Screenshot",
+	props: {
+		bug: Object,
+	},
+	emits: ["loading"],
+	setup(props, context) {
+		const images = ref([{}]);
+		const modal = ref(false);
+		const showMark = ref(true);
+		const counter = ref(0);
+
+		const setLoading = (value) => {
+			context.emit("loading", value);
+		};
+
+		const previous = () => {
+			if (counter.value > 0) counter.value--;
+		};
+
+		const next = () => {
+			if (counter.value < images.value.length - 1) counter.value++;
+		};
+
+		const update = () => {
+			setLoading(true);
+
+			chrome.runtime.sendMessage(
+				{
+					message: "getScreenshots",
+					payload: {
+						bug_id: props.bug.id,
+					},
+				},
+				(response) => {
+					setLoading(false);
+
+					switch (response.message) {
+						case "error":
+							throw response.error;
+
+						case "ok":
+							images.value = response.payload;
+							console.info("Request get screenshots: ok!");
+							break;
+					}
+				}
+			);
+		};
+
+		let thumbnail = computed(() => {
+			if (images.value.length > 0)
+				return images.value[0].attributes?.data;
+			return "/";
+		});
+
+		const shownImage = computed(() => {
+			let img = images.value[counter.value];
+
+			console.log(img);
+			// used for getting the image dimensions from base64 data
+			let i = new Image();
+			i.src = img.attributes.data;
+
+			return {
+				image: img.attributes.data,
+				number: counter.value + 1,
+				// needed the position relative to the original image resolution so it can account for different image distorsions while shown via modal
+				mark: {
+					x: (img.attributes.position_x / i.width) * 100,
+					y: (img.attributes.position_y / i.height) * 100,
+				},
+			};
+		});
+
+		const priority = computed(() => {
+			switch (Number(props.bug.attributes.priority.id)) {
+				case 1:
+					return "minor";
+				case 2:
+					return "normal";
+				case 3:
+					return "important";
+				case 4:
+					return "critical";
+
+				default:
+					return "normal";
+			}
+		});
+
+		onMounted(() => {
+			update();
+		});
+
+		watch(props, update);
+
+		return {
+			images,
+			modal,
+			thumbnail,
+			shownImage,
+			priority,
+			showMark,
+			setLoading,
+			previous,
+			next,
+		};
+	},
+};
+</script>

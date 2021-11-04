@@ -1,0 +1,42 @@
+#overlay {
+	background-color: hsla(0, 0%, 100%, 0.5);
+	width: 100vw;
+	height: 100vh;
+	cursor: url("/assets/icons/pin.png") 20 40, auto;
+
+	&.marked {
+		background-color: hsla(0, 0%, 100%, 0.3) !important;
+		z-index: -1 !important;
+		cursor: not-allowed !important;
+		flex: 1;
+		position: fixed;
+		width: 100%;
+		height: 100%;
+	}
+}
+
+.marker {
+	z-index: 9101;
+	position: absolute;
+	display: block;
+	width: 32px;
+	height: 56px;
+	background-position: center center;
+	background-repeat: no-repeat;
+
+	&.critical {
+		background-image: url("/assets/marks/mark_crit.svg");
+	}
+
+	&.important {
+		background-image: url("/assets/marks/mark_imp.svg");
+	}
+
+	&.normal {
+		background-image: url("/assets/marks/mark_normal.svg");
+	}
+
+	&.minor {
+		background-image: url("/assets/marks/mark_min.svg");
+	}
+}
