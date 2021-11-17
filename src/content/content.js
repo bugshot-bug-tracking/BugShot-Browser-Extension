@@ -49,7 +49,7 @@ div.style.cssText = `
     height: fit-content;
     overflow: hidden;
     background-color: transparent;
-    z-index: 10000;
+    z-index: 2047483647;
     `;
 
 div.appendChild(document.createElement("bug-shot"));
