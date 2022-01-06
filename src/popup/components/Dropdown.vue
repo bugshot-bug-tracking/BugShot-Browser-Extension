@@ -24,7 +24,8 @@
 				<div class="item-wrap">
 					<div class="company">
 						{{
-							option.project.attributes.company.designation ||
+							option.project.attributes.company.attributes
+								.designation ||
 							option.project.attributes.company.id ||
 							"-"
 						}}
@@ -90,7 +91,7 @@ export default {
 			for (const option of props.options) {
 				if (
 					option.project.attributes.designation.match(regOption) ||
-					option.project.attributes.company.designation.match(
+					option.project.attributes.company.attributes.designation.match(
 						regOption
 					)
 				)
@@ -110,8 +111,9 @@ export default {
 			selected.value = option;
 			optionsShow.value = false;
 			searchFilter.value = `${
-				option.project.attributes.company.designation ||
-				option.project.attributes.company.id ||
+				selected.value.project.attributes.company.attributes
+					.designation ||
+				selected.value.project.attributes.company.id ||
 				"-"
 			} | ${
 				option.project.attributes.designation ||
@@ -128,7 +130,8 @@ export default {
 				searchFilter.value = "";
 			} else {
 				searchFilter.value = `${
-					selected.value.project.attributes.company.designation ||
+					selected.value.project.attributes.company.attributes
+						.designation ||
 					selected.value.project.attributes.company.id ||
 					"-"
 				} | ${
@@ -146,7 +149,8 @@ export default {
 				if (option.project.id === props.default) {
 					selected.value = option;
 					searchFilter.value = `${
-						selected.value.project.attributes.company.designation ||
+						selected.value.project.attributes.company.attributes
+							.designation ||
 						selected.value.project.attributes.company.id ||
 						"-"
 					} | ${

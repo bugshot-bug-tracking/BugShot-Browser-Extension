@@ -4,9 +4,10 @@
 	<form id="popup-login-form" @submit.prevent="submit">
 		<div class="form-group">
 			<input
+				id="email"
 				type="email"
 				name="email"
-				id="email"
+				class="field"
 				placeholder="Email"
 				required
 				v-model="email"
@@ -16,9 +17,10 @@
 
 		<div class="form-group">
 			<input
+				id="password"
 				:type="passwordType"
 				name="password"
-				id="password"
+				class="field"
 				placeholder="Password"
 				minlength="8"
 				required
@@ -159,8 +161,7 @@ export default {
 		align-items: center;
 	}
 
-	#email,
-	#password {
+	.field {
 		border: 1px solid hsl(264, 78%, 77%);
 		border-radius: 8px;
 		margin: 16px 0;

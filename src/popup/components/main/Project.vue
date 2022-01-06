@@ -4,7 +4,7 @@
 
 		<div class="bottom">
 			<span>Company: </span>
-			{{ project.attributes.company.designation }}
+			{{ project.attributes.company.attributes.designation }}
 		</div>
 	</Container>
 </template>

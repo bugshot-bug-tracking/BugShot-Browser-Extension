@@ -18,7 +18,7 @@
 				<label>Creator:</label>
 				<div class="content">
 					{{
-						`${bug.attributes.user.first_name} ${bug.attributes.user.last_name}`
+						`${bug.attributes.creator.attributes.first_name} ${bug.attributes.creator.attributes.last_name}`
 					}}
 				</div>
 			</div>
@@ -90,7 +90,7 @@
 			<div class="grid1x2 status">
 				<label>Status:</label>
 				<div class="content status">
-					{{ bug.attributes.status.designation }}
+					{{ bug.attributes.status_name }}
 				</div>
 			</div>
 		</div>

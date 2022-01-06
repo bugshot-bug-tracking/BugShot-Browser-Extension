@@ -6,7 +6,7 @@
 
 		<div class="company">Company:</div>
 		<div class="company-name">
-			{{ project.attributes.company.designation }}
+			{{ project.attributes.company.attributes.designation }}
 		</div>
 
 		<div class="project">Project:</div>

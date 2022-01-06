@@ -247,6 +247,7 @@
   scroll-behavior: auto;
   min-width: 300px;
   min-height: 200px;
+  max-height: 96vh;
 }
 .modal-container > .modal-content::-webkit-scrollbar {
   display: none;
@@ -311,15 +312,13 @@
 #sidebar {
   display: flex;
   flex-direction: column;
-  background-color: #1f2547;
   min-width: 65px;
   min-height: 60px;
   width: 4vw;
   height: 7vh;
-  transition: 0.1s;
+  transition: 0.2s;
   transition-timing-function: ease-in;
-  border-top-left-radius: 13px;
-  border-bottom-left-radius: 13px;
+  background: linear-gradient(to bottom right, transparent 0%, transparent 49%, #1f2547 50%, #1f2547 100%);
 }
 #sidebar > div {
   flex: 1;
@@ -328,6 +327,11 @@
   height: 100vh;
   border-top-left-radius: unset;
   border-bottom-left-radius: unset;
+  background: #1f2547;
+}
+#sidebar.open #logo {
+  margin: unset;
+  background-origin: content-box;
 }
 #sidebar.open > div {
   flex: 0.1;
@@ -337,8 +341,8 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
-  background-origin: content-box;
   padding: 0 1vw;
+  margin: 50% 0% 10% 45%;
 }
 #sidebar #logo:hover {
   cursor: pointer;

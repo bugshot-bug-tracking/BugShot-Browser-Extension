@@ -10,10 +10,10 @@
 	},
 	"devDependencies": {
 		"cross-env": "^7.0.3",
-		"laravel-mix": "^6.0.34",
+		"laravel-mix": "^6.0.39",
 		"resolve-url-loader": "^4.0.0",
-		"sass": "^1.43.2",
-		"sass-loader": "^12.2.0",
+		"sass": "^1.46.0",
+		"sass-loader": "^12.4.0",
 		"vue-loader": "^16.5.0"
 	},
 	"dependencies": {

@@ -95,7 +95,7 @@ export default {
 					{
 						message: "deleteBug",
 						payload: {
-							bug_id: props.bug.id,
+							bug: props.bug,
 						},
 					},
 					(response) => {
