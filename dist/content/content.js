@@ -425,8 +425,7 @@ __webpack_require__.r(__webpack_exports__);
       chrome.runtime.sendMessage({
         message: "deleteAttachment",
         payload: {
-          attachment_id: item.id,
-          bug_id: item.attributes.bug_id
+          attachment_id: item.id
         }
       }, function (response) {
         emitLoading(false);

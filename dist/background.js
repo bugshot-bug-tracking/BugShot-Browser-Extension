@@ -244,7 +244,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			case "deleteAttachment":
 				return sendResponseWrapper(deleteAttachment, [
 					request.payload.attachment_id,
-					request.payload.bug_id,
 				]);
 
 			case "getComments":
@@ -675,9 +674,9 @@ async function deleteBug(bug) {
 	};
 }
 
-async function deleteAttachment(attachment_id, bug_id) {
+async function deleteAttachment(attachment_id) {
 	const token = await getTokenFromStorage();
-	const url = `${apiURL}/bugs/${bug_id}/attachments/${attachment_id}`;
+	const url = `${apiURL}/attachments/${attachment_id}`;
 
 	let response = await fetch(url, {
 		method: "DELETE",

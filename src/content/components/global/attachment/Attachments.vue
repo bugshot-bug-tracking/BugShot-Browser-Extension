@@ -222,7 +222,6 @@ export default {
 					message: "deleteAttachment",
 					payload: {
 						attachment_id: item.id,
-						bug_id: item.attributes.bug_id,
 					},
 				},
 				(response) => {
