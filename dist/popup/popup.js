@@ -77,7 +77,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       note: "Disable the dropdown"
     },
     "default": {
-      type: Number,
+      type: String,
       required: false,
       "default": -1,
       note: "The project(id) to show when mounted"
@@ -100,7 +100,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           var option = _step.value;
-          if (option.project.attributes.designation.match(regOption) || option.project.attributes.company.attributes.designation.match(regOption)) filtered.push(option);
+          if (option.attributes.designation.match(regOption) || option.attributes.company.attributes.designation.match(regOption)) filtered.push(option);
         }
       } catch (err) {
         _iterator.e(err);
@@ -121,16 +121,16 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     var selectOption = function selectOption(option) {
       selected.value = option;
       optionsShow.value = false;
-      searchFilter.value = "".concat(selected.value.project.attributes.company.attributes.designation || selected.value.project.attributes.company.id || "-", " | ").concat(option.project.attributes.designation || option.project.id || "-");
-      context.emit("selected", selected.value.project.id);
+      searchFilter.value = "".concat(selected.value.attributes.company.attributes.designation || selected.value.attributes.company.id || "-", " | ").concat(option.attributes.designation || option.id || "-");
+      context.emit("selected", selected.value.id);
     };
 
     var exit = function exit() {
-      if (!selected.value.project.id) {
+      if (!selected.value.id) {
         selected.value = {};
         searchFilter.value = "";
       } else {
-        searchFilter.value = "".concat(selected.value.project.attributes.company.attributes.designation || selected.value.project.attributes.company.id || "-", " | ").concat(selected.value.project.attributes.designation || selected.value.project.id || "-");
+        searchFilter.value = "".concat(selected.value.attributes.company.attributes.designation || selected.value.attributes.company.id || "-", " | ").concat(selected.value.attributes.designation || selected.value.id || "-");
       }
 
       optionsShow.value = false;
@@ -144,9 +144,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
           var option = _step2.value;
 
-          if (option.project.id === props["default"]) {
+          if (option.id === props["default"]) {
             selected.value = option;
-            searchFilter.value = "".concat(selected.value.project.attributes.company.attributes.designation || selected.value.project.attributes.company.id || "-", " | ").concat(selected.value.project.attributes.designation || selected.value.project.id || "-");
+            searchFilter.value = "".concat(selected.value.attributes.company.attributes.designation || selected.value.attributes.company.id || "-", " | ").concat(selected.value.attributes.designation || selected.value.id || "-");
             break;
           }
         }
@@ -478,7 +478,7 @@ __webpack_require__.r(__webpack_exports__);
             break;
 
           case "ok":
-            if (response.payload !== null) selectedProject.value = response.payload.project;else selectedProject.value = {};
+            if (response.payload !== null) selectedProject.value = response.payload;else selectedProject.value = {};
             break;
         }
       });
@@ -784,9 +784,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         return $setup.selectOption(option);
       },
       key: index
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(option.project.attributes.company.attributes.designation || option.project.attributes.company.id || "-"), 1
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(option.attributes.company.attributes.designation || option.attributes.company.id || "-"), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(option.project.attributes.designation || option.project.id || "-"), 1
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(option.attributes.designation || option.id || "-"), 1
     /* TEXT */
     )])], 40
     /* PROPS, HYDRATE_EVENTS */

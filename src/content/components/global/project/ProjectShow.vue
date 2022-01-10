@@ -43,7 +43,7 @@ export default {
 							break;
 
 						case "ok":
-							project.value = response.payload.project;
+							project.value = response.payload;
 							break;
 					}
 				}

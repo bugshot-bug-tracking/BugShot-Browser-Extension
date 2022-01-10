@@ -162,8 +162,7 @@ export default {
 						attachments.value.push({
 							attributes: {
 								designation: filesInfo[index].name,
-								data: files64[index],
-								type: filesInfo[index].type,
+								base64: files64[index],
 							},
 						});
 					}

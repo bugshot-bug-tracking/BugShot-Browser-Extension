@@ -22,6 +22,8 @@ export default {
 	setup() {
 		const date = (dateString) => {
 			if (dateString === "" || dateString === null) return "";
+			if (dateString.slice(-1).toUpperCase() !== "Z") dateString += "Z";
+
 			return new Date(dateString).toLocaleString();
 		};
 

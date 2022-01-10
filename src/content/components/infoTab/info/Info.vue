@@ -97,7 +97,13 @@
 
 		<div class="deadline">
 			<label>Deadline:</label>
-			<div class="content">{{ date(bug.attributes.deadline) }}</div>
+			<div class="content">
+				{{
+					bug.attributes.deadline
+						? date(bug.attributes.deadline)
+						: "No deadline"
+				}}
+			</div>
 		</div>
 	</div>
 </template>
@@ -120,6 +126,8 @@ export default {
 
 		const date = (dateString) => {
 			if (dateString === "" || dateString === null) return "";
+			if (dateString.slice(-1).toUpperCase() !== "Z") dateString += "Z";
+
 			return new Date(dateString).toLocaleString();
 		};
 

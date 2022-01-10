@@ -376,8 +376,7 @@ __webpack_require__.r(__webpack_exports__);
             attachments.value.push({
               attributes: {
                 designation: filesInfo[index].name,
-                data: files64[index],
-                type: filesInfo[index].type
+                base64: files64[index]
               }
             });
           }
@@ -574,7 +573,7 @@ __webpack_require__.r(__webpack_exports__);
             break;
 
           case "ok":
-            project.value = response.payload.project;
+            project.value = response.payload;
             break;
         }
       });
@@ -949,6 +948,7 @@ __webpack_require__.r(__webpack_exports__);
   setup: function setup() {
     var date = function date(dateString) {
       if (dateString === "" || dateString === null) return "";
+      if (dateString.slice(-1).toUpperCase() !== "Z") dateString += "Z";
       return new Date(dateString).toLocaleString();
     };
 
@@ -992,6 +992,7 @@ __webpack_require__.r(__webpack_exports__);
 
     var date = function date(dateString) {
       if (dateString === "" || dateString === null) return "";
+      if (dateString.slice(-1).toUpperCase() !== "Z") dateString += "Z";
       return new Date(dateString).toLocaleString();
     };
 
@@ -1146,6 +1147,7 @@ __webpack_require__.r(__webpack_exports__);
   setup: function setup(props, context) {
     var date = function date(dateString) {
       if (dateString === "" || dateString === null) return "";
+      if (dateString.slice(-1).toUpperCase() !== "Z") dateString += "Z";
       return new Date(dateString).toLocaleString();
     };
 
@@ -1618,7 +1620,6 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
             "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
               return $props.bug.description = $event;
             }),
-            minlength: "5",
             maxlength: "250"
           }, null, 512
           /* NEED_PATCH */
@@ -2502,7 +2503,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* CLASS */
   )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_41, [_hoisted_42, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.bug.attributes.status_name), 1
   /* TEXT */
-  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [_hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_46, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.date($props.bug.attributes.deadline)), 1
+  )])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [_hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_46, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.bug.attributes.deadline ? $setup.date($props.bug.attributes.deadline) : "No deadline"), 1
   /* TEXT */
   )])]);
 }

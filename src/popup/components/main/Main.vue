@@ -95,8 +95,7 @@ export default {
 
 						case "ok":
 							if (response.payload !== null)
-								selectedProject.value =
-									response.payload.project;
+								selectedProject.value = response.payload;
 							else selectedProject.value = {};
 
 							break;

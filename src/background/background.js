@@ -130,9 +130,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 			case "getStatusesAndBugs":
 				managedProject(sender.tab.url).then((project) => {
-					sendResponseWrapper(getStatusesAndBugs, [
-						project.project.id,
-					]);
+					sendResponseWrapper(getStatusesAndBugs, [project.id]);
 				});
 
 				return true;
@@ -185,9 +183,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			case "sendBug":
 				managedProject(sender.tab.url).then((project) => {
 					let bug_details = {
-						project_id: project.project.id,
+						project_id: project.id,
 						priority_id: request.payload.priority,
-						status_id: project.project.attributes.statuses[0].id,
+						status_id: project.attributes.statuses[0].id,
 						designation: request.payload.name,
 						description: request.payload.description,
 						url: sender.tab.url,
@@ -380,7 +378,6 @@ async function logged() {
  * @return {Promise<Array>} All info regarding projects on the URL or 'null' if not found
  * @throws {Object} A 'message' and the 'response' object from fetch function in case response code != 2xx or 404
  */
-// TODO update check of project
 async function getProject(projectURL) {
 	const token = await getTokenFromStorage();
 	let origin = new URL(projectURL).origin; // Get url origin from the URL
@@ -557,7 +554,7 @@ async function sendBugDetails(data) {
 
 async function postComment(bug_id, content) {
 	const token = await getTokenFromStorage();
-	const url = `${apiURL}/comment`;
+	const url = `${apiURL}/bugs/${bug_id}/comments`;
 
 	let response = await fetch(url, {
 		method: "POST",
@@ -804,8 +801,8 @@ async function managedProject(url) {
 	// if data is not the same, first try to find the prefered project in the new data
 	let pref = -1;
 	for (let index = 0; index < projects.length; index++) {
-		const project = projects[index].project;
-		if (project.id === storage.projects[storage.option].project.id) {
+		const project = projects[index];
+		if (project.id === storage.projects[storage.option].id) {
 			pref = index;
 			break;
 		}
@@ -922,7 +919,7 @@ async function setPrefered(option, url) {
 	// look for the project that has id === "option"
 	for (let index = 0; index < record.projects.length; index++) {
 		const project = record.projects[index];
-		if (project.project.id === option) {
+		if (project.id === option) {
 			newPref = index;
 			break;
 		}

@@ -24,19 +24,14 @@
 				<div class="item-wrap">
 					<div class="company">
 						{{
-							option.project.attributes.company.attributes
-								.designation ||
-							option.project.attributes.company.id ||
+							option.attributes.company.attributes.designation ||
+							option.attributes.company.id ||
 							"-"
 						}}
 					</div>
 
 					<div class="project">
-						{{
-							option.project.attributes.designation ||
-							option.project.id ||
-							"-"
-						}}
+						{{ option.attributes.designation || option.id || "-" }}
 					</div>
 				</div>
 			</div>
@@ -68,7 +63,7 @@ export default {
 			note: "Disable the dropdown",
 		},
 		default: {
-			type: Number,
+			type: String,
 			required: false,
 			default: -1,
 			note: "The project(id) to show when mounted",
@@ -90,8 +85,8 @@ export default {
 			// if not show only the options that contain the specified characters
 			for (const option of props.options) {
 				if (
-					option.project.attributes.designation.match(regOption) ||
-					option.project.attributes.company.attributes.designation.match(
+					option.attributes.designation.match(regOption) ||
+					option.attributes.company.attributes.designation.match(
 						regOption
 					)
 				)
@@ -111,32 +106,26 @@ export default {
 			selected.value = option;
 			optionsShow.value = false;
 			searchFilter.value = `${
-				selected.value.project.attributes.company.attributes
-					.designation ||
-				selected.value.project.attributes.company.id ||
+				selected.value.attributes.company.attributes.designation ||
+				selected.value.attributes.company.id ||
 				"-"
-			} | ${
-				option.project.attributes.designation ||
-				option.project.id ||
-				"-"
-			}`;
+			} | ${option.attributes.designation || option.id || "-"}`;
 
-			context.emit("selected", selected.value.project.id);
+			context.emit("selected", selected.value.id);
 		};
 
 		const exit = () => {
-			if (!selected.value.project.id) {
+			if (!selected.value.id) {
 				selected.value = {};
 				searchFilter.value = "";
 			} else {
 				searchFilter.value = `${
-					selected.value.project.attributes.company.attributes
-						.designation ||
-					selected.value.project.attributes.company.id ||
+					selected.value.attributes.company.attributes.designation ||
+					selected.value.attributes.company.id ||
 					"-"
 				} | ${
-					selected.value.project.attributes.designation ||
-					selected.value.project.id ||
+					selected.value.attributes.designation ||
+					selected.value.id ||
 					"-"
 				}`;
 			}
@@ -146,16 +135,16 @@ export default {
 
 		if (props.default !== -1) {
 			for (const option of props.options) {
-				if (option.project.id === props.default) {
+				if (option.id === props.default) {
 					selected.value = option;
 					searchFilter.value = `${
-						selected.value.project.attributes.company.attributes
+						selected.value.attributes.company.attributes
 							.designation ||
-						selected.value.project.attributes.company.id ||
+						selected.value.attributes.company.id ||
 						"-"
 					} | ${
-						selected.value.project.attributes.designation ||
-						selected.value.project.id ||
+						selected.value.attributes.designation ||
+						selected.value.id ||
 						"-"
 					}`;
 					break;
