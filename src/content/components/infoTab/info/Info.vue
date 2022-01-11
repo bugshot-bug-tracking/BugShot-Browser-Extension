@@ -18,7 +18,7 @@
 				<label>Creator:</label>
 				<div class="content">
 					{{
-						`${bug.attributes.user.first_name} ${bug.attributes.user.last_name}`
+						`${bug.attributes.creator.attributes.first_name} ${bug.attributes.creator.attributes.last_name}`
 					}}
 				</div>
 			</div>
@@ -90,14 +90,20 @@
 			<div class="grid1x2 status">
 				<label>Status:</label>
 				<div class="content status">
-					{{ bug.attributes.status.designation }}
+					{{ bug.attributes.status_name }}
 				</div>
 			</div>
 		</div>
 
 		<div class="deadline">
 			<label>Deadline:</label>
-			<div class="content">{{ date(bug.attributes.deadline) }}</div>
+			<div class="content">
+				{{
+					bug.attributes.deadline
+						? date(bug.attributes.deadline)
+						: "No deadline"
+				}}
+			</div>
 		</div>
 	</div>
 </template>
@@ -120,6 +126,8 @@ export default {
 
 		const date = (dateString) => {
 			if (dateString === "" || dateString === null) return "";
+			if (dateString.slice(-1).toUpperCase() !== "Z") dateString += "Z";
+
 			return new Date(dateString).toLocaleString();
 		};
 

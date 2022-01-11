@@ -114,8 +114,7 @@ export default {
 										bug_id: props.bug.id,
 										data: {
 											designation: file.name,
-											data: data64,
-											type: file.type,
+											base64: data64,
 										},
 									},
 								},
@@ -163,8 +162,7 @@ export default {
 						attachments.value.push({
 							attributes: {
 								designation: filesInfo[index].name,
-								data: files64[index],
-								type: filesInfo[index].type,
+								base64: files64[index],
 							},
 						});
 					}
@@ -186,6 +184,7 @@ export default {
 					message: "downloadAttachment",
 					payload: {
 						attachment_id: item.id,
+						bug_id: item.attributes.bug_id,
 					},
 				},
 				(response) => {

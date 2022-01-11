@@ -6,7 +6,7 @@
 
 		<div class="company">Company:</div>
 		<div class="company-name">
-			{{ project.attributes.company.designation }}
+			{{ project.attributes.company.attributes.designation }}
 		</div>
 
 		<div class="project">Project:</div>
@@ -43,7 +43,7 @@ export default {
 							break;
 
 						case "ok":
-							project.value = response.payload.project;
+							project.value = response.payload;
 							break;
 					}
 				}

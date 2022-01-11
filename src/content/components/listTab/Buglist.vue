@@ -12,9 +12,10 @@
 			:name="status.attributes.designation"
 		>
 			<BugCard
-				v-for="bug in status.bugs"
+				v-for="bug in status.attributes.bugs"
 				:key="bug.id"
 				:bug="bug"
+				:status_name="status.attributes.designation"
 				@info="$emit('info', $event)"
 			/>
 		</BugGroup>

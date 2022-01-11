@@ -1,13 +1,13 @@
-var baseURL = `http://165.232.70.214`;
+var baseURL = `https://dev.bugshot.de`;
 var webURL = `${baseURL}/`;
 var apiURL = `${baseURL}/api/v1`;
 
 /** Event listener on page update; injects content.js if there is a project for it */
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-	// If thab loading is not complete exit
+	// If tab loading is not complete exit
 	if (!(changeInfo.status === "complete")) return;
 
-	// If tab url is not http/https or https exit
+	// If tab url is not http or https exit
 	if (!/^http/.test(tab.url)) return;
 
 	// If not logged in exit
@@ -49,6 +49,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 			})
 			.catch((err) => {
 				let origin = new URL(tab.url).origin;
+
 				console.log({
 					origin,
 					result: err,
@@ -127,24 +128,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			case "currentProject":
 				return sendResponseWrapper(managedProject, [sender.tab.url]);
 
-			case "getBugs":
-				managedProject(sender.tab.url).then((project) => {
-					sendResponseWrapper(getBugs, [project.project.id]);
-				});
-
-				return true;
-
 			case "getStatusesAndBugs":
 				managedProject(sender.tab.url).then((project) => {
-					sendResponseWrapper(getStatusesAndBugs, [
-						project.project.id,
-					]);
+					sendResponseWrapper(getStatusesAndBugs, [project.id]);
 				});
 
 				return true;
 
 			case "deleteBug":
-				return sendResponseWrapper(deleteBug, [request.payload.bug_id]);
+				return sendResponseWrapper(deleteBug, [request.payload.bug]);
 
 			// ! WIP for when the web dashboard is done
 			case "openAdminPannel":
@@ -191,15 +183,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			case "sendBug":
 				managedProject(sender.tab.url).then((project) => {
 					let bug_details = {
-						project_id: project.project.id,
+						project_id: project.id,
 						priority_id: request.payload.priority,
+						status_id: project.attributes.statuses[0].id,
 						designation: request.payload.name,
 						description: request.payload.description,
 						url: sender.tab.url,
 						selector: request.payload.selector,
 						resolution: request.payload.resolution, // this is an object {width, height}
 						screenshot: request.payload.screenshot,
-						mark_coords: request.payload.mark_coords, // this is an object {x, y}
+						mark_coords: request.payload.mark_coords, // this is an object {x, y, wx, wy}
 					};
 
 					sendBugDetails(bug_details)
@@ -207,7 +200,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 							console.log(response);
 
 							let data = {
-								screenshot: bug_details.screenshot,
+								screenshot: btoa(bug_details.screenshot),
 								mark_coords: bug_details.mark_coords,
 							};
 
@@ -243,6 +236,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			case "downloadAttachment":
 				return sendResponseWrapper(downloadAttachment, [
 					request.payload.attachment_id,
+					request.payload.bug_id,
 				]);
 
 			case "deleteAttachment":
@@ -340,26 +334,18 @@ async function logOut() {
  */
 async function logged() {
 	// get the auth record from storage
-	let record = await new Promise((resolve) =>
-		chrome.storage.local.get("auth", resolve)
-	);
+	let token = await getTokenFromStorage();
+	let user = await getUserFromStorage();
 
 	// if the record was empty
-	if (
-		record &&
-		Object.keys(record).length === 0 &&
-		Object.getPrototypeOf(record) === Object.prototype
-	)
-		return false;
-
-	record = record.auth;
+	if (token === null) return false;
 
 	// make a request to see if the token is still valid
 	const url = `${apiURL}/auth/user`;
 	let response = await fetch(url, {
 		method: "POST",
 		headers: {
-			Authorization: `Bearer ${record.token}`,
+			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
 			"Content-type": "application/json",
 		},
@@ -373,11 +359,11 @@ async function logged() {
 
 	// check if server data is still up to date with local
 	if (
-		response.id !== record.user.id ||
-		response.type !== record.user.type ||
-		response.attributes.email !== record.user.attributes.email ||
-		response.attributes.first_name !== record.user.attributes.first_name ||
-		response.attributes.last_name !== record.user.attributes.last_name
+		response.id !== user.id ||
+		response.type !== user.type ||
+		response.attributes.email !== user.attributes.email ||
+		response.attributes.first_name !== user.attributes.first_name ||
+		response.attributes.last_name !== user.attributes.last_name
 	)
 		return false;
 
@@ -396,7 +382,7 @@ async function getProject(projectURL) {
 	const token = await getTokenFromStorage();
 	let origin = new URL(projectURL).origin; // Get url origin from the URL
 
-	let requestURL = `${apiURL}/check-project`;
+	let requestURL = `${apiURL}/user/check-project`;
 
 	let response = await fetch(requestURL, {
 		method: "POST",
@@ -404,6 +390,7 @@ async function getProject(projectURL) {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
 			"Content-type": "application/json",
+			"include-statuses": true,
 		},
 		body: JSON.stringify({
 			url: origin,
@@ -425,59 +412,22 @@ async function getProject(projectURL) {
 }
 
 /**
- * Get the bug list associated with a project
+ * Get the statuse list and bugs associated with a project
  * @param  {String} project_id The id of the project
  * @return {Array} Array with all the bugs associated with a project, null if project not found
  * @throws {Object} A 'message' and the 'response' object from fetch function in case response code != 2xx or 404
  */
-async function getBugs(project_id) {
-	const token = await getTokenFromStorage();
-	const url = `${apiURL}/project/${project_id}/bugs`;
-
-	let response = await fetch(url, {
-		method: "GET",
-		headers: {
-			Authorization: `Bearer ${token}`,
-			Accept: "application/json",
-		},
-	});
-
-	if (response.ok) {
-		let res = await response.json();
-		return res.data;
-	}
-
-	// Expect 404 to mean no project found
-	if (!response.ok && response.status === 404) return null;
-
-	throw {
-		message: "Not a good response from server",
-		response: response,
-	};
-}
-
 async function getStatusesAndBugs(project_id) {
-	let statuses = await getStatuses(project_id);
-
-	if (statuses === null) return null;
-
-	for (let index = 0; index < statuses.length; index++) {
-		const status = statuses[index];
-		status["bugs"] = await getBugsByStatus(status.id);
-	}
-
-	return statuses;
-}
-
-async function getStatuses(project_id) {
 	const token = await getTokenFromStorage();
-	const url = `${apiURL}/project/${project_id}/statuses`;
+	const url = `${apiURL}/projects/${project_id}/statuses`;
 
 	let response = await fetch(url, {
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
+			"include-bugs": true,
+			"include-bug-users": true,
 		},
 	});
 
@@ -485,35 +435,6 @@ async function getStatuses(project_id) {
 		let res = await response.json();
 		return res.data;
 	}
-
-	// Expect 404 to mean no project found
-	if (!response.ok && response.status === 404) return null;
-
-	throw {
-		message: "Not a good response from server",
-		response: response,
-	};
-}
-
-async function getBugsByStatus(status_id) {
-	const token = await getTokenFromStorage();
-	const url = `${apiURL}/status/${status_id}/bugs`;
-
-	let response = await fetch(url, {
-		method: "GET",
-		headers: {
-			Authorization: `Bearer ${token}`,
-			Accept: "application/json",
-		},
-	});
-
-	if (response.ok) {
-		let res = await response.json();
-		return res.data;
-	}
-
-	// Expect 404 to mean no project found
-	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -522,32 +443,8 @@ async function getBugsByStatus(status_id) {
 }
 
 async function getScreenshots(bug_id) {
-	let screenArray = [];
-
-	let infos = await getScreenshotsInfo(bug_id);
-
-	if (infos === null) return null;
-
-	for (let index = 0; index < infos.length; index++) {
-		const info = infos[index];
-
-		let data = await getScreenshotsData(info.id);
-
-		if (data === null) continue;
-
-		info["attributes"]["data"] = data;
-		let screenshot = info;
-
-		screenArray.push(screenshot);
-	}
-
-	console.log(screenArray);
-	return screenArray;
-}
-
-async function getScreenshotsData(screenshot_id) {
 	const token = await getTokenFromStorage();
-	const url = `${apiURL}/screenshot/${screenshot_id}/download`;
+	const url = `${apiURL}/bugs/${bug_id}/screenshots`;
 
 	let response = await fetch(url, {
 		method: "GET",
@@ -558,38 +455,9 @@ async function getScreenshotsData(screenshot_id) {
 	});
 
 	if (response.ok) {
-		let res = await (await response.blob()).text();
+		let res = (await response.json()).data;
 		return res;
 	}
-
-	// Expect 404 to mean no screenshot found
-	if (!response.ok && response.status === 404) return null;
-
-	throw {
-		message: "Not a good response from server",
-		response: response,
-	};
-}
-
-async function getScreenshotsInfo(bug_id) {
-	const token = await getTokenFromStorage();
-	const url = `${apiURL}/bug/${bug_id}/screenshots`;
-
-	let response = await fetch(url, {
-		method: "GET",
-		headers: {
-			Authorization: `Bearer ${token}`,
-			Accept: "application/json",
-		},
-	});
-
-	if (response.ok) {
-		let res = await response.json();
-		return res.data;
-	}
-
-	// Expect 404 to mean no project found
-	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -599,7 +467,7 @@ async function getScreenshotsInfo(bug_id) {
 
 async function getAttachments(bug_id) {
 	const token = await getTokenFromStorage();
-	const url = `${apiURL}/bug/${bug_id}/attachments`;
+	const url = `${apiURL}/bugs/${bug_id}/attachments`;
 
 	let response = await fetch(url, {
 		method: "GET",
@@ -613,9 +481,6 @@ async function getAttachments(bug_id) {
 		let res = await response.json();
 		return res.data;
 	}
-
-	// Expect 404 to mean no bug found
-	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -625,7 +490,7 @@ async function getAttachments(bug_id) {
 
 async function getComments(bug_id) {
 	const token = await getTokenFromStorage();
-	const url = `${apiURL}/bug/${bug_id}/comments`;
+	const url = `${apiURL}/bugs/${bug_id}/comments`;
 
 	let response = await fetch(url, {
 		method: "GET",
@@ -639,9 +504,6 @@ async function getComments(bug_id) {
 		let res = await response.json();
 		return res.data;
 	}
-
-	// Expect 404 to mean no bug found
-	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -652,7 +514,7 @@ async function getComments(bug_id) {
 //** --------- POST --------- */
 async function sendBugDetails(data) {
 	const token = await getTokenFromStorage();
-	const url = `${apiURL}/bug`;
+	const url = `${apiURL}/statuses/${data.status_id}/bugs`;
 
 	let osInfo = await getOS();
 	let browser = getBrowser();
@@ -675,6 +537,7 @@ async function sendBugDetails(data) {
 			selector: data.selector,
 			resolution: `${data.resolution.width}x${data.resolution.height}`,
 			// deadline: null,
+			order_number: 0,
 		}),
 	});
 
@@ -682,9 +545,6 @@ async function sendBugDetails(data) {
 		let res = await response.json();
 		return res.data;
 	}
-
-	// Expect 404 to mean no project found
-	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -694,7 +554,7 @@ async function sendBugDetails(data) {
 
 async function postComment(bug_id, content) {
 	const token = await getTokenFromStorage();
-	const url = `${apiURL}/comment`;
+	const url = `${apiURL}/bugs/${bug_id}/comments`;
 
 	let response = await fetch(url, {
 		method: "POST",
@@ -725,38 +585,28 @@ async function postComment(bug_id, content) {
 
 async function sendBugScreenshot(bug_id, data) {
 	const token = await getTokenFromStorage();
-	const url = `${apiURL}/screenshot`;
-
-	let today = new Date();
-	let timestamp = today.toISOString();
-	timestamp += ".jpg";
-
-	let formData = new FormData();
-	formData.append("bug_id", bug_id);
-	formData.append("position_x", data.mark_coords.x);
-	formData.append("position_y", data.mark_coords.y);
-	formData.append(
-		"file",
-		new Blob([data.screenshot], { type: "image/jpeg" }),
-		timestamp
-	);
+	const url = `${apiURL}/bugs/${bug_id}/screenshots`;
 
 	let response = await fetch(url, {
 		method: "POST",
 		headers: {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
+			"Content-type": "application/json",
 		},
-		body: formData,
+		body: JSON.stringify({
+			position_x: data.mark_coords.x,
+			position_y: data.mark_coords.y,
+			web_position_x: data.mark_coords.wx,
+			web_position_y: data.mark_coords.wy,
+			base64: data.screenshot,
+		}),
 	});
 
 	if (response.ok) {
 		let res = await response.json();
 		return res.data;
 	}
-
-	// Expect 404 to mean no bug found
-	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -766,30 +616,31 @@ async function sendBugScreenshot(bug_id, data) {
 
 async function saveAttachment(bug_id, data) {
 	const token = await getTokenFromStorage();
-	const url = `${apiURL}/attachment`;
+	const url = `${apiURL}/bugs/${bug_id}/attachments`;
 
-	// for base64 to binary array
-	let binary = await (await fetch(data.data)).arrayBuffer();
-	let formData = new FormData();
-	formData.append("bug_id", bug_id);
-	formData.append("file", new File([binary], data.designation));
+	// // for base64 to binary array
+	// let binary = await (await fetch(data.data)).arrayBuffer();
+	// let formData = new FormData();
+	// formData.append("bug_id", bug_id);
+	// formData.append("file", new File([binary], data.designation));
 
 	let response = await fetch(url, {
 		method: "POST",
 		headers: {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
+			"Content-type": "application/json",
 		},
-		body: formData,
+		body: JSON.stringify({
+			designation: data.designation,
+			base64: btoa(data.base64),
+		}),
 	});
 
 	if (response.ok) {
 		let res = await response.json();
 		return res.data;
 	}
-
-	// Expect 404 to mean no bug found
-	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -800,9 +651,9 @@ async function saveAttachment(bug_id, data) {
 //** --------- PUT --------- */
 //** --------- DELETE --------- */
 
-async function deleteBug(bug_id) {
+async function deleteBug(bug) {
 	const token = await getTokenFromStorage();
-	const url = `${apiURL}/bug/${bug_id}`;
+	const url = `${apiURL}/statuses/${bug.attributes.status_id}/bugs/${bug.id}`;
 
 	let response = await fetch(url, {
 		method: "DELETE",
@@ -813,9 +664,6 @@ async function deleteBug(bug_id) {
 	});
 
 	if (response.ok) return true; // Delete returns 204
-
-	// Expect 404 to mean no bug found
-	if (!response.ok && response.status === 404) return null;
 
 	throw {
 		message: "Not a good response from server",
@@ -825,7 +673,7 @@ async function deleteBug(bug_id) {
 
 async function deleteAttachment(attachment_id) {
 	const token = await getTokenFromStorage();
-	const url = `${apiURL}/attachment/${attachment_id}`;
+	const url = `${apiURL}/attachments/${attachment_id}`;
 
 	let response = await fetch(url, {
 		method: "DELETE",
@@ -837,9 +685,6 @@ async function deleteAttachment(attachment_id) {
 
 	if (response.ok) return true; // Delete returns 204
 
-	// Expect 404 to mean no bug found
-	if (!response.ok && response.status === 404) return null;
-
 	throw {
 		message: "Not a good response from server",
 		response: response,
@@ -848,16 +693,40 @@ async function deleteAttachment(attachment_id) {
 
 //** --------- Download --------- */
 
-async function downloadAttachment(attachment_id) {
+async function downloadAttachment(attachment_id, bug_id) {
 	const token = await getTokenFromStorage();
-	return chrome.downloads.download({
-		url: `${apiURL}/attachment/${attachment_id}/download`,
+	const url = `${apiURL}/bugs/${bug_id}/attachments/${attachment_id}`;
+
+	let response = await fetch(url, {
 		method: "GET",
-		headers: [
-			{ name: "Authorization", value: `Bearer ${token}` },
-			{ name: "Accept", value: "application/json" },
-		],
+		headers: {
+			Authorization: `Bearer ${token}`,
+			Accept: "application/json",
+			"include-attachment-base64": true,
+		},
 	});
+
+	if (!response.ok)
+		throw {
+			message: "Not a good response from server",
+			response: response,
+		};
+
+	let attachment = (await response.json()).data;
+
+	return chrome.downloads.download({
+		url: atob(attachment.attributes.base64),
+		filename: attachment.attributes.designation,
+	});
+
+	// return chrome.downloads.download({
+	// 	url: `${apiURL}/bugs/${bug_id}/attachments/${attachment_id}`,
+	// 	method: "GET",
+	// 	headers: [
+	// 		{ name: "Authorization", value: `Bearer ${token}` },
+	// 		{ name: "Accept", value: "application/json" },
+	// 	],
+	// });
 }
 
 //** --------- Others --------- */
@@ -932,8 +801,8 @@ async function managedProject(url) {
 	// if data is not the same, first try to find the prefered project in the new data
 	let pref = -1;
 	for (let index = 0; index < projects.length; index++) {
-		const project = projects[index].project;
-		if (project.id === storage.projects[storage.option].project.id) {
+		const project = projects[index];
+		if (project.id === storage.projects[storage.option].id) {
 			pref = index;
 			break;
 		}
@@ -1009,6 +878,15 @@ async function getTokenFromStorage() {
 	let record = await new Promise((resolve) =>
 		chrome.storage.local.get("auth", resolve)
 	);
+
+	// if the record was empty
+	if (
+		record &&
+		Object.keys(record).length === 0 &&
+		Object.getPrototypeOf(record) === Object.prototype
+	)
+		return null;
+
 	return record.auth.token;
 }
 
@@ -1016,7 +894,16 @@ async function getUserFromStorage() {
 	let record = await new Promise((resolve) =>
 		chrome.storage.local.get("auth", resolve)
 	);
-	return record.auth?.user;
+
+	// if the record was empty
+	if (
+		record &&
+		Object.keys(record).length === 0 &&
+		Object.getPrototypeOf(record) === Object.prototype
+	)
+		return null;
+
+	return record.auth.user;
 }
 
 async function setPrefered(option, url) {
@@ -1032,7 +919,7 @@ async function setPrefered(option, url) {
 	// look for the project that has id === "option"
 	for (let index = 0; index < record.projects.length; index++) {
 		const project = record.projects[index];
-		if (project.project.id === option) {
+		if (project.id === option) {
 			newPref = index;
 			break;
 		}

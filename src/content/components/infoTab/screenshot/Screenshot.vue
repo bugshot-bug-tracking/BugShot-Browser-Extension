@@ -8,7 +8,7 @@
 		<img :src="shownImage.image" alt="Screenshots" />
 
 		<div
-			v-show="showMark"
+			v-if="showMark"
 			class="marker"
 			:class="priority"
 			:style="` 
@@ -53,7 +53,7 @@ export default {
 	},
 	emits: ["loading"],
 	setup(props, context) {
-		const images = ref([{}]);
+		const images = ref([]);
 		const modal = ref(false);
 		const showMark = ref(true);
 		const counter = ref(0);
@@ -98,7 +98,8 @@ export default {
 
 		let thumbnail = computed(() => {
 			if (images.value.length > 0)
-				return images.value[0].attributes?.data;
+				return atob(images.value[0].attributes.base64);
+
 			return "/";
 		});
 
@@ -108,10 +109,10 @@ export default {
 			console.log(img);
 			// used for getting the image dimensions from base64 data
 			let i = new Image();
-			i.src = img.attributes.data;
+			i.src = atob(img.attributes.base64);
 
 			return {
-				image: img.attributes.data,
+				image: i.src,
 				number: counter.value + 1,
 				// needed the position relative to the original image resolution so it can account for different image distorsions while shown via modal
 				mark: {

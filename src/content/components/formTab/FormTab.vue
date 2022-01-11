@@ -30,19 +30,12 @@
 						rows="3"
 						placeholder="Describe the bug."
 						v-model="bug.description"
-						minlength="5"
 						maxlength="250"
 					></textarea>
 				</div>
 
 				<div
-					class="
-						form-group
-						d-flex
-						justify-content-evenly
-						mb-lg-2
-						flex-wrap
-					"
+					class="form-group d-flex justify-content-evenly mb-lg-2 flex-wrap"
 				>
 					<div class="form-check form-check-inline">
 						<input

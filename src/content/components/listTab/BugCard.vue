@@ -1,7 +1,7 @@
 <template>
 	<div class="bug-card">
 		<div class="card">
-			<div class="card-header bug-title" @click="$emit('info', bug)">
+			<div class="card-header bug-title" @click="info">
 				{{ bug.attributes.designation }}
 			</div>
 
@@ -27,16 +27,27 @@
 <script>
 export default {
 	name: "BugCard",
-	props: { bug: Object },
+	props: {
+		bug: Object,
+		status_name: String,
+	},
 	emits: ["info"],
-	setup() {
+	setup(props, context) {
 		const date = (dateString) => {
 			if (dateString === "" || dateString === null) return "";
+			if (dateString.slice(-1).toUpperCase() !== "Z") dateString += "Z";
+
 			return new Date(dateString).toLocaleString();
+		};
+
+		const info = () => {
+			props.bug.attributes.status_name = props.status_name;
+			context.emit("info", props.bug);
 		};
 
 		return {
 			date,
+			info,
 		};
 	},
 };
