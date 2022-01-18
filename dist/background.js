@@ -1,5 +1,5 @@
-var baseURL = `https://dev.bugshot.de`;
-var webURL = `${baseURL}/`;
+var baseURL = "https://dev-api.bugshot.de";
+var webURL = "https://dev.bugshot.de";
 var apiURL = `${baseURL}/api/v1`;
 
 /** Event listener on page update; injects content.js if there is a project for it */
@@ -138,9 +138,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			case "deleteBug":
 				return sendResponseWrapper(deleteBug, [request.payload.bug]);
 
-			// ! WIP for when the web dashboard is done
 			case "openAdminPannel":
-				return true;
 				chrome.tabs
 					.create({
 						url: webURL,
@@ -153,13 +151,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 				return true;
 
-			// ! WIP for when the web dashboard is done
 			case "openProjectPannel":
-				return true;
-				getProject(sender.tab.url).then((response) => {
+				managedProject(sender.tab.url).then((project) => {
 					chrome.tabs
 						.create({
-							url: `${webURL}/companies/${response.project.attributes.company_id}/projects/${response.project.id}/statuses`,
+							url: `${webURL}/projects/${project.id}`,
 						})
 						.then(() => {
 							sendResponse({
@@ -286,6 +282,8 @@ async function logIn(credentials) {
 		headers: {
 			Accept: "application/json",
 			"Content-type": "application/json",
+			clientId: "5",
+			version: "1.0.0",
 		},
 		body: JSON.stringify({
 			email: credentials.email,
@@ -318,6 +316,8 @@ async function logOut() {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
 			"Content-type": "application/json",
+			clientId: "5",
+			version: "1.0.0",
 		},
 	});
 
@@ -348,6 +348,8 @@ async function logged() {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
 			"Content-type": "application/json",
+			clientId: "5",
+			version: "1.0.0",
 		},
 	});
 
@@ -380,9 +382,10 @@ async function logged() {
  */
 async function getProject(projectURL) {
 	const token = await getTokenFromStorage();
+	const user = await getUserFromStorage();
 	let origin = new URL(projectURL).origin; // Get url origin from the URL
 
-	let requestURL = `${apiURL}/user/check-project`;
+	let requestURL = `${apiURL}/users/${user.id}/check-project`;
 
 	let response = await fetch(requestURL, {
 		method: "POST",
@@ -390,6 +393,8 @@ async function getProject(projectURL) {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
 			"Content-type": "application/json",
+			clientId: "5",
+			version: "1.0.0",
 			"include-statuses": true,
 		},
 		body: JSON.stringify({
@@ -426,6 +431,8 @@ async function getStatusesAndBugs(project_id) {
 		headers: {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
+			clientId: "5",
+			version: "1.0.0",
 			"include-bugs": true,
 			"include-bug-users": true,
 		},
@@ -451,6 +458,8 @@ async function getScreenshots(bug_id) {
 		headers: {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
+			clientId: "5",
+			version: "1.0.0",
 		},
 	});
 
@@ -474,6 +483,8 @@ async function getAttachments(bug_id) {
 		headers: {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
+			clientId: "5",
+			version: "1.0.0",
 		},
 	});
 
@@ -497,6 +508,8 @@ async function getComments(bug_id) {
 		headers: {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
+			clientId: "5",
+			version: "1.0.0",
 		},
 	});
 
@@ -525,6 +538,8 @@ async function sendBugDetails(data) {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
 			"Content-type": "application/json",
+			clientId: "5",
+			version: "1.0.0",
 		},
 		body: JSON.stringify({
 			project_id: data.project_id,
@@ -562,6 +577,8 @@ async function postComment(bug_id, content) {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
 			"Content-type": "application/json",
+			clientId: "5",
+			version: "1.0.0",
 		},
 		body: JSON.stringify({
 			bug_id: bug_id,
@@ -593,6 +610,8 @@ async function sendBugScreenshot(bug_id, data) {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
 			"Content-type": "application/json",
+			clientId: "5",
+			version: "1.0.0",
 		},
 		body: JSON.stringify({
 			position_x: data.mark_coords.x,
@@ -630,6 +649,8 @@ async function saveAttachment(bug_id, data) {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
 			"Content-type": "application/json",
+			clientId: "5",
+			version: "1.0.0",
 		},
 		body: JSON.stringify({
 			designation: data.designation,
@@ -660,6 +681,8 @@ async function deleteBug(bug) {
 		headers: {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
+			clientId: "5",
+			version: "1.0.0",
 		},
 	});
 
@@ -680,6 +703,8 @@ async function deleteAttachment(attachment_id) {
 		headers: {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
+			clientId: "5",
+			version: "1.0.0",
 		},
 	});
 
@@ -702,6 +727,8 @@ async function downloadAttachment(attachment_id, bug_id) {
 		headers: {
 			Authorization: `Bearer ${token}`,
 			Accept: "application/json",
+			clientId: "5",
+			version: "1.0.0",
 			"include-attachment-base64": true,
 		},
 	});

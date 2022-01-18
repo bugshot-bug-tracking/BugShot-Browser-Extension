@@ -48,7 +48,7 @@
 					id="remember"
 					v-model="remember"
 				/>
-				Remenber me
+				Remember me
 			</label>
 
 			<button id="form-submit" type="submit" class="btn btn-primary">
