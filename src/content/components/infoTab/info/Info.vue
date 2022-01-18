@@ -127,7 +127,7 @@ export default {
 		const date = (dateString) => {
 			if (dateString === "" || dateString === null) return "";
 			if (dateString.slice(-1).toUpperCase() !== "Z") dateString += "Z";
-			console.log(props.bug);
+
 			return new Date(dateString).toLocaleString();
 		};
 
