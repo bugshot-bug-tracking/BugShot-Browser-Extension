@@ -155,7 +155,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 				managedProject(sender.tab.url).then((project) => {
 					chrome.tabs
 						.create({
-							url: `${webURL}/projects/${project.id}`,
+							url: `${webURL}/project/${project.id}`,
 						})
 						.then(() => {
 							sendResponse({
