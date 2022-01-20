@@ -1,126 +1,133 @@
 $green: hsl(158, 80%, 47%);
 
 .thumbnail-wraper {
-  cursor: pointer;
+	cursor: pointer;
 
-  .thumbnail {
-    width: 100%;
-  }
+	.thumbnail {
+		width: 100%;
+	}
 
-  .enlarge {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    background-image: url("/assets/icons/expand.svg");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: hsla(0, 0%, 0%, 0.15);
-    background-size: 10%;
+	.enlarge {
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		z-index: 1;
+		top: 0;
+		left: 0;
+		background-image: url("/assets/icons/expand.svg");
+		background-repeat: no-repeat;
+		background-position: center;
+		background-color: hsla(0, 0%, 0%, 0.15);
+		background-size: 10%;
 
-    opacity: 0;
-    transition: 0.2s ease-in-out;
-  }
+		opacity: 0;
+		transition: 0.2s ease-in-out;
+	}
 
-  &:hover {
-    .enlarge {
-      transition: 0.2s ease-in-out;
-      opacity: 1;
-    }
-  }
+	&:hover {
+		.enlarge {
+			transition: 0.2s ease-in-out;
+			opacity: 1;
+		}
+	}
+}
+
+.big-screenshot {
+	.marker {
+		margin-left: -16px;
+		margin-top: -56px;
+	}
 }
 
 .controls-bottom {
-  bottom: 0;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  align-items: center;
-  position: absolute;
-  padding: 12px;
-  z-index: 1;
+	bottom: 0;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	align-items: center;
+	position: absolute;
+	padding: 12px;
+	z-index: 1;
 
-  .controls {
-    padding: 1vh 0.5vw;
-    background-color: hsl(0, 0%, 100%);
-    border-radius: 10px;
-    box-shadow: 0 3px 6px rgb(0 0 0 / 10%);
-    display: inline-flex;
-    align-items: center;
+	.controls {
+		padding: 1vh 0.5vw;
+		background-color: hsl(0, 0%, 100%);
+		border-radius: 10px;
+		box-shadow: 0 3px 6px rgb(0 0 0 / 10%);
+		display: inline-flex;
+		align-items: center;
 
-    > * {
-      margin: 0 10px;
-    }
+		> * {
+			margin: 0 10px;
+		}
 
-    > .btn-hide-mark {
-      border: 2px solid $green;
-      border-radius: 50px;
-      background-color: hsl(0, 0%, 100%);
-      width: 170px;
-      height: 40px;
-      color: $green;
-      font-weight: 500;
+		> .btn-hide-mark {
+			border: 2px solid $green;
+			border-radius: 50px;
+			background-color: hsl(0, 0%, 100%);
+			width: 170px;
+			height: 40px;
+			color: $green;
+			font-weight: 500;
 
-      &:hover {
-        background-color: $green;
-        color: hsl(0, 0%, 100%);
-        transition: all 0.2s ease;
-        cursor: pointer;
-      }
-    }
+			&:hover {
+				background-color: $green;
+				color: hsl(0, 0%, 100%);
+				transition: all 0.2s ease;
+				cursor: pointer;
+			}
+		}
 
-    > .images-counter {
-      background-color: hsl(0, 0%, 100%);
-    }
-  }
+		> .images-counter {
+			background-color: hsl(0, 0%, 100%);
+		}
+	}
 }
 
 .controls-side {
-  bottom: 0;
-  left: -20px;
-  height: 100%;
-  position: absolute;
-  width: calc(100% + 40px);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+	bottom: 0;
+	left: -20px;
+	height: 100%;
+	position: absolute;
+	width: calc(100% + 40px);
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
 
-  .btn-side-arrow {
-    min-width: 40px;
-    min-height: 40px;
-    background-repeat: no-repeat;
-    background-origin: content-box;
-    background-position: center;
-    background-color: hsl(0, 0%, 100%);
-    border: 2px solid $green;
-    border-radius: 100%;
+	.btn-side-arrow {
+		min-width: 40px;
+		min-height: 40px;
+		background-repeat: no-repeat;
+		background-origin: content-box;
+		background-position: center;
+		background-color: hsl(0, 0%, 100%);
+		border: 2px solid $green;
+		border-radius: 100%;
 
-    &:hover {
-      background-color: $green;
-      transition: all 0.2s ease;
-      cursor: pointer;
-    }
+		&:hover {
+			background-color: $green;
+			transition: all 0.2s ease;
+			cursor: pointer;
+		}
 
-    &.arrow-left {
-      background-image: url("/assets/icons/icn_left_arrow.svg");
+		&.arrow-left {
+			background-image: url("/assets/icons/icn_left_arrow.svg");
 
-      &:hover {
-        background-image: url("/assets/icons/icn_left_arrow_hover.svg");
-      }
-    }
+			&:hover {
+				background-image: url("/assets/icons/icn_left_arrow_hover.svg");
+			}
+		}
 
-    &.arrow-right {
-      background-image: url("/assets/icons/icn_left_arrow.svg");
-      transform: rotate(180deg);
+		&.arrow-right {
+			background-image: url("/assets/icons/icn_left_arrow.svg");
+			transform: rotate(180deg);
 
-      &:hover {
-        background-image: url("/assets/icons/icn_left_arrow_hover.svg");
-        transform: rotate(180deg);
-      }
-    }
-  }
+			&:hover {
+				background-image: url("/assets/icons/icn_left_arrow_hover.svg");
+				transform: rotate(180deg);
+			}
+		}
+	}
 }
