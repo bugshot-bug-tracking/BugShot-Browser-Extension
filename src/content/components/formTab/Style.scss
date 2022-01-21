@@ -132,6 +132,15 @@ $light-white-blue: hsl(240, 40%, 98%);
 			}
 		}
 	}
+
+	.deadline {
+		position: relative;
+
+		.content {
+			color: hsl(231, 45%, 75%);
+			width: 100%;
+		}
+	}
 }
 
 .priority {

@@ -974,6 +974,13 @@
   background-color: #18bed8;
   color: white;
 }
+#bug-form .deadline {
+  position: relative;
+}
+#bug-form .deadline .content {
+  color: #a3abdc;
+  width: 100%;
+}
 
 .priority {
   font-weight: normal;

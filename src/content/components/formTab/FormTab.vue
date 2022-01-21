@@ -30,7 +30,7 @@
 						rows="3"
 						placeholder="Describe the bug."
 						v-model="bug.description"
-						maxlength="1000"
+						maxlength="1500"
 					></textarea>
 				</div>
 

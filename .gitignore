@@ -26,5 +26,4 @@ pnpm-debug.log*
 *.zip
 /artifacts
 
-package-lock.json
 mix-manifest.json
