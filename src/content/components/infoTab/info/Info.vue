@@ -13,7 +13,7 @@
 			<div class="content">{{ bug.id }}</div>
 		</div>
 
-		<div class="justify-content-between">
+		<div class="justify-content-between align-items-start">
 			<div class="creator">
 				<label>Creator:</label>
 				<div class="content">

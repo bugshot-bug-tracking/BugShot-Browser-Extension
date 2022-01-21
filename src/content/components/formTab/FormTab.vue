@@ -19,7 +19,7 @@
 						required
 						v-model="bug.name"
 						minlength="5"
-						maxlength="250"
+						maxlength="50"
 					/>
 				</div>
 
@@ -30,7 +30,7 @@
 						rows="3"
 						placeholder="Describe the bug."
 						v-model="bug.description"
-						maxlength="250"
+						maxlength="1500"
 					></textarea>
 				</div>
 
