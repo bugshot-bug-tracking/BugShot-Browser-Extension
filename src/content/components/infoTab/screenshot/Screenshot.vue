@@ -1,20 +1,20 @@
 <template>
-	<div class="thumbnail-wraper" @click="modal = !modal">
+	<div class="thumbnail-wraper" @click="toggleModal">
 		<img class="thumbnail" :src="thumbnail" alt="Screenshots" />
 		<div class="enlarge" />
 	</div>
 
-	<Modal :show="modal" @close="modal = !modal">
-		<img :src="shownImage.image" alt="Screenshots" />
+	<Modal :show="modal" @close="modal = !modal" class="big-screenshot">
+		<img :src="showImage" alt="Screenshots" ref="bigScreen" />
 
 		<div
-			v-if="showMark"
+			v-show="mark.show"
 			class="marker"
 			:class="priority"
-			:style="` 
-			left: calc(${shownImage.mark.x}% - 16px);
-			top: calc(${shownImage.mark.y}% - 56px);			
-			`"
+			:style="{
+				left: mark.x + '%',
+				top: mark.y + '%',
+			}"
 		/>
 
 		<template v-slot:extra>
@@ -22,41 +22,68 @@
 				<div class="controls">
 					<div
 						class="btn btn-hide-mark"
-						@click="showMark = !showMark"
+						@click="mark.show = !mark.show"
 					>
-						{{ showMark ? "Hide" : "Show" }} mark
+						{{ mark.show ? "Hide" : "Show" }} mark
 					</div>
 
-					<div class="images-counter" v-if="images.length > 1">
-						{{ shownImage.number }} of {{ images.length }}
+					<div class="images-counter" v-if="screenshots.length > 1">
+						{{ counter + 1 }} of {{ screenshots.length }}
 					</div>
 				</div>
 			</div>
 
-			<div class="controls-side" v-if="images.length > 1">
-				<div class="btn btn-side-arrow arrow-left" @click="previous" />
-				<div class="btn btn-side-arrow arrow-right" @click="next" />
+			<div class="controls-side" v-if="screenshots.length > 1">
+				<div
+					class="btn btn-side-arrow arrow-left"
+					v-if="counter > 0"
+					@click="previous"
+				/>
+				<div v-else />
+
+				<div
+					class="btn btn-side-arrow arrow-right"
+					v-if="counter < screenshots.length - 1"
+					@click="next"
+				/>
 			</div>
 		</template>
 	</Modal>
 </template>
 
 <script>
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, nextTick, onMounted, reactive, ref, watch } from "vue";
 import Modal from "../../global/modal/Modal.vue";
 
 export default {
 	components: { Modal },
 	name: "Screenshot",
 	props: {
-		bug: Object,
+		bug: {
+			required: true,
+			type: Object,
+		},
 	},
 	emits: ["loading"],
 	setup(props, context) {
-		const images = ref([]);
+		const screenshots = ref([]);
 		const modal = ref(false);
-		const showMark = ref(true);
 		const counter = ref(0);
+		const bigScreen = ref(null);
+		const mark = reactive({
+			show: true,
+			x: 0,
+			y: 0,
+		});
+
+		// fixes the problem of renedering a null object
+		const toggleModal = () => {
+			if (screenshots.value[0] == null) {
+				modal.value = false;
+				return;
+			}
+			modal.value = !modal.value;
+		};
 
 		const setLoading = (value) => {
 			context.emit("loading", value);
@@ -67,7 +94,7 @@ export default {
 		};
 
 		const next = () => {
-			if (counter.value < images.value.length - 1) counter.value++;
+			if (counter.value < screenshots.value.length - 1) counter.value++;
 		};
 
 		const update = () => {
@@ -88,7 +115,7 @@ export default {
 							throw response.error;
 
 						case "ok":
-							images.value = response.payload;
+							screenshots.value = response.payload;
 							console.info("Request get screenshots: ok!");
 							break;
 					}
@@ -97,29 +124,38 @@ export default {
 		};
 
 		let thumbnail = computed(() => {
-			if (images.value.length > 0)
-				return atob(images.value[0].attributes.base64);
-
+			if (screenshots.value.length > 0)
+				return atob(screenshots.value[0].attributes.base64);
 			return "/";
 		});
 
-		const shownImage = computed(() => {
-			let img = images.value[counter.value];
+		const showImage = computed(() => {
+			if (counter.value >= screenshots.value.length) counter.value = 0;
 
-			console.log(img);
-			// used for getting the image dimensions from base64 data
-			let i = new Image();
-			i.src = atob(img.attributes.base64);
+			let img = screenshots.value[counter.value];
 
-			return {
-				image: i.src,
-				number: counter.value + 1,
-				// needed the position relative to the original image resolution so it can account for different image distorsions while shown via modal
-				mark: {
-					x: (img.attributes.position_x / i.width) * 100,
-					y: (img.attributes.position_y / i.height) * 100,
-				},
-			};
+			// wait untill rendered to get image sizes
+			nextTick(() => {
+				// get points relative to the original image to put the marker
+
+				mark.x =
+					img.attributes.position_x <= 0 &&
+					bigScreen.value.naturalWidth <= 0
+						? 0
+						: (img.attributes.position_x /
+								bigScreen.value.naturalWidth) *
+						  100;
+
+				mark.y =
+					img.attributes.position_y <= 0 &&
+					bigScreen.value.naturalHeight <= 0
+						? 0
+						: (img.attributes.position_y /
+								bigScreen.value.naturalHeight) *
+						  100;
+			});
+
+			return atob(img.attributes.base64);
 		});
 
 		const priority = computed(() => {
@@ -145,15 +181,17 @@ export default {
 		watch(props, update);
 
 		return {
-			images,
+			screenshots,
 			modal,
 			thumbnail,
-			shownImage,
+			counter,
+			bigScreen,
+			mark,
+			showImage,
 			priority,
-			showMark,
-			setLoading,
 			previous,
 			next,
+			toggleModal,
 		};
 	},
 };
