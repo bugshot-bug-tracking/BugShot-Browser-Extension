@@ -1,7 +1,7 @@
 {
-	"name": "BugShot MV3",
-	"description": "Bug shooting as Chrome Extension MV3",
-	"version": "0.1.0",
+	"name": "BugShot",
+	"description": "BugShot is an easy-to-use tool to track the bugs on your projects.",
+	"version": "1.0.0",
 	"manifest_version": 3,
 	"icons": {
 		"16": "assets/extension_icons/icon_16x16.png",
