@@ -408,8 +408,8 @@
   font-size: 20px;
   font-weight: 500;
   align-self: center;
-  text-overflow: ellipsis;
   margin-left: 5px;
+  word-break: break-all;
 }
 #info .id {
   font-size: 12px;
@@ -420,6 +420,8 @@
 }
 #info .description {
   display: block;
+  text-align: left;
+  word-break: break-all;
 }
 #info #technical {
   display: block;
@@ -534,6 +536,11 @@
 .thumbnail-wraper:hover .enlarge {
   transition: 0.2s ease-in-out;
   opacity: 1;
+}
+
+.big-screenshot .marker {
+  margin-left: -16px;
+  margin-top: -56px;
 }
 
 .controls-bottom {
@@ -844,6 +851,10 @@
   font-weight: bold;
   color: #1f2547;
   border-bottom: 2px solid #e6e6ff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-word;
 }
 .bug-card .bug-title:hover {
   cursor: pointer;
@@ -962,6 +973,13 @@
 #bug-form .option.minoir:checked {
   background-color: #18bed8;
   color: white;
+}
+#bug-form .deadline {
+  position: relative;
+}
+#bug-form .deadline .content {
+  color: #a3abdc;
+  width: 100%;
 }
 
 .priority {
