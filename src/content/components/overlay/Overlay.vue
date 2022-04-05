@@ -8,7 +8,7 @@
 		<div
 			class="marker"
 			v-if="mark.on"
-			:style="`left: ${mark.x - 16}px; top: ${mark.y - 56}px;`"
+			:style="`left: ${mark.x}px; top: ${mark.y}px;`"
 			:class="priority"
 		></div>
 	</div>
@@ -16,6 +16,7 @@
 
 <script>
 import { ref, computed } from "vue";
+import unique from "../../util/unique-selector";
 
 export default {
 	name: "Overlay",
@@ -125,6 +126,35 @@ export default {
 							wx: pageX,
 							wy: pageY,
 						};
+
+						const element = document.elementFromPoint(
+							event.clientX,
+							event.clientY
+						);
+
+						props.details.markers = [
+							{
+								position_x: clientX,
+								position_y: clientY,
+								web_position_x: pageX,
+								web_position_y: pageY,
+								target_x: element.getBoundingClientRect().x,
+								target_y: element.getBoundingClientRect().y,
+								target_height:
+									element.getBoundingClientRect().height,
+								target_width:
+									element.getBoundingClientRect().width,
+								scroll_x: window.scrollX,
+								scroll_y: window.scrollY,
+								screenshot_height: window.innerHeight,
+								screenshot_width: window.innerWidth,
+								target_full_selector: unique(element, {
+									fromRoot: true,
+								}),
+								target_short_selector: unique(element),
+								target_html: element.outerHTML,
+							},
+						];
 
 						context.emit("formOpen");
 					}

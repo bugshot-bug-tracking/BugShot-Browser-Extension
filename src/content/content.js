@@ -1,5 +1,6 @@
 import * as Vue from "vue";
 import Content from "./components/Content.vue";
+import Markers from "./components/Markers.ce.vue";
 import mitt from "mitt";
 
 window.emitter = mitt();
@@ -36,7 +37,12 @@ function setCSS(dom) {
 	});
 }
 
-window.customElements.define("bug-shot", BugShot);
+if (!customElements.get("bug-shot")) customElements.define("bug-shot", BugShot);
+
+const element = Vue.defineCustomElement(Markers);
+
+if (!customElements.get("bug-shot-markers"))
+	customElements.define("bug-shot-markers", element);
 
 // After the preparations are done append the new element to the DOM
 let div = document.createElement("div");
@@ -54,6 +60,10 @@ div.style.cssText = `
 
 div.appendChild(document.createElement("bug-shot"));
 
+let markers = document.createElement("bug-shot-markers");
+
+document.body.appendChild(markers);
+
 document.body.append(div);
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -63,7 +73,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 		case "getStatus":
 			sendResponse({
 				message: "ok",
-				payload: { status: !div.hidden },
+				payload: {
+					status: !div.hidden,
+					markers: !markers.hidden,
+				},
 			});
 
 			break;
@@ -73,6 +86,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 			sendResponse({
 				message: "ok",
 				payload: { status: !div.hidden },
+			});
+
+			break;
+
+		case "setMarkers":
+			markers.hidden = !request.payload.status;
+			sendResponse({
+				message: "ok",
+				payload: { status: !markers.hidden },
 			});
 
 			break;
