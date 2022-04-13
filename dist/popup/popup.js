@@ -1,5 +1,5 @@
 "use strict";
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["/dist/popup/popup"],{
+(self["webpackChunkbug_shot_extension"] = self["webpackChunkbug_shot_extension"] || []).push([["/dist/popup/popup"],{
 
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./src/content/components/global/container/Container.vue?vue&type=script&lang=js":
 /*!*******************************************************************************************************************************************************************************************************************!*\
