@@ -1,4 +1,4 @@
-(self["webpackChunk"] = self["webpackChunk"] || []).push([["dist/vendor"],{
+(self["webpackChunkbug_shot_extension"] = self["webpackChunkbug_shot_extension"] || []).push([["dist/vendor"],{
 
 /***/ "./node_modules/@babel/runtime/regenerator/index.js":
 /*!**********************************************************!*\
