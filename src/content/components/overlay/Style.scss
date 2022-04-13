@@ -23,7 +23,9 @@
 	height: 56px;
 	background-position: center center;
 	background-repeat: no-repeat;
-
+	margin-left: -16px;
+	margin-top: -56px;
+	
 	&.critical {
 		background-image: url("/assets/marks/mark_crit.svg");
 	}

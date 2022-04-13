@@ -18,7 +18,7 @@
 						placeholder="Enter bug name."
 						required
 						v-model="bug.name"
-						minlength="5"
+						minlength="1"
 						maxlength="50"
 					/>
 				</div>
@@ -31,7 +31,7 @@
 						placeholder="Describe the bug."
 						v-model="bug.description"
 						maxlength="1500"
-					></textarea>
+					/>
 				</div>
 
 				<div

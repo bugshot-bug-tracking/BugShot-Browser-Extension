@@ -189,6 +189,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 						resolution: request.payload.resolution, // this is an object {width, height}
 						screenshot: request.payload.screenshot,
 						mark_coords: request.payload.mark_coords, // this is an object {x, y, wx, wy}
+						markers: request.payload.markers,
 					};
 
 					sendBugDetails(bug_details)
@@ -198,6 +199,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 							let data = {
 								screenshot: btoa(bug_details.screenshot),
 								mark_coords: bug_details.mark_coords,
+								markers: request.payload.markers,
 							};
 
 							sendBugScreenshot(response.id, data).then(() => {
@@ -256,6 +258,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 					request.payload.project_id,
 					request.payload.url,
 				]);
+
+			case "getMarkers": {
+				return sendResponseWrapper(getMarkers, [sender.tab.url]);
+			}
+
+			case "getBug": {
+				return sendResponseWrapper(getBug, [request.payload.bug]);
+			}
 
 			default:
 				sendResponse({
@@ -524,6 +534,65 @@ async function getComments(bug_id) {
 	};
 }
 
+async function getMarkers(p_url) {
+	const project = await getProject(p_url);
+
+	const token = await getTokenFromStorage();
+	let params = new URLSearchParams();
+	params.set("url", p_url);
+
+	const url =
+		`${apiURL}/projects/${project[0].id}/markers?` + params.toString();
+
+	let response = await fetch(url, {
+		method: "GET",
+		headers: {
+			Authorization: `Bearer ${token}`,
+			Accept: "application/json",
+			clientId: "5",
+			version: "1.0.0",
+		},
+	});
+
+	if (response.ok) {
+		let res = await response.json();
+		return res.data;
+	}
+
+	throw {
+		message: "Not a good response from server",
+		response: response,
+	};
+}
+
+async function getBug(bug) {
+	console.log(bug);
+	const token = await getTokenFromStorage();
+
+	const url = `${apiURL}/statuses/${bug.status_id}/bugs/${bug.id}`;
+
+	let response = await fetch(url, {
+		method: "GET",
+		headers: {
+			Authorization: `Bearer ${token}`,
+			Accept: "application/json",
+			clientId: "5",
+			version: "1.0.0",
+			"include-bug-users": true,
+		},
+	});
+
+	if (response.ok) {
+		let res = await response.json();
+		return res.data;
+	}
+
+	throw {
+		message: "Not a good response from server",
+		response: response,
+	};
+}
+
 //** --------- POST --------- */
 async function sendBugDetails(data) {
 	const token = await getTokenFromStorage();
@@ -619,6 +688,7 @@ async function sendBugScreenshot(bug_id, data) {
 			web_position_x: data.mark_coords.wx,
 			web_position_y: data.mark_coords.wy,
 			base64: data.screenshot,
+			markers: data.markers,
 		}),
 	});
 
