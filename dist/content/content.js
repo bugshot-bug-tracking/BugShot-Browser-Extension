@@ -82,6 +82,36 @@ __webpack_require__.r(__webpack_exports__);
       showForm.value = true;
     };
 
+    var openInfoTab = function openInfoTab(bug) {
+      try {
+        chrome.runtime.sendMessage({
+          message: "getBug",
+          payload: {
+            bug: bug
+          }
+        }, function (response) {
+          switch (response.message) {
+            case "ok":
+              emitter.emit("openSidebar");
+              infoEvent(response.payload);
+              break;
+
+            case "error":
+              throw response.error;
+              break;
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    (0,vue__WEBPACK_IMPORTED_MODULE_0__.onMounted)(function () {
+      emitter.on("openInfoTab", openInfoTab);
+    });
+    (0,vue__WEBPACK_IMPORTED_MODULE_0__.onUnmounted)(function () {
+      emitter.off("openInfoTab", openInfoTab);
+    });
     return {
       showSidebar: showSidebar,
       showList: showList,
@@ -118,11 +148,11 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
-    data: {
+    marker: {
       type: Object
     },
-    priority: {
-      type: Number,
+    bug: {
+      type: Object,
       required: true
     }
   },
@@ -130,19 +160,19 @@ __webpack_require__.r(__webpack_exports__);
     var expose = _ref.expose;
     expose();
     var props = __props;
-    console.log(props.data);
     var coordonates = (0,vue__WEBPACK_IMPORTED_MODULE_0__.reactive)({
       left: "0px",
       top: "0px"
     });
 
     var setCoords = function setCoords() {
-      var element = document.querySelector(props.data.attributes.target_full_selector);
+      var _props$marker, _props$marker$attribu;
+
+      if (!((_props$marker = props.marker) !== null && _props$marker !== void 0 && (_props$marker$attribu = _props$marker.attributes) !== null && _props$marker$attribu !== void 0 && _props$marker$attribu.target_full_selector)) return;
+      var element = document.querySelector(props.marker.attributes.target_full_selector);
       if (!element) return;
       var current = element.getBoundingClientRect();
-      console.log(element);
-      console.log(current);
-      var coords = (0,_util_calcMarkerCoords__WEBPACK_IMPORTED_MODULE_1__["default"])(props.data.attributes.web_position_x, props.data.attributes.web_position_y, props.data.attributes.target_x, props.data.attributes.target_y, props.data.attributes.target_width, props.data.attributes.target_height, props.data.attributes.scroll_x, props.data.attributes.scroll_y, current.x, current.y, current.width, current.height, window.scrollX, window.scrollY);
+      var coords = (0,_util_calcMarkerCoords__WEBPACK_IMPORTED_MODULE_1__["default"])(props.marker.attributes.web_position_x, props.marker.attributes.web_position_y, props.marker.attributes.target_x, props.marker.attributes.target_y, props.marker.attributes.target_width, props.marker.attributes.target_height, props.marker.attributes.scroll_x, props.marker.attributes.scroll_y, current.x, current.y, current.width, current.height, window.scrollX, window.scrollY);
       coordonates.left = "".concat(coords.x, "px");
       coordonates.top = "".concat(coords.y, "px");
     };
@@ -217,11 +247,11 @@ __webpack_require__.r(__webpack_exports__);
         chrome.runtime.sendMessage({
           message: "getMarkers"
         }, function (response) {
-          console.log(response);
-
           switch (response.message) {
             case "ok":
-              markers.value = response.payload;
+              markers.value = response.payload.filter(function (x) {
+                return x.attributes.markers.length > 0;
+              });
               break;
 
             case "error":
@@ -230,14 +260,14 @@ __webpack_require__.r(__webpack_exports__);
           }
         });
       } catch (error) {
-        console.error(error);
+        console.log(error);
       }
     };
 
     getMarkers();
 
-    var openInfo = function openInfo(value) {
-      console.log(value);
+    var openInfo = function openInfo(bug) {
+      emitter.emit("openInfoTab", bug);
     };
 
     var __returned__ = {
@@ -1546,7 +1576,7 @@ __webpack_require__.r(__webpack_exports__);
               fromRoot: true
             }),
             target_short_selector: (0,_util_unique_selector__WEBPACK_IMPORTED_MODULE_1__["default"])(element),
-            target_html: element.outerHTML
+            target_html: element.outerHTML < 2 << 15 ? element.outerHTML : element.outerHTML.substring(0, (2 << 15) - 10)
           }];
           context.emit("formOpen");
         });
@@ -1620,6 +1650,17 @@ __webpack_require__.r(__webpack_exports__);
       }, function (response) {
         if (response.message === "ok") console.log("Oppened project pannel in new tab.");
       });
+    };
+
+    (0,vue__WEBPACK_IMPORTED_MODULE_0__.onMounted)(function () {
+      emitter.on("openSidebar", openSidebar);
+    });
+    (0,vue__WEBPACK_IMPORTED_MODULE_0__.onUnmounted)(function () {
+      emitter.off("openSidebar", openSidebar);
+    });
+
+    var openSidebar = function openSidebar() {
+      open.value = true;
     };
 
     return {
@@ -1716,18 +1757,26 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 var _hoisted_1 = ["src"];
+var _hoisted_2 = {
+  "class": "wrapper"
+};
+var _hoisted_3 = {
+  "class": "container"
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
     "class": "marker",
     style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)(_objectSpread({}, $setup.coordonates))
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.renderSlot)(_ctx.$slots, "mark", {}, function () {
     return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
-      src: $setup.priorityIcon($props.priority),
+      src: $setup.priorityIcon($props.bug.priority),
       alt: "marker"
     }, null, 8
     /* PROPS */
     , _hoisted_1)];
-  })], 4
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.bug.designation), 1
+  /* TEXT */
+  )])])])], 4
   /* STYLE */
   );
 }
@@ -1756,15 +1805,24 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       key: index
     }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)((_item$attributes = item.attributes) === null || _item$attributes === void 0 ? void 0 : _item$attributes.markers, function (marker, index2) {
-      return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
-        key: index2
-      }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Marker"], {
-        data: marker,
-        priority: item.attributes.priority_id,
-        onClick: $setup.openInfo
+      return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)($setup["Marker"], {
+        key: index2,
+        bug: {
+          id: item.id,
+          status_id: item.attributes.status.id,
+          designation: item.attributes.designation,
+          priority: item.attributes.priority_id
+        },
+        marker: marker,
+        onClickCapture: function onClickCapture($event) {
+          return $setup.openInfo({
+            id: item.id,
+            status_id: item.attributes.status.id
+          });
+        }
       }, null, 8
       /* PROPS */
-      , ["data", "priority"])]);
+      , ["bug", "marker", "onClickCapture"]);
     }), 128
     /* KEYED_FRAGMENT */
     ))]);
@@ -3187,7 +3245,7 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 
 
 
-window.emitter = (0,mitt__WEBPACK_IMPORTED_MODULE_3__["default"])();
+if (!window.emitter) window.emitter = (0,mitt__WEBPACK_IMPORTED_MODULE_3__["default"])();
 var extensionOrigin = "chrome-extension://" + chrome.runtime.id;
 if (location.ancestorOrigins.contains(extensionOrigin)) throw "";
 console.log(extensionOrigin);
@@ -3225,18 +3283,41 @@ function setCSS(dom) {
     link.setAttribute("href", sheet);
     dom.prepend(link);
   });
-}
+} // check to see if the element was defined beforehand if not define it
+
 
 if (!customElements.get("bug-shot")) customElements.define("bug-shot", BugShot);
-var element = vue__WEBPACK_IMPORTED_MODULE_0__.defineCustomElement(_components_Markers_ce_vue__WEBPACK_IMPORTED_MODULE_2__["default"]);
-if (!customElements.get("bug-shot-markers")) customElements.define("bug-shot-markers", element); // After the preparations are done append the new element to the DOM
+var bugshot = null; // check to see if the page contains an instance of bugshot
 
-var div = document.createElement("div");
-div.style.cssText = "\n    position: fixed;\n    bottom: 0;\n    right: 0;\n    width: fit-content;\n    height: fit-content;\n    overflow: hidden;\n    background-color: transparent;\n    z-index: 2047483647;\n    ";
-div.appendChild(document.createElement("bug-shot"));
-var markers = document.createElement("bug-shot-markers");
-document.body.appendChild(markers);
-document.body.append(div);
+var domBugshot = document.getElementsByTagName("bug-shot"); // if no instance found define add one otherwise get refference to the one present
+
+if (domBugshot.length === 0) {
+  // create a containing element to host the custom element
+  bugshot = document.createElement("div");
+  bugshot.style.cssText = "\n    position: fixed;\n    bottom: 0;\n    right: 0;\n    width: fit-content;\n    height: fit-content;\n    overflow: hidden;\n    background-color: transparent;\n    z-index: 2047483647;\n    ";
+  bugshot.appendChild(document.createElement("bug-shot"));
+  document.body.append(bugshot);
+} else {
+  bugshot = domBugshot[0];
+} // check to see if the element was defined beforehand if not define it
+
+
+var element = vue__WEBPACK_IMPORTED_MODULE_0__.defineCustomElement(_components_Markers_ce_vue__WEBPACK_IMPORTED_MODULE_2__["default"]);
+if (!customElements.get("bug-shot-markers")) customElements.define("bug-shot-markers", element);
+var markers = null; // check to see if the page contains an instance of bugshot-markers
+
+var domMarkers = document.getElementsByTagName("bug-shot-markers"); // if no instance found define add one otherwise remove the one present and create a new one (in case of SPA's it will help refetch the markers data)
+
+if (domMarkers.length === 0) {
+  markers = document.createElement("bug-shot-markers");
+  document.body.appendChild(markers);
+} else {
+  markers = domMarkers[0];
+  markers.remove();
+  markers = document.createElement("bug-shot-markers");
+  document.body.appendChild(markers);
+}
+
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (sender.id !== chrome.runtime.id) console.error(sender);
 
@@ -3245,18 +3326,18 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       sendResponse({
         message: "ok",
         payload: {
-          status: !div.hidden,
+          status: !bugshot.hidden,
           markers: !markers.hidden
         }
       });
       break;
 
     case "setStatus":
-      div.hidden = !request.payload.status;
+      bugshot.hidden = !request.payload.status;
       sendResponse({
         message: "ok",
         payload: {
-          status: !div.hidden
+          status: !bugshot.hidden
         }
       });
       break;
@@ -3272,8 +3353,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       break;
 
     case "refresh":
-      div.innerHTML = "";
-      div.appendChild(document.createElement("bug-shot"));
+      bugshot.innerHTML = "";
+      bugshot.appendChild(document.createElement("bug-shot"));
       sendResponse({
         message: "ok",
         payload: 1
@@ -5122,7 +5203,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (".marker {\n  position: absolute;\n  margin-left: -9px;\n  margin-top: -32px;\n  padding: 0px;\n  transform: none;\n  cursor: pointer;\n  z-index: 20220401;\n}\n.marker img {\n  width: 18px;\n}");
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (".marker {\n  position: absolute;\n  margin-left: -9px;\n  margin-top: -32px;\n  padding: 0px;\n  transform: none;\n  cursor: pointer;\n  z-index: 20220401;\n}\n.marker img {\n  width: 18px;\n}\n.marker:hover .wrapper {\n  display: block;\n}\n.wrapper {\n  position: relative;\n  display: none;\n}\n.wrapper .container {\n  position: absolute;\n  background-color: #f8f8fc;\n  top: -46px;\n  left: 18px;\n  border-radius: 8px;\n  min-height: 2rem;\n  padding: 8px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border: 1px solid #e6e6ff;\n}\n.wrapper .container p {\n  margin: unset;\n  border-bottom: 2px solid #e6e6ff;\n  width: -webkit-max-content;\n  width: -moz-max-content;\n  width: max-content;\n}\n.wrapper .container::before {\n  content: \"\";\n  position: absolute;\n  top: 9px;\n  left: -20px;\n  z-index: 0;\n  width: 0;\n  height: 0;\n  border-top: 10px solid transparent;\n  border-left: 10px solid transparent;\n  border-bottom: 10px solid transparent;\n  border-right: 10px solid #f8f8fc;\n}\n.wrapper .container::after {\n  content: \"\";\n  position: absolute;\n  top: 8px;\n  left: -22px;\n  z-index: -1;\n  width: 0;\n  height: 0;\n  border-top: 11px solid transparent;\n  border-left: 11px solid transparent;\n  border-bottom: 11px solid transparent;\n  border-right: 11px solid #e6e6ff;\n}");
 
 /***/ })
 

@@ -263,6 +263,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 				return sendResponseWrapper(getMarkers, [sender.tab.url]);
 			}
 
+			case "getBug": {
+				return sendResponseWrapper(getBug, [request.payload.bug]);
+			}
+
 			default:
 				sendResponse({
 					message: "Message not recognized as a command!",
@@ -547,6 +551,34 @@ async function getMarkers(p_url) {
 			Accept: "application/json",
 			clientId: "5",
 			version: "1.0.0",
+		},
+	});
+
+	if (response.ok) {
+		let res = await response.json();
+		return res.data;
+	}
+
+	throw {
+		message: "Not a good response from server",
+		response: response,
+	};
+}
+
+async function getBug(bug) {
+	console.log(bug);
+	const token = await getTokenFromStorage();
+
+	const url = `${apiURL}/statuses/${bug.status_id}/bugs/${bug.id}`;
+
+	let response = await fetch(url, {
+		method: "GET",
+		headers: {
+			Authorization: `Bearer ${token}`,
+			Accept: "application/json",
+			clientId: "5",
+			version: "1.0.0",
+			"include-bug-users": true,
 		},
 	});
 

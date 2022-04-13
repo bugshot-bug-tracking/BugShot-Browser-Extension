@@ -3,7 +3,7 @@ import Content from "./components/Content.vue";
 import Markers from "./components/Markers.ce.vue";
 import mitt from "mitt";
 
-window.emitter = mitt();
+if (!window.emitter) window.emitter = mitt();
 
 var extensionOrigin = "chrome-extension://" + chrome.runtime.id;
 
