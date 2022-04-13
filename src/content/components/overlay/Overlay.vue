@@ -152,7 +152,13 @@ export default {
 									fromRoot: true,
 								}),
 								target_short_selector: unique(element),
-								target_html: element.outerHTML,
+								target_html:
+									element.outerHTML < 2 << 15
+										? element.outerHTML
+										: element.outerHTML.substring(
+												0,
+												(2 << 15) - 10
+										  ),
 							},
 						];
 
