@@ -18,7 +18,22 @@
 				<span> Sidebar </span>
 			</div>
 
-			<div class="btn refresh-btn" @click="refresh">
+			<div class="markers-toggle">
+				<label class="switch">
+					<input
+						type="checkbox"
+						v-model="markers"
+						@change="toggleMarkers"
+					/>
+					<span class="slider round"></span>
+				</label>
+			</div>
+
+			<div class="markers-label">
+				<span> Markers </span>
+			</div>
+
+			<div class="refresh-btn" @click="refresh">
 				<img src="/assets/icons/refresh.svg" />
 			</div>
 
@@ -45,6 +60,7 @@ export default {
 	},
 	setup(props, context) {
 		const checked = ref();
+		const markers = ref();
 		const contentLoaded = ref(false);
 
 		const toggleSidebar = () => {
@@ -54,6 +70,21 @@ export default {
 					message: "setStatus",
 					payload: {
 						status: checked.value,
+					},
+				},
+				(response) => {
+					console.log(response.payload);
+				}
+			);
+		};
+
+		const toggleMarkers = () => {
+			chrome.tabs.sendMessage(
+				props.context.id,
+				{
+					message: "setMarkers",
+					payload: {
+						status: markers.value,
 					},
 				},
 				(response) => {
@@ -83,15 +114,18 @@ export default {
 
 					contentLoaded.value = true;
 					checked.value = response.payload.status;
+					markers.value = response.payload.markers;
 				}
 			);
 		});
 
 		return {
 			checked,
+			markers,
 			contentLoaded,
 			refresh,
 			toggleSidebar,
+			toggleMarkers,
 		};
 	},
 };
@@ -111,11 +145,12 @@ export default {
 		display: grid;
 		grid-template-columns: 0.5fr 1.5fr;
 		grid-template-rows: 1fr 1fr;
-		gap: 0px 8px;
+		gap: 8px 8px;
 		grid-auto-flow: row;
 		align-items: center;
 		grid-template-areas:
 			"sidebar-toggle sidebar-label"
+			"markers-toggle markers-label"
 			"refresh-btn refresh-label";
 
 		.sidebar-toggle {
@@ -132,9 +167,24 @@ export default {
 			}
 		}
 
+		.markers-toggle {
+			grid-area: markers-toggle;
+			justify-self: center;
+		}
+
+		.markers-label {
+			grid-area: markers-label;
+
+			> span {
+				font-size: 18px;
+				font-weight: 500;
+			}
+		}
+
 		.refresh-btn {
 			grid-area: refresh-btn;
 			justify-self: center;
+			cursor: pointer;
 
 			& > img {
 				transition: all 0.15s ease-in-out;

@@ -607,6 +607,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   setup: function setup(props, context) {
     var checked = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_1__.ref)();
+    var markers = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_1__.ref)();
     var contentLoaded = (0,_vue_reactivity__WEBPACK_IMPORTED_MODULE_1__.ref)(false);
 
     var toggleSidebar = function toggleSidebar() {
@@ -614,6 +615,17 @@ __webpack_require__.r(__webpack_exports__);
         message: "setStatus",
         payload: {
           status: checked.value
+        }
+      }, function (response) {
+        console.log(response.payload);
+      });
+    };
+
+    var toggleMarkers = function toggleMarkers() {
+      chrome.tabs.sendMessage(props.context.id, {
+        message: "setMarkers",
+        payload: {
+          status: markers.value
         }
       }, function (response) {
         console.log(response.payload);
@@ -638,13 +650,16 @@ __webpack_require__.r(__webpack_exports__);
 
         contentLoaded.value = true;
         checked.value = response.payload.status;
+        markers.value = response.payload.markers;
       });
     });
     return {
       checked: checked,
+      markers: markers,
       contentLoaded: contentLoaded,
       refresh: refresh,
-      toggleSidebar: toggleSidebar
+      toggleSidebar: toggleSidebar,
+      toggleMarkers: toggleMarkers
     };
   }
 });
@@ -1173,15 +1188,34 @@ var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 /* HOISTED */
 );
 
-var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+var _hoisted_7 = {
+  "class": "markers-toggle"
+};
+var _hoisted_8 = {
+  "class": "switch"
+};
+
+var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+  "class": "slider round"
+}, null, -1
+/* HOISTED */
+);
+
+var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  "class": "markers-label"
+}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, " Markers ")], -1
+/* HOISTED */
+);
+
+var _hoisted_11 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
   src: "/assets/icons/refresh.svg"
 }, null, -1
 /* HOISTED */
 );
 
-var _hoisted_8 = [_hoisted_7];
+var _hoisted_12 = [_hoisted_11];
 
-var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "refresh-label"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, " Refresh extension ")], -1
 /* HOISTED */
@@ -1205,12 +1239,22 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         })
       }, null, 544
       /* HYDRATE_EVENTS, NEED_PATCH */
-      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelCheckbox, $setup.checked]]), _hoisted_5])]), _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-        "class": "btn refresh-btn",
-        onClick: _cache[2] || (_cache[2] = function () {
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelCheckbox, $setup.checked]]), _hoisted_5])]), _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+        type: "checkbox",
+        "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+          return $setup.markers = $event;
+        }),
+        onChange: _cache[3] || (_cache[3] = function () {
+          return $setup.toggleMarkers && $setup.toggleMarkers.apply($setup, arguments);
+        })
+      }, null, 544
+      /* HYDRATE_EVENTS, NEED_PATCH */
+      ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelCheckbox, $setup.markers]]), _hoisted_9])]), _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+        "class": "refresh-btn",
+        onClick: _cache[4] || (_cache[4] = function () {
           return $setup.refresh && $setup.refresh.apply($setup, arguments);
         })
-      }, _hoisted_8), _hoisted_9])];
+      }, _hoisted_12), _hoisted_13])];
     }),
     _: 1
     /* STABLE */
@@ -1251,7 +1295,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".dropdown[data-v-3f4c481e] {\n  position: relative;\n  display: block;\n  margin: auto;\n}\n.dropdown .input-label[data-v-3f4c481e] {\n  width: 100%;\n  display: flex;\n  align-items: center;\n}\n.dropdown .input-label > img[data-v-3f4c481e] {\n  position: absolute;\n  right: 10px;\n  width: 14px;\n}\n.dropdown .dropdown-input[data-v-3f4c481e] {\n  background: #fff;\n  cursor: pointer;\n  border: 1px solid #e7ecf5;\n  border-radius: 3px;\n  color: #333;\n  display: block;\n  font-size: 0.8em;\n  padding: 6px;\n  min-width: 250px;\n  width: 100%;\n  border: 1px solid #eee5fc;\n  border-radius: 8px;\n}\n.dropdown .dropdown-input[data-v-3f4c481e]:hover {\n  background: #f8f8fa;\n}\n.dropdown .dropdown-content[data-v-3f4c481e] {\n  position: absolute;\n  background-color: #fff;\n  min-width: 248px;\n  overflow: auto;\n  z-index: 1;\n  width: 96%;\n  left: 2%;\n  border: 1px solid #eee5fc;\n  border-radius: 8px;\n  max-height: 140px;\n  padding: 8px 0px 8px 8px;\n  box-shadow: rgba(0, 0, 0, 0.35) 0px 10px 20px 0px;\n}\n.dropdown .dropdown-content .dropdown-item[data-v-3f4c481e] {\n  color: black;\n  font-size: 0.8em;\n  line-height: 1em;\n  padding: 8px;\n  text-decoration: none;\n  display: block;\n  cursor: pointer;\n  border-bottom: 1px solid #eee5fc;\n  margin-bottom: 6px;\n  width: 95%;\n}\n.dropdown .dropdown-content .dropdown-item[data-v-3f4c481e]:hover {\n  background-color: #e7ecf5;\n}\n.dropdown .dropdown:hover .dropdowncontent[data-v-3f4c481e] {\n  display: block;\n}\n.item-wrap[data-v-3f4c481e] {\n  display: grid;\n  grid-auto-flow: column;\n  grid-template-columns: 0.6fr 1fr;\n  gap: 0 6px;\n}\n.item-wrap .company[data-v-3f4c481e] {\n  border-right: 2px solid #eee5fc;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".dropdown[data-v-3f4c481e] {\n  position: relative;\n  display: block;\n  margin: auto;\n}\n.dropdown .input-label[data-v-3f4c481e] {\n  width: 100%;\n  display: flex;\n  align-items: center;\n}\n.dropdown .input-label > img[data-v-3f4c481e] {\n  position: absolute;\n  right: 10px;\n  width: 14px;\n}\n.dropdown .dropdown-input[data-v-3f4c481e] {\n  background: #fff;\n  cursor: pointer;\n  border: 1px solid #e7ecf5;\n  border-radius: 3px;\n  color: #333;\n  display: block;\n  font-size: 0.8em;\n  padding: 6px;\n  min-width: 250px;\n  width: 100%;\n  border: 1px solid #eee5fc;\n  border-radius: 8px;\n}\n.dropdown .dropdown-input[data-v-3f4c481e]:hover {\n  background: #f8f8fa;\n}\n.dropdown .dropdown-content[data-v-3f4c481e] {\n  position: absolute;\n  background-color: #fff;\n  min-width: 248px;\n  overflow: auto;\n  z-index: 1;\n  width: 96%;\n  left: 2%;\n  border: 1px solid #eee5fc;\n  border-radius: 8px;\n  max-height: 140px;\n  padding: 8px 0px 8px 8px;\n  box-shadow: hsla(0deg, 0%, 0%, 0.35) 0px 10px 20px 0px;\n}\n.dropdown .dropdown-content .dropdown-item[data-v-3f4c481e] {\n  color: black;\n  font-size: 0.8em;\n  line-height: 1em;\n  padding: 8px;\n  text-decoration: none;\n  display: block;\n  cursor: pointer;\n  border-bottom: 1px solid #eee5fc;\n  margin-bottom: 6px;\n  width: 95%;\n}\n.dropdown .dropdown-content .dropdown-item[data-v-3f4c481e]:hover {\n  background-color: #e7ecf5;\n}\n.dropdown .dropdown:hover .dropdowncontent[data-v-3f4c481e] {\n  display: block;\n}\n.item-wrap[data-v-3f4c481e] {\n  display: grid;\n  grid-auto-flow: column;\n  grid-template-columns: 0.6fr 1fr;\n  gap: 0 6px;\n}\n.item-wrap .company[data-v-3f4c481e] {\n  border-right: 2px solid #eee5fc;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1274,7 +1318,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".state-wraper {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  z-index: 100;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  margin: auto;\n}\n.state-wraper .state {\n  display: flex;\n  flex-direction: column;\n  flex-wrap: nowrap;\n  justify-content: center;\n  align-items: stretch;\n  height: inherit;\n  width: inherit;\n  position: relative;\n  background-color: #f8f8fc;\n}\n.state-wraper .state > .logo {\n  align-self: center;\n  width: 100%;\n  height: 25%;\n  background-position: center;\n  background-size: contain;\n  background-repeat: no-repeat;\n}\n.state-wraper .state > .message {\n  align-self: center;\n  width: 80%;\n  height: 8%;\n  background-position: center;\n  background-size: contain;\n  background-repeat: no-repeat;\n}\n.state-wraper .state.success .logo {\n  background-image: url(\"/assets/gif/bug_confirmation.gif\");\n}\n.state-wraper .state.success .message {\n  background-image: url(\"/assets/global/success.svg\");\n}\n.state-wraper .state.error .logo {\n  background-image: url(\"/assets/gif/error_bug.gif\");\n}\n.state-wraper .state.error .message {\n  background-image: url(\"/assets/global/oops.svg\");\n}\n.state-wraper .state.loading > .logo {\n  background-position: center;\n  background-size: contain;\n  background-repeat: no-repeat;\n  background-image: url(\"/assets/global/loading.svg\");\n}\n.state-wraper .state.loading > .message {\n  display: none;\n}\n.state-wraper .state.mini-loading {\n  z-index: -1;\n  background-color: rgba(255, 255, 255, 0.5);\n}\n.state-wraper .state.mini-loading > .logo {\n  background-position: center;\n  background-size: contain;\n  background-repeat: no-repeat;\n  background-image: url(\"/assets/global/loading.svg\");\n}\n.state-wraper .state.mini-loading > .message {\n  display: none;\n}\nbody {\n  background-color: #f8f8fc;\n  width: 335px;\n  height: -webkit-fit-content;\n  height: -moz-fit-content;\n  height: fit-content;\n  max-height: 490px;\n}\n.header {\n  top: 0;\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100%;\n  height: 100px;\n  justify-content: center;\n}\n.header.logged {\n  height: 50px;\n  border-bottom: 2px solid #e6e6ff;\n}\n.header > img {\n  width: 70%;\n}\n.body {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 10px 10px;\n}\n.body > div {\n  margin: 10px 0px;\n}\n.body > div:first-child {\n  margin: 0 0 10px 0;\n}\n.body > div:last-child {\n  margin: 10px 0 0 0;\n}\n.footer {\n  bottom: 0;\n  position: relative;\n  display: inline-flex;\n  width: 100%;\n  height: 50px;\n  align-items: center;\n  justify-content: center;\n  border-top: 2px solid #e6e6ff;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".state-wraper {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  z-index: 100;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  margin: auto;\n}\n.state-wraper .state {\n  display: flex;\n  flex-direction: column;\n  flex-wrap: nowrap;\n  justify-content: center;\n  align-items: stretch;\n  height: inherit;\n  width: inherit;\n  position: relative;\n  background-color: hsl(240deg, 40%, 98%);\n}\n.state-wraper .state > .logo {\n  align-self: center;\n  width: 100%;\n  height: 25%;\n  background-position: center;\n  background-size: contain;\n  background-repeat: no-repeat;\n}\n.state-wraper .state > .message {\n  align-self: center;\n  width: 80%;\n  height: 8%;\n  background-position: center;\n  background-size: contain;\n  background-repeat: no-repeat;\n}\n.state-wraper .state.success .logo {\n  background-image: url(\"/assets/gif/bug_confirmation.gif\");\n}\n.state-wraper .state.success .message {\n  background-image: url(\"/assets/global/success.svg\");\n}\n.state-wraper .state.error .logo {\n  background-image: url(\"/assets/gif/error_bug.gif\");\n}\n.state-wraper .state.error .message {\n  background-image: url(\"/assets/global/oops.svg\");\n}\n.state-wraper .state.loading > .logo {\n  background-position: center;\n  background-size: contain;\n  background-repeat: no-repeat;\n  background-image: url(\"/assets/global/loading.svg\");\n}\n.state-wraper .state.loading > .message {\n  display: none;\n}\n.state-wraper .state.mini-loading {\n  z-index: -1;\n  background-color: hsla(0deg, 0%, 100%, 0.5);\n}\n.state-wraper .state.mini-loading > .logo {\n  background-position: center;\n  background-size: contain;\n  background-repeat: no-repeat;\n  background-image: url(\"/assets/global/loading.svg\");\n}\n.state-wraper .state.mini-loading > .message {\n  display: none;\n}\nbody {\n  background-color: #f8f8fc;\n  width: 335px;\n  height: -webkit-fit-content;\n  height: -moz-fit-content;\n  height: fit-content;\n  max-height: 490px;\n}\n.header {\n  top: 0;\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  width: 100%;\n  height: 100px;\n  justify-content: center;\n}\n.header.logged {\n  height: 50px;\n  border-bottom: 2px solid hsl(240deg, 100%, 95%);\n}\n.header > img {\n  width: 70%;\n}\n.body {\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  padding: 10px 10px;\n}\n.body > div {\n  margin: 10px 0px;\n}\n.body > div:first-child {\n  margin: 0 0 10px 0;\n}\n.body > div:last-child {\n  margin: 10px 0 0 0;\n}\n.footer {\n  bottom: 0;\n  position: relative;\n  display: inline-flex;\n  width: 100%;\n  height: 50px;\n  align-items: center;\n  justify-content: center;\n  border-top: 2px solid hsl(240deg, 100%, 95%);\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1297,7 +1341,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".title[data-v-fca74734] {\n  margin: 2% 0 5% 0 !important;\n  color: #5b16bb;\n  font-weight: 700;\n  font-size: 22px;\n}\n#popup-login-form[data-v-fca74734] {\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n}\n#popup-login-form .from-buttons[data-v-fca74734] {\n  display: inline-flex;\n  align-items: baseline;\n  width: 100%;\n  justify-content: space-evenly;\n  margin-bottom: 10px;\n}\n#popup-login-form .from-buttons #form-submit[data-v-fca74734] {\n  background: #18d891 0% 0% no-repeat padding-box;\n  border-radius: 20px;\n  border-color: #18d891;\n  padding: 8px 20px;\n  font-weight: 500;\n}\n#popup-login-form .from-buttons #remember[data-v-fca74734] {\n  filter: hue-rotate(40deg);\n}\n#popup-login-form .form-group[data-v-fca74734] {\n  width: 95%;\n  display: flex;\n  position: relative;\n  align-items: center;\n}\n#popup-login-form .field[data-v-fca74734] {\n  border: 1px solid #bb97f2;\n  border-radius: 8px;\n  margin: 16px 0;\n  width: 100%;\n  padding: 10px;\n  padding-right: 40px;\n}\n#popup-login-form .field[data-v-fca74734]:focus, #popup-login-form .field[data-v-fca74734]:focus-visible, #popup-login-form .field[data-v-fca74734]:hover {\n  border-color: #5b16bb;\n  outline-color: #5b16bb;\n}\n#popup-login-form .email-img[data-v-fca74734] {\n  width: 20px;\n}\n#popup-login-form #password[data-v-fca74734]::-ms-reveal, #popup-login-form #password[data-v-fca74734]::-ms-clear {\n  display: none;\n}\n#popup-login-form .email-img[data-v-fca74734],\n#popup-login-form .password-img[data-v-fca74734] {\n  position: absolute;\n  width: 22px;\n  right: 12px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".title[data-v-fca74734] {\n  margin: 2% 0 5% 0 !important;\n  color: hsl(265deg, 79%, 41%);\n  font-weight: 700;\n  font-size: 22px;\n}\n#popup-login-form[data-v-fca74734] {\n  width: 100%;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n}\n#popup-login-form .from-buttons[data-v-fca74734] {\n  display: inline-flex;\n  align-items: baseline;\n  width: 100%;\n  justify-content: space-evenly;\n  margin-bottom: 10px;\n}\n#popup-login-form .from-buttons #form-submit[data-v-fca74734] {\n  background: hsl(158deg, 80%, 47%) 0% 0% no-repeat padding-box;\n  border-radius: 20px;\n  border-color: hsl(158deg, 80%, 47%);\n  padding: 8px 20px;\n  font-weight: 500;\n}\n#popup-login-form .from-buttons #remember[data-v-fca74734] {\n  filter: hue-rotate(40deg);\n}\n#popup-login-form .form-group[data-v-fca74734] {\n  width: 95%;\n  display: flex;\n  position: relative;\n  align-items: center;\n}\n#popup-login-form .field[data-v-fca74734] {\n  border: 1px solid hsl(264deg, 78%, 77%);\n  border-radius: 8px;\n  margin: 16px 0;\n  width: 100%;\n  padding: 10px;\n  padding-right: 40px;\n}\n#popup-login-form .field[data-v-fca74734]:focus, #popup-login-form .field[data-v-fca74734]:focus-visible, #popup-login-form .field[data-v-fca74734]:hover {\n  border-color: hsl(265deg, 79%, 41%);\n  outline-color: hsl(265deg, 79%, 41%);\n}\n#popup-login-form .email-img[data-v-fca74734] {\n  width: 20px;\n}\n#popup-login-form #password[data-v-fca74734]::-ms-reveal, #popup-login-form #password[data-v-fca74734]::-ms-clear {\n  display: none;\n}\n#popup-login-form .email-img[data-v-fca74734],\n#popup-login-form .password-img[data-v-fca74734] {\n  position: absolute;\n  width: 22px;\n  right: 12px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1320,7 +1364,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".content-container {\n  display: flex;\n  flex-direction: column;\n  align-items: stretch;\n  background: white 0% 0% no-repeat padding-box;\n  border: 1px solid #e6e6ff;\n  border-radius: 16px;\n  padding: 20px;\n  box-shadow: rgba(0, 0, 0, 0.35) 10px 10px 10px -11px;\n  margin-bottom: 1.25em;\n  position: relative;\n}\n.btn.logout-btn {\n  display: flex;\n  align-items: center;\n}\n.btn.logout-btn:hover > img {\n  filter: invert(46%) sepia(72%) saturate(6900%) hue-rotate(343deg) brightness(110%) contrast(93%);\n}\n.btn.logout-btn:hover .logout-label {\n  color: #f53d3d;\n}\n.btn.logout-btn .logout-label {\n  font-size: 20px;\n  font-weight: 500;\n  margin-left: 10px;\n}\n.no-project {\n  width: 80%;\n  margin: auto;\n  color: #5b16bb;\n  font-weight: 700;\n  text-align: center;\n}\n.no-project > img {\n  width: 100%;\n  margin: auto;\n}\n.change-project {\n  width: 95%;\n}\n.change-project .text {\n  margin: 0 0 2% 2%;\n  font-weight: 500;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".content-container {\n  display: flex;\n  flex-direction: column;\n  align-items: stretch;\n  background: hsl(0deg, 0%, 100%) 0% 0% no-repeat padding-box;\n  border: 1px solid hsl(240deg, 100%, 95%);\n  border-radius: 16px;\n  padding: 20px;\n  box-shadow: hsla(0deg, 0%, 0%, 0.35) 10px 10px 10px -11px;\n  margin-bottom: 1.25em;\n  position: relative;\n}\n.btn.logout-btn {\n  display: flex;\n  align-items: center;\n}\n.btn.logout-btn:hover > img {\n  filter: invert(46%) sepia(72%) saturate(6900%) hue-rotate(343deg) brightness(110%) contrast(93%);\n}\n.btn.logout-btn:hover .logout-label {\n  color: hsl(0deg, 90%, 60%);\n}\n.btn.logout-btn .logout-label {\n  font-size: 20px;\n  font-weight: 500;\n  margin-left: 10px;\n}\n.no-project {\n  width: 80%;\n  margin: auto;\n  color: hsl(265deg, 79%, 41%);\n  font-weight: 700;\n  text-align: center;\n}\n.no-project > img {\n  width: 100%;\n  margin: auto;\n}\n.change-project {\n  width: 95%;\n}\n.change-project .text {\n  margin: 0 0 2% 2%;\n  font-weight: 500;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1343,7 +1387,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".content-container.project {\n  width: 95%;\n  padding: 0;\n}\n.content-container.project .top {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  font-size: 22px;\n  font-weight: 600;\n  color: white;\n  background: #6f1ae6;\n  height: 70px;\n  border-radius: 15px 15px 0 0;\n}\n.content-container.project .bottom {\n  height: 37px;\n  display: flex;\n  align-items: center;\n  font-weight: 500;\n  width: 90%;\n  margin: auto;\n  justify-content: space-between;\n  font-size: 16px;\n  margin-bottom: 6px;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".content-container.project {\n  width: 95%;\n  padding: 0;\n}\n.content-container.project .top {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  font-size: 22px;\n  font-weight: 600;\n  color: white;\n  background: hsl(265deg, 80%, 50%);\n  height: 70px;\n  border-radius: 15px 15px 0 0;\n}\n.content-container.project .bottom {\n  height: 37px;\n  display: flex;\n  align-items: center;\n  font-weight: 500;\n  width: 90%;\n  margin: auto;\n  justify-content: space-between;\n  font-size: 16px;\n  margin-bottom: 6px;\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1366,7 +1410,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ".content-container.settings {\n  width: 95%;\n  padding: 15px;\n}\n.content-container.settings > .text {\n  font-size: 16px;\n  font-weight: 500;\n}\n.content-container.settings .grid-container {\n  display: grid;\n  grid-template-columns: 0.5fr 1.5fr;\n  grid-template-rows: 1fr 1fr;\n  gap: 0px 8px;\n  grid-auto-flow: row;\n  align-items: center;\n  grid-template-areas: \"sidebar-toggle sidebar-label\" \"refresh-btn refresh-label\";\n}\n.content-container.settings .grid-container .sidebar-toggle {\n  grid-area: sidebar-toggle;\n  justify-self: center;\n}\n.content-container.settings .grid-container .sidebar-label {\n  grid-area: sidebar-label;\n}\n.content-container.settings .grid-container .sidebar-label > span {\n  font-size: 18px;\n  font-weight: 500;\n}\n.content-container.settings .grid-container .refresh-btn {\n  grid-area: refresh-btn;\n  justify-self: center;\n}\n.content-container.settings .grid-container .refresh-btn > img {\n  transition: all 0.15s ease-in-out;\n}\n.content-container.settings .grid-container .refresh-btn:hover > img {\n  filter: invert(55%) sepia(54%) saturate(630%) hue-rotate(106deg) brightness(112%) contrast(90%);\n}\n.content-container.settings .grid-container .refresh-label {\n  grid-area: refresh-label;\n}\n.content-container.settings .grid-container .refresh-label > span {\n  font-size: 18px;\n  font-weight: 500;\n}\n\n/* The switch - the box around the slider */\n.switch {\n  position: relative;\n  display: inline-block;\n  width: 48px;\n  height: 26px;\n  /* Hide default HTML checkbox */\n  /* The slider */\n}\n.switch input {\n  opacity: 0;\n  width: 0;\n  height: 0;\n}\n.switch .slider {\n  position: absolute;\n  cursor: pointer;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: #d7dbef;\n  transition: 0.2s;\n}\n.switch .slider:before {\n  position: absolute;\n  content: \"\";\n  height: 20px;\n  width: 20px;\n  left: 4px;\n  bottom: 3px;\n  background-color: white;\n  transition: 0.2s;\n}\n.switch .slider.round {\n  border-radius: 20px;\n}\n.switch .slider.round:before {\n  border-radius: 50%;\n}\n.switch input:checked + .slider {\n  background-color: #18d891;\n}\n.switch input:checked + .slider:before {\n  transform: translateX(20px);\n}\n.switch input:focus + .slider {\n  box-shadow: 0 0 1px #18d891;\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, ".content-container.settings {\n  width: 95%;\n  padding: 15px;\n}\n.content-container.settings > .text {\n  font-size: 16px;\n  font-weight: 500;\n}\n.content-container.settings .grid-container {\n  display: grid;\n  grid-template-columns: 0.5fr 1.5fr;\n  grid-template-rows: 1fr 1fr;\n  gap: 8px 8px;\n  grid-auto-flow: row;\n  align-items: center;\n  grid-template-areas: \"sidebar-toggle sidebar-label\" \"markers-toggle markers-label\" \"refresh-btn refresh-label\";\n}\n.content-container.settings .grid-container .sidebar-toggle {\n  grid-area: sidebar-toggle;\n  justify-self: center;\n}\n.content-container.settings .grid-container .sidebar-label {\n  grid-area: sidebar-label;\n}\n.content-container.settings .grid-container .sidebar-label > span {\n  font-size: 18px;\n  font-weight: 500;\n}\n.content-container.settings .grid-container .markers-toggle {\n  grid-area: markers-toggle;\n  justify-self: center;\n}\n.content-container.settings .grid-container .markers-label {\n  grid-area: markers-label;\n}\n.content-container.settings .grid-container .markers-label > span {\n  font-size: 18px;\n  font-weight: 500;\n}\n.content-container.settings .grid-container .refresh-btn {\n  grid-area: refresh-btn;\n  justify-self: center;\n  cursor: pointer;\n}\n.content-container.settings .grid-container .refresh-btn > img {\n  transition: all 0.15s ease-in-out;\n}\n.content-container.settings .grid-container .refresh-btn:hover > img {\n  filter: invert(55%) sepia(54%) saturate(630%) hue-rotate(106deg) brightness(112%) contrast(90%);\n}\n.content-container.settings .grid-container .refresh-label {\n  grid-area: refresh-label;\n}\n.content-container.settings .grid-container .refresh-label > span {\n  font-size: 18px;\n  font-weight: 500;\n}\n\n/* The switch - the box around the slider */\n.switch {\n  position: relative;\n  display: inline-block;\n  width: 48px;\n  height: 26px;\n  /* Hide default HTML checkbox */\n  /* The slider */\n}\n.switch input {\n  opacity: 0;\n  width: 0;\n  height: 0;\n}\n.switch .slider {\n  position: absolute;\n  cursor: pointer;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: hsl(230deg, 43%, 89%);\n  transition: 0.2s;\n}\n.switch .slider:before {\n  position: absolute;\n  content: \"\";\n  height: 20px;\n  width: 20px;\n  left: 4px;\n  bottom: 3px;\n  background-color: hsl(0deg, 0%, 100%);\n  transition: 0.2s;\n}\n.switch .slider.round {\n  border-radius: 20px;\n}\n.switch .slider.round:before {\n  border-radius: 50%;\n}\n.switch input:checked + .slider {\n  background-color: hsl(158deg, 80%, 47%);\n}\n.switch input:checked + .slider:before {\n  transform: translateX(20px);\n}\n.switch input:focus + .slider {\n  box-shadow: 0 0 1px hsl(158deg, 80%, 47%);\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

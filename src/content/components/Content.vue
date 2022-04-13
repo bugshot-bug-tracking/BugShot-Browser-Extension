@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { nextTick, ref } from "vue";
+import { nextTick, onMounted, onUnmounted, ref } from "vue";
 
 import Sidebar from "./sidebar/Sidebar.vue";
 import Buglist from "./listTab/Buglist.vue";
@@ -92,6 +92,41 @@ export default {
 			showForm.value = true;
 		};
 
+		const openInfoTab = (bug) => {
+			try {
+				chrome.runtime.sendMessage(
+					{
+						message: "getBug",
+						payload: {
+							bug: bug,
+						},
+					},
+					(response) => {
+						switch (response.message) {
+							case "ok":
+								emitter.emit("openSidebar");
+								infoEvent(response.payload);
+								break;
+
+							case "error":
+								throw response.error;
+								break;
+						}
+					}
+				);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		onMounted(() => {
+			emitter.on("openInfoTab", openInfoTab);
+		});
+
+		onUnmounted(() => {
+			emitter.off("openInfoTab", openInfoTab);
+		});
+
 		return {
 			showSidebar,
 			showList,
@@ -110,4 +145,3 @@ export default {
 	},
 };
 </script>
-

@@ -1,8 +1,9 @@
 import * as Vue from "vue";
 import Content from "./components/Content.vue";
+import Markers from "./components/Markers.ce.vue";
 import mitt from "mitt";
 
-window.emitter = mitt();
+if (!window.emitter) window.emitter = mitt();
 
 var extensionOrigin = "chrome-extension://" + chrome.runtime.id;
 
@@ -36,12 +37,19 @@ function setCSS(dom) {
 	});
 }
 
-window.customElements.define("bug-shot", BugShot);
+// check to see if the element was defined beforehand if not define it
+if (!customElements.get("bug-shot")) customElements.define("bug-shot", BugShot);
 
-// After the preparations are done append the new element to the DOM
-let div = document.createElement("div");
+let bugshot = null;
+// check to see if the page contains an instance of bugshot
+let domBugshot = document.getElementsByTagName("bug-shot");
 
-div.style.cssText = `
+// if no instance found define add one otherwise get refference to the one present
+if (domBugshot.length === 0) {
+	// create a containing element to host the custom element
+	bugshot = document.createElement("div");
+
+	bugshot.style.cssText = `
     position: fixed;
     bottom: 0;
     right: 0;
@@ -52,9 +60,33 @@ div.style.cssText = `
     z-index: 2047483647;
     `;
 
-div.appendChild(document.createElement("bug-shot"));
+	bugshot.appendChild(document.createElement("bug-shot"));
 
-document.body.append(div);
+	document.body.append(bugshot);
+} else {
+	bugshot = domBugshot[0];
+}
+
+// check to see if the element was defined beforehand if not define it
+const element = Vue.defineCustomElement(Markers);
+if (!customElements.get("bug-shot-markers"))
+	customElements.define("bug-shot-markers", element);
+
+let markers = null;
+// check to see if the page contains an instance of bugshot-markers
+let domMarkers = document.getElementsByTagName("bug-shot-markers");
+
+// if no instance found define add one otherwise remove the one present and create a new one (in case of SPA's it will help refetch the markers data)
+if (domMarkers.length === 0) {
+	markers = document.createElement("bug-shot-markers");
+	document.body.appendChild(markers);
+} else {
+	markers = domMarkers[0];
+	markers.remove();
+
+	markers = document.createElement("bug-shot-markers");
+	document.body.appendChild(markers);
+}
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 	if (sender.id !== chrome.runtime.id) console.error(sender);
@@ -63,23 +95,35 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 		case "getStatus":
 			sendResponse({
 				message: "ok",
-				payload: { status: !div.hidden },
+				payload: {
+					status: !bugshot.hidden,
+					markers: !markers.hidden,
+				},
 			});
 
 			break;
 
 		case "setStatus":
-			div.hidden = !request.payload.status;
+			bugshot.hidden = !request.payload.status;
 			sendResponse({
 				message: "ok",
-				payload: { status: !div.hidden },
+				payload: { status: !bugshot.hidden },
+			});
+
+			break;
+
+		case "setMarkers":
+			markers.hidden = !request.payload.status;
+			sendResponse({
+				message: "ok",
+				payload: { status: !markers.hidden },
 			});
 
 			break;
 
 		case "refresh":
-			div.innerHTML = "";
-			div.appendChild(document.createElement("bug-shot"));
+			bugshot.innerHTML = "";
+			bugshot.appendChild(document.createElement("bug-shot"));
 			sendResponse({
 				message: "ok",
 				payload: 1,
