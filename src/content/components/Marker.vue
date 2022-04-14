@@ -1,8 +1,16 @@
 <template>
 	<div class="marker" :style="{ ...coordonates }">
 		<slot name="mark">
-			<img :src="priorityIcon(priority)" alt="marker" />
+			<img :src="priorityIcon(bug.priority)" alt="marker" />
 		</slot>
+
+		<div class="wrapper">
+			<div class="container">
+				<span>
+					<p>{{ bug.designation }}</p>
+				</span>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -11,40 +19,39 @@ import { onUnmounted, reactive, ref } from "vue";
 import calcMarkerCoords from "../util/calcMarkerCoords";
 
 const props = defineProps({
-	data: {
+	marker: {
 		type: Object,
 	},
-	priority: {
-		type: Number,
+	bug: {
+		type: Object,
 		required: true,
 	},
 });
-console.log(props.data);
+
 const coordonates = reactive({
 	left: "0px",
 	top: "0px",
 });
 
 const setCoords = () => {
+	if (!props.marker?.attributes?.target_full_selector) return;
+
 	let element = document.querySelector(
-		props.data.attributes.target_full_selector
+		props.marker.attributes.target_full_selector
 	);
 	if (!element) return;
 	const current = element.getBoundingClientRect();
 
-	console.log(element);
-	console.log(current);
-
 	let coords = calcMarkerCoords(
-		props.data.attributes.web_position_x,
-		props.data.attributes.web_position_y,
+		props.marker.attributes.web_position_x,
+		props.marker.attributes.web_position_y,
 
-		props.data.attributes.target_x,
-		props.data.attributes.target_y,
-		props.data.attributes.target_width,
-		props.data.attributes.target_height,
-		props.data.attributes.scroll_x,
-		props.data.attributes.scroll_y,
+		props.marker.attributes.target_x,
+		props.marker.attributes.target_y,
+		props.marker.attributes.target_width,
+		props.marker.attributes.target_height,
+		props.marker.attributes.scroll_x,
+		props.marker.attributes.scroll_y,
 
 		current.x,
 		current.y,
