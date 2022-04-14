@@ -56,8 +56,8 @@ const openInfo = (value) => {
 <style lang="scss">
 .marker {
 	position: absolute;
-	margin-left: -9px;
-	margin-top: -32px;
+	margin-left: -12px;
+	margin-top: -42px;
 	padding: 0px;
 
 	transform: none;
@@ -65,7 +65,7 @@ const openInfo = (value) => {
 	z-index: 20220401;
 
 	img {
-		width: 18px;
+		width: 24px;
 	}
 }
 </style>
