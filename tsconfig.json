@@ -1,0 +1,22 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"module": "ESNext",
+		"target": "es2016",
+		"lib": ["DOM", "ESNext"],
+		"strict": true,
+		"esModuleInterop": true,
+		"jsx": "preserve",
+		"skipLibCheck": true,
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"noUnusedLocals": true,
+		"strictNullChecks": true,
+		"forceConsistentCasingInFileNames": true,
+		"types": ["vite/client", "vue/macros", "chrome"],
+		"paths": {
+			"~/*": ["src/*"]
+		}
+	},
+	"exclude": ["extension", "node_modules"]
+}
