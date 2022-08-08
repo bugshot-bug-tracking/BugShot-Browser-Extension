@@ -1,0 +1,9 @@
+<svg id="camera" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Layer_3" data-name="Layer 3">
+    <rect id="Rectangle_2850" data-name="Rectangle 2850" width="24" height="24" fill="none"/>
+  </g>
+  <g id="Layer_2" data-name="Layer 2">
+    <path id="Path_887" data-name="Path 887" d="M19.61,20H4.39L2,17.61V8.78L4.43,6.7H7L8.77,4h6.46L17,6.7h2.54L22,8.78v8.83ZM5.21,18H18.79L20,16.79V9.7l-1.17-1H16L14.16,6H9.84L8,8.7H5.17L4,9.7v7.09Z" fill="#1a2040"/>
+    <path id="Path_888" data-name="Path 888" d="M12,16.4a3.7,3.7,0,1,1,3.7-3.7A3.7,3.7,0,0,1,12,16.4ZM12,11a1.7,1.7,0,1,0,1.7,1.7A1.7,1.7,0,0,0,12,11Z" fill="#1a2040"/>
+  </g>
+</svg>

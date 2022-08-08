@@ -1,0 +1,12 @@
+<svg id="delete" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Layer_3" data-name="Layer 3">
+    <rect id="Rectangle_2868" data-name="Rectangle 2868" width="24" height="24" fill="none"/>
+  </g>
+  <g id="Layer_2" data-name="Layer 2">
+    <path id="Path_893" data-name="Path 893" d="M16.41,22H7.59L5,19.41V8H7V18.59L8.41,20h7.18L17,18.59V8h2V19.41Z" fill="#1a2040"/>
+    <rect id="Rectangle_2869" data-name="Rectangle 2869" width="18" height="2" transform="translate(3 6)" fill="#1a2040"/>
+    <path id="Path_894" data-name="Path 894" d="M17,6H15V4.86L14.14,4H9.86L9,4.86V6H7V4.03L9.03,2h5.94L17,4.03Z" fill="#1a2040"/>
+    <rect id="Rectangle_2870" data-name="Rectangle 2870" width="2" height="8" transform="translate(9 10)" fill="#1a2040"/>
+    <rect id="Rectangle_2871" data-name="Rectangle 2871" width="2" height="8" transform="translate(13 10)" fill="#1a2040"/>
+  </g>
+</svg>
