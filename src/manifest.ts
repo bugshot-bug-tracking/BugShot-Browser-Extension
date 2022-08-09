@@ -23,7 +23,6 @@ export function getManifest(): Manifest.WebExtensionManifest {
 		host_permissions: ["*://*/*", "<all_urls>"],
 
 		action: {
-			default_icon: "./assets/extension-icons/icon-256x256.png",
 			default_popup: "./popup/index.html",
 		},
 		// options_ui: {
