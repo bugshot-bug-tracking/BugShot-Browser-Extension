@@ -1,4 +1,5 @@
 import { ProtocolWithReturn } from "webext-bridge";
+import { User } from "./models/User";
 
 declare module "*.vue" {
 	import { type DefineComponent } from "vue";
@@ -15,5 +16,8 @@ declare module "webext-bridge" {
 			{ tabId: number },
 			{ title: string }
 		>;
+		getUser: ProtocolWithReturn<{}, User>;
+		getToken: ProtocolWithReturn<{}, string>;
+		setToken: ProtocolWithReturn<{ token: string }, boolean>;
 	}
 }

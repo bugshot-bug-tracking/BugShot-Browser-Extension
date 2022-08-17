@@ -7,7 +7,20 @@
 </template>
 
 <script setup lang="ts">
-import pkg from "../../package.json";
+
+import { useI18nStore } from "~/stores/i18n";
+import { useAuthStore } from "~/stores/auth";
+
+useI18nStore().init();
+
+const store = useAuthStore();
+const auth = computed(() => store.isAuthenticated);
+
+onMounted(async () => {
+		let result = await store.init();
+
+		if (!result) console.log("An error occured!");
+});
 </script>
 
 <style lang="scss">

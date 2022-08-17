@@ -31,6 +31,7 @@ export function getManifest(): Manifest.WebExtensionManifest {
 		// },
 		background: {
 			service_worker: "background.js",
+			type: "module",
 		},
 		content_scripts: [
 			{
