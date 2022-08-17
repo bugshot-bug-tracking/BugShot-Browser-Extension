@@ -1,25 +1,33 @@
 <template>
-	<header text-12>Header</header>
+	<Spinner v-if="loading" style="height: 30rem" />
 
-	<main>Main</main>
-
-	<footer>BugShot WebExtension v{{ pkg.version }}</footer>
+	<component v-else :is="auth ? Main : Login" />
 </template>
 
 <script setup lang="ts">
+import Login from "./pages/Login.vue";
+import Main from "./pages/Main.vue";
 
 import { useI18nStore } from "~/stores/i18n";
 import { useAuthStore } from "~/stores/auth";
 
 useI18nStore().init();
 
+const loading = ref(true);
+
 const store = useAuthStore();
 const auth = computed(() => store.isAuthenticated);
 
 onMounted(async () => {
+	try {
 		let result = await store.init();
 
 		if (!result) console.log("An error occured!");
+	} catch (error) {
+		console.log(error);
+	} finally {
+		loading.value = false;
+	}
 });
 </script>
 
