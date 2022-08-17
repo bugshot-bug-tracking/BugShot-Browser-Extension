@@ -38,10 +38,8 @@ const change = (value: string) => {
 
 <style lang="scss" scoped>
 div {
-	width: 100%;
 	display: flex;
 	justify-content: space-between;
-	padding: 0.5rem;
 }
 
 ul {
