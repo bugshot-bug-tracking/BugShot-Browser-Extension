@@ -32,9 +32,29 @@ onMounted(async () => {
 </script>
 
 <style lang="scss">
+@import "~/styles/global.scss";
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
+@import "vue-select/dist/vue-select.css";
+
+html input {
+	font-size: 1rem;
+	line-height: 1.5rem;
+}
+
 body {
 	margin: 0;
-	min-width: 100px;
-	min-height: 100px;
+	min-width: 20rem;
+	min-height: 30rem;
+	background-color: #f8f8fc;
+	padding: 1rem;
+	font-size: 1rem;
+	color: #1a2040;
+	font-family: "Open Sans", sans-serif;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+p {
+	margin: unset;
 }
 </style>
