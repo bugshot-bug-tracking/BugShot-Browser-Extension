@@ -1,4 +1,5 @@
 import { resolve } from "path";
+import type { UserConfig } from "vite";
 import { defineConfig } from "vite";
 import Vue from "@vitejs/plugin-vue";
 import AutoImport from "unplugin-auto-import/vite";
@@ -8,15 +9,9 @@ import Unocss from "unocss/vite";
 
 const r = (...args: string[]) => resolve(__dirname, ...args);
 
-export default defineConfig(({ command }) => {
+export default defineConfig(() => {
 	return {
-		root: r("src"),
-
-		resolve: {
-			alias: {
-				"~/": `${r("src")}/`,
-			},
-		},
+		...sharedConfig,
 
 		build: {
 			outDir: r("extension/dev"),
@@ -26,7 +21,6 @@ export default defineConfig(({ command }) => {
 				input: {
 					background: r("src/background"),
 					"popup/index": r("src/popup/index.html"),
-					"content/index": r("src/content/index.ts"),
 					// options: r("src/options/index.html"),
 				},
 				output: {
@@ -40,46 +34,58 @@ export default defineConfig(({ command }) => {
 			},
 		},
 
-		plugins: [
-			Vue(),
-
-			AutoImport({
-				imports: [
-					"vue",
-					{
-						"webextension-polyfill": [["*", "browser"]],
-					},
-				],
-				dts: r("src/auto-imports.d.ts"),
-			}),
-
-			Components({
-				dirs: [r("src/components")],
-				// generate `components.d.ts` for ts support with Volar
-				dts: r("src/components.d.ts"),
-			}),
-
-			// https://github.com/intlify/vite-plugin-vue-i18n
-			VueI18n({
-				include: [resolve(__dirname, "src/locales/**")],
-			}),
-
-			Unocss(),
-
-			// rewrite assets to use relative path
-			{
-				name: "assets-rewrite",
-				enforce: "post",
-				apply: "build",
-				transformIndexHtml(html) {
-					return html.replace(/"\/assets\//g, '"../assets/');
-				},
-			},
-		],
-
-		optimizeDeps: {
-			include: ["vue", "@vueuse/core", "webextension-polyfill"],
-			exclude: ["vue-demi"],
-		},
+		plugins: [...sharedConfig.plugins!],
 	};
 });
+
+export const sharedConfig: UserConfig = {
+	root: r("src"),
+
+	resolve: {
+		alias: {
+			"~/": `${r("src")}/`,
+		},
+	},
+
+	plugins: [
+		Vue(),
+
+		AutoImport({
+			imports: [
+				"vue",
+				{
+					"webextension-polyfill": [["*", "browser"]],
+				},
+			],
+			dts: r("src/auto-imports.d.ts"),
+		}),
+
+		Components({
+			dirs: [r("src/components")],
+			// generate `components.d.ts` for ts support with Volar
+			dts: r("src/components.d.ts"),
+		}),
+
+		// https://github.com/intlify/vite-plugin-vue-i18n
+		VueI18n({
+			include: [resolve(__dirname, "src/locales/**")],
+		}),
+
+		Unocss(),
+
+		// rewrite assets to use relative path
+		{
+			name: "assets-rewrite",
+			enforce: "post",
+			apply: "build",
+			transformIndexHtml(html) {
+				return html.replace(/"\/assets\//g, '"../assets/');
+			},
+		},
+	],
+
+	optimizeDeps: {
+		include: ["vue", "@vueuse/core", "webextension-polyfill"],
+		exclude: ["vue-demi"],
+	},
+};

@@ -39,5 +39,11 @@ export function getManifest(): Manifest.WebExtensionManifest {
 				js: ["./content/index.js"],
 			},
 		],
+		web_accessible_resources: [
+			{
+				resources: ["assets/*", "content/*"],
+				matches: ["*://*/*", "<all_urls>"],
+			},
+		],
 	};
 }
