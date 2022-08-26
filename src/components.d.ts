@@ -7,6 +7,8 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AttachmentsItem: typeof import('./components/Attachments/AttachmentsItem.vue')['default']
+    AttachmentsList: typeof import('./components/Attachments/AttachmentsList.vue')['default']
     BugCard: typeof import('./components/BugCard.vue')['default']
     BugList: typeof import('./components/tabs/BugList.vue')['default']
     Button: typeof import('./components/Button.vue')['default']
