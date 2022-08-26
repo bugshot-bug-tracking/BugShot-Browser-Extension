@@ -1,9 +1,28 @@
 <template>
 	<div flex flex-row-reverse>
+		<Sidebar
+			:id="company.id"
+			@openBugList="buglist.open"
+			@close="buglist.close"
+		/>
 	</div>
 </template>
 
 <script setup lang="ts">
+
+const company = computed(() => {
+	return { id: "[PH]company-id" };
+});
+
+const buglist = reactive({
+	show: false,
+	open: () => {
+		buglist.show = true;
+	},
+	close: () => {
+		buglist.show = false;
+	},
+});
 </script>
 
 <style lang="scss">

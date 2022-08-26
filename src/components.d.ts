@@ -9,6 +9,7 @@ declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     Button: typeof import('./components/Button.vue')['default']
     LanguageSwitch: typeof import('./components/LanguageSwitch.vue')['default']
+    Sidebar: typeof import('./components/Sidebar.vue')['default']
     Spinner: typeof import('./components/Spinner.vue')['default']
   }
 }
