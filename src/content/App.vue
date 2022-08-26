@@ -5,6 +5,8 @@
 			@openBugList="buglist.open"
 			@close="buglist.close"
 		/>
+
+		<BugList v-if="buglist.show" @close="buglist.close" />
 	</div>
 </template>
 

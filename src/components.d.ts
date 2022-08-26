@@ -7,7 +7,10 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    BugCard: typeof import('./components/BugCard.vue')['default']
+    BugList: typeof import('./components/tabs/BugList.vue')['default']
     Button: typeof import('./components/Button.vue')['default']
+    CollapsableList: typeof import('./components/CollapsableList.vue')['default']
     LanguageSwitch: typeof import('./components/LanguageSwitch.vue')['default']
     Sidebar: typeof import('./components/Sidebar.vue')['default']
     Spinner: typeof import('./components/Spinner.vue')['default']
