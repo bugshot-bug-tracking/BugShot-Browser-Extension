@@ -235,5 +235,8 @@
 	"recover": "Recover",
 	"remember_me": "Remember me",
 	"welcome_to": "Welcome to",
-	"please_login": "Please login"
+	"please_login": "Please login",
+	"bug_list": "Bug List",
+	"admin": "Admin",
+	"current_project": "Current project"
 }
