@@ -124,6 +124,36 @@ const emit = defineEmits(["close"]);
 const open = ref(false);
 
 const list = ref([
+	{
+		id: 0,
+		attributes: {
+			designation: "Attachment #0",
+		},
+	},
+	{
+		id: 1,
+		attributes: {
+			designation: "Attachment #1",
+		},
+	},
+	{
+		id: 2,
+		attributes: {
+			designation: "Attachment #2",
+		},
+	},
+	{
+		id: 3,
+		attributes: {
+			designation: "Attachment #3",
+		},
+	},
+	{
+		id: 4,
+		attributes: {
+			designation: "Attachment #4",
+		},
+	},
 ]);
 
 const attachments = reactive({

@@ -61,9 +61,118 @@ const company = "[PH] Company";
 const project = "[PH] Project";
 
 const statuses = [
+	{ id: "0", attributes: { designation: "Status 0" } },
+	{ id: "1", attributes: { designation: "Status 1" } },
+	{ id: "2", attributes: { designation: "Status 2" } },
+	{ id: "3", attributes: { designation: "Status 3" } },
+	{ id: "4", attributes: { designation: "Status 4" } },
 ];
 
 const bugs = [
+	{
+		id: "0",
+		attributes: {
+			designation: "Bug 0",
+			priority: { id: (0 % 4) + 1 },
+			deadline: "",
+		},
+	},
+	{
+		id: "1",
+		attributes: {
+			designation: "Bug 1",
+			priority: { id: (1 % 4) + 1 },
+			deadline: "",
+		},
+	},
+	{
+		id: "2",
+		attributes: {
+			designation: "Bug 2",
+			priority: { id: (2 % 4) + 1 },
+			deadline: "",
+		},
+	},
+	{
+		id: "3",
+		attributes: {
+			designation: "Bug 3",
+			priority: { id: (3 % 4) + 1 },
+			deadline: "",
+		},
+	},
+	{
+		id: "4",
+		attributes: {
+			designation: "Bug 4",
+			priority: { id: (4 % 4) + 1 },
+			deadline: "",
+		},
+	},
+	{
+		id: "5",
+		attributes: {
+			designation: "Bug 5",
+			priority: { id: (5 % 4) + 1 },
+			deadline: "",
+		},
+	},
+	{
+		id: "6",
+		attributes: {
+			designation: "Bug 6",
+			priority: { id: (6 % 4) + 1 },
+			deadline: "",
+		},
+	},
+	{
+		id: "7",
+		attributes: {
+			designation: "Bug 7",
+			priority: { id: (7 % 4) + 1 },
+			deadline: "",
+		},
+	},
+	{
+		id: "8",
+		attributes: {
+			designation: "Bug 8",
+			priority: { id: (8 % 4) + 1 },
+			deadline: "",
+		},
+	},
+	{
+		id: "9",
+		attributes: {
+			designation: "Bug 9",
+			priority: { id: (9 % 4) + 1 },
+			deadline: "",
+		},
+	},
+	{
+		id: "10",
+		attributes: {
+			designation: "Bug 10",
+			priority: { id: (10 % 4) + 1 },
+			deadline: "",
+		},
+	},
+	{
+		id: "11",
+		attributes: {
+			designation: "Bug 11",
+			priority: { id: (11 % 4) + 1 },
+			deadline: "",
+		},
+	},
+	{
+		id: "12",
+		attributes: {
+			designation: "Bug 12",
+			priority: { id: (12 % 4) + 1 },
+			deadline: "",
+		},
+	},
 ];
 
 const t = (value: any) => value;
