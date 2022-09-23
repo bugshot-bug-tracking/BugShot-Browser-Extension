@@ -14,7 +14,9 @@
 }
 
 .vue-universal-modal {
-	z-index: 1;
+	&:focus-visible {
+		outline: unset;
+	}
 
 	.vue-universal-modal-content {
 	}

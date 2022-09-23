@@ -195,13 +195,23 @@
 	margin: 0.25rem;
 }
 
-.bs-input2 {
+.bs-input {
 	display: flex;
 	flex-direction: column;
 	text-align: left;
 	align-items: stretch;
 	gap: 0.5rem;
 	position: relative;
+
+	label {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		span {
+			font-size: 0.75rem;
+		}
+	}
 
 	.input-image {
 		position: absolute;
@@ -214,10 +224,13 @@
 		}
 	}
 
-	input {
+	input,
+	textarea {
 		border: 1px solid hsl(264deg, 78%, 77%);
 		border-radius: 0.5rem;
 		padding: 0.75rem;
+		background: white;
+		resize: vertical;
 
 		&:focus,
 		&:focus-visible,
@@ -268,25 +281,25 @@
 		&.min-chars > li.min-chars {
 			@extend .black-to-green;
 			&::before {
-				background-image: url("/src/assets/icons/check.svg");
+				background-image: url("/assets/icons/check.svg");
 			}
 		}
 		&.letters > li.letters {
 			@extend .black-to-green;
 			&::before {
-				background-image: url("/src/assets/icons/check.svg");
+				background-image: url("/assets/icons/check.svg");
 			}
 		}
 		&.numbers > li.numbers {
 			@extend .black-to-green;
 			&::before {
-				background-image: url("/src/assets/icons/check.svg");
+				background-image: url("/assets/icons/check.svg");
 			}
 		}
 		&.same > li.same {
 			@extend .black-to-green;
 			&::before {
-				background-image: url("/src/assets/icons/check.svg");
+				background-image: url("/assets/icons/check.svg");
 			}
 		}
 	}
@@ -300,7 +313,7 @@
 
 		&::before {
 			content: "";
-			background-image: url("/src/assets/icons/close_2.svg");
+			background-image: url("/assets/icons/close_2.svg");
 			background-position: 0 0;
 			background-size: auto;
 			background-repeat: no-repeat;

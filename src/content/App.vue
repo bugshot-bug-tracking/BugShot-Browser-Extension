@@ -28,7 +28,6 @@ const buglist = reactive({
 </script>
 
 <style lang="scss">
-@import "~/styles/global.scss";
 @import "~/styles/Style.scss";
 
 :host {

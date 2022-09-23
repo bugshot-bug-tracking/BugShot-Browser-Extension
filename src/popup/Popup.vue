@@ -32,7 +32,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss">
-@import "~/styles/global.scss";
+@import "~/styles/Style.scss";
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
 @import "vue-select/dist/vue-select.css";
 
