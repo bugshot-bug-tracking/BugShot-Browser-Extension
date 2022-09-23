@@ -1,20 +1,21 @@
 <template>
 	<section class="bs-container">
 		<div class="header">
-			<h1 text-5 m-0>{{ $t("attachment", 2) }}</h1>
+			<h1 text-5 m-0>{{ t("attachment", 2) }}</h1>
 
 			<div flex items-center gap-2>
 				<img
-					src="/src/assets/icons/refresh.svg"
+					src="/assets/icons/refresh.svg"
 					alt="refresh"
 					class="refresh-button"
 					@click="emit('update')"
+					v-if="!local"
 				/>
 
 				<label class="file-label black-to-green">
 					<input type="file" multiple @change="upload" hidden />
 
-					<img src="/src/assets/icons/attachment.svg" alt="attach" />
+					<img src="/assets/icons/attachment.svg" alt="attach" />
 				</label>
 			</div>
 		</div>
@@ -35,8 +36,6 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
-
 const props = defineProps({
 	list: {
 		required: true,
@@ -46,6 +45,12 @@ const props = defineProps({
 		required: false,
 		type: String,
 		default: "",
+	},
+	local: {
+		required: false,
+		type: Boolean,
+		default: false,
+		description: "Hide refresh button when set to true",
 	},
 });
 

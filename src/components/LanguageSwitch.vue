@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<p>{{ $t("language") }}:</p>
+		<p>{{ t("language") }}:</p>
 
 		<ul>
 			<li
@@ -27,6 +27,8 @@
 import { useI18nStore } from "~/stores/i18n";
 
 const store = useI18nStore();
+
+const { t } = useI18n();
 
 const locale = computed(() => store.getLocale);
 const availableLocales = computed(() => store.getSupportedLocales);
