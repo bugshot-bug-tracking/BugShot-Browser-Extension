@@ -31,10 +31,10 @@
 			<Screenshot :bug="bug" @loading="emitLoading" />
 		</div>
 
-		<div class="url">
+		<div class="url" v-if="bug.attributes.url">
 			<label>URL:</label>
 			<div class="content">
-				<a :href="bug.url">{{ bug.attributes.url }}</a>
+				<a :href="bug.attributes.url">{{ bug.attributes.url }}</a>
 			</div>
 		</div>
 
