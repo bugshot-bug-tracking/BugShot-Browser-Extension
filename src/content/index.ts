@@ -4,6 +4,8 @@ import { createApp } from "vue";
 
 import axi from "~/modules/axios";
 import pinia from "~/modules/pinia";
+import VueUniversalModal from "vue-universal-modal";
+import "vue-universal-modal/dist/index.css";
 
 import App from "./App.vue";
 
@@ -20,6 +22,14 @@ import App from "./App.vue";
 			axi.install({ app });
 
 			app.mount(this.shadowRoot);
+
+			let modalsNode = document.createElement("div");
+			modalsNode.setAttribute("id", "modals");
+			this.shadowRoot?.append(modalsNode);
+			app.use(VueUniversalModal, {
+				teleportTarget: modalsNode,
+				modalComponent: "MyModal",
+			});
 
 			const styleEl = document.createElement("link");
 
