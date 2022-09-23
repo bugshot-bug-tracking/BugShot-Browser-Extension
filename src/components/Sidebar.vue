@@ -26,7 +26,7 @@
 				</li>
 			</div>
 
-			<li class="report-button">
+			<li class="report-button" @click="emit('add')">
 				<img src="/assets/icons/add.svg" alt="add" />
 			</li>
 
@@ -49,7 +49,7 @@ const props = defineProps({
 	},
 });
 
-const emit = defineEmits(["open", "close", "openBugList"]);
+const emit = defineEmits(["open", "close", "openBugList", "add"]);
 
 const open = reactive({
 	value: false,
