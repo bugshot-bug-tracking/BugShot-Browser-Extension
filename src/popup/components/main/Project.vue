@@ -38,12 +38,17 @@ export default {
 		color: white;
 
 		background: hsl(265, 80%, 50%);
-		height: 70px;
+		min-height: 70px;
 		border-radius: 15px 15px 0 0;
+
+		padding: 16px;
+		line-height: 1.6rem;
+		text-align: center;
 	}
 
 	.bottom {
-		height: 37px;
+		min-height: 37px;
+		gap: 8px;
 		display: flex;
 		align-items: center;
 		font-weight: 500;
