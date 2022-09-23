@@ -1,5 +1,5 @@
 export interface Role {
-	id: string;
+	id: number;
 	type: string;
 	attributes: {
 		designation: string;

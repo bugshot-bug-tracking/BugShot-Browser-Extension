@@ -10,8 +10,10 @@ export interface Company {
 		color_hex: string;
 		created_at: string;
 		updated_at: string;
-		creator: User;
+		creator?: User;
 		projects?: Array<Project>;
 		role?: Role;
+		users?: User[];
 	};
+	pending?: any[];
 }

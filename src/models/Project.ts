@@ -1,5 +1,6 @@
 import { Company } from "./Company";
 import { Image } from "./Image";
+import { Role } from "./Role";
 import { Status } from "./Status";
 import { User } from "./User";
 
@@ -13,11 +14,13 @@ export interface Project {
 		url: string;
 		created_at: string;
 		updated_at: string;
-		creator: User;
+		creator?: User;
 		bugsDone: number;
 		bugsTotal: number;
 		image?: Image;
 		statuses?: Status[];
 		users?: User[];
+		role?: Role;
 	};
+	pending?: any;
 }
