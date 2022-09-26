@@ -23,6 +23,8 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
+
 const emit = defineEmits(["info"]);
 
 defineProps({
@@ -48,8 +50,7 @@ defineProps({
 	},
 });
 
-//! replace this with the appropriate vue-18n method
-const t = (value: any) => value;
+const { t } = useI18n();
 
 const priorities = computed(() => [
 	{

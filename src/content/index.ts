@@ -4,8 +4,11 @@ import { createApp } from "vue";
 
 import axi from "~/modules/axios";
 import pinia from "~/modules/pinia";
+import i18n from "~/modules/i18n";
 import VueUniversalModal from "vue-universal-modal";
 import "vue-universal-modal/dist/index.css";
+
+import gComponents from "~/modules/globalComponents";
 
 import App from "./App.vue";
 
@@ -20,6 +23,9 @@ import App from "./App.vue";
 
 			pinia.install({ app });
 			axi.install({ app });
+			i18n.install({ app });
+
+			gComponents.install({ app });
 
 			app.mount(this.shadowRoot);
 

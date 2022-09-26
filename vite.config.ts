@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 import Vue from "@vitejs/plugin-vue";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
-import VueI18n from "@intlify/vite-plugin-vue-i18n";
+import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
 import Unocss from "unocss/vite";
 
 const r = (...args: string[]) => resolve(__dirname, ...args);
@@ -66,9 +66,10 @@ export const sharedConfig: UserConfig = {
 			dts: r("src/components.d.ts"),
 		}),
 
-		// https://github.com/intlify/vite-plugin-vue-i18n
-		VueI18n({
-			include: [resolve(__dirname, "src/locales/**")],
+		VueI18nPlugin({
+			/* options */
+			// locale messages resource pre-compile option
+			include: [resolve(__dirname, "locales/**")],
 		}),
 
 		Unocss(),

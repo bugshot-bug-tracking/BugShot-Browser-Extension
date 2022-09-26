@@ -53,6 +53,7 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
 import { useMainStore } from "~/stores/main";
 
 const emit = defineEmits(["close"]);
@@ -63,7 +64,7 @@ const store = useMainStore();
 
 const statuses = computed(() => store.getStatuses);
 
-const t = (value: any) => value;
+const { t } = useI18n();
 
 const info = reactive({
 	show: false,

@@ -1,5 +1,5 @@
 import * as storage from "~/logic/backgroundStorage";
-import { onMessage } from "webext-bridge";
+import * as webex from "webext-bridge";
 
 console.log("background!");
 
@@ -14,7 +14,7 @@ console.log("background!");
 
 //** --------- STORAGE --------- */
 
-onMessage("getToken", () => {
+webex.onMessage("getToken", () => {
 	try {
 		return storage.token.value;
 	} catch (error) {
@@ -23,7 +23,7 @@ onMessage("getToken", () => {
 	}
 });
 
-onMessage("setToken", ({ data }) => {
+webex.onMessage("setToken", ({ data }) => {
 	try {
 		storage.token.value = data.token;
 		return true;
@@ -33,7 +33,7 @@ onMessage("setToken", ({ data }) => {
 	}
 });
 
-onMessage("invalidate", () => {
+webex.onMessage("invalidate", () => {
 	try {
 		storage.token.value = "";
 		return true;

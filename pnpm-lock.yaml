@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@intlify/vite-plugin-vue-i18n': ^6.0.1
+  '@intlify/unplugin-vue-i18n': ^0.6.0
   '@types/chrome': ^0.0.197
   '@types/fs-extra': ^9.0.13
   '@types/node': ^18.7.18
@@ -36,7 +36,7 @@ specifiers:
   webextension-polyfill: ^0.10.0
 
 devDependencies:
-  '@intlify/vite-plugin-vue-i18n': 6.0.1_vite@3.1.3+vue-i18n@9.2.2
+  '@intlify/unplugin-vue-i18n': 0.6.0_vite@3.1.3+vue-i18n@9.2.2
   '@types/chrome': 0.0.197
   '@types/fs-extra': 9.0.13
   '@types/node': 18.7.18
@@ -239,17 +239,14 @@ packages:
     engines: {node: '>= 14'}
     dev: true
 
-  /@intlify/vite-plugin-vue-i18n/6.0.1_vite@3.1.3+vue-i18n@9.2.2:
-    resolution: {integrity: sha512-FFVcxVU4bR9vdDLNbltM5mrhndnXMErO01i0RrpdyMegEt3Nu/YLoH0sFdjRun7/RY4vaEnhTnFvVf9uO0dQvg==}
-    engines: {node: '>= 14.6'}
+  /@intlify/unplugin-vue-i18n/0.6.0_vite@3.1.3+vue-i18n@9.2.2:
+    resolution: {integrity: sha512-GAXsPBY+VtWpA6PRoqL0Yi4is9eCy2oYifqycEuNIbsL72Cn4iRlOaSRjeRaJJj48qWHGNN9Xm5YH7eB3GI/2g==}
+    engines: {node: '>= 14.16'}
     peerDependencies:
       petite-vue-i18n: '*'
-      vite: ^2.9.0 || ^3.0.0
       vue-i18n: '*'
     peerDependenciesMeta:
       petite-vue-i18n:
-        optional: true
-      vite:
         optional: true
       vue-i18n:
         optional: true
@@ -257,13 +254,22 @@ packages:
       '@intlify/bundle-utils': 3.1.2_vue-i18n@9.2.2
       '@intlify/shared': 9.3.0-beta.3
       '@rollup/pluginutils': 4.2.1
+      '@vue/compiler-sfc': 3.2.39
       debug: 4.3.4
       fast-glob: 3.2.12
+      js-yaml: 4.1.0
+      json5: 2.2.1
+      pathe: 0.2.0
+      picocolors: 1.0.0
       source-map: 0.6.1
-      vite: 3.1.3_sass@1.54.9
+      unplugin: 0.8.1_vite@3.1.3
       vue-i18n: 9.2.2_vue@3.2.39
     transitivePeerDependencies:
+      - esbuild
+      - rollup
       - supports-color
+      - vite
+      - webpack
     dev: true
 
   /@intlify/vue-devtools/9.2.2:
@@ -717,6 +723,10 @@ packages:
     dependencies:
       normalize-path: 3.0.0
       picomatch: 2.3.1
+    dev: true
+
+  /argparse/2.0.1:
+    resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
     dev: true
 
   /asynckit/0.4.0:
@@ -1560,8 +1570,21 @@ packages:
     hasBin: true
     dev: true
 
+  /js-yaml/4.1.0:
+    resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
+    hasBin: true
+    dependencies:
+      argparse: 2.0.1
+    dev: true
+
   /json-parse-better-errors/1.0.2:
     resolution: {integrity: sha512-mrqyZKfX5EhL7hvqcV6WG1yYjnjeuYDzDhhcAAUrq8Po85NBQBJP+ZDUT75qZQ98IkUoBqdkExkukOU7Ts2wrw==}
+    dev: true
+
+  /json5/2.2.1:
+    resolution: {integrity: sha512-1hqLFMSrGHRHxav9q9gNjJ5EXznIxGVO09xQRrwplcS8qs28pZ8s8hupZAmqDwZUmVZ2Qb2jnyPOWcDH8m8dlA==}
+    engines: {node: '>=6'}
+    hasBin: true
     dev: true
 
   /jsonc-eslint-parser/1.4.1:
@@ -1852,6 +1875,10 @@ packages:
     engines: {node: '>=4'}
     dependencies:
       pify: 3.0.0
+    dev: true
+
+  /pathe/0.2.0:
+    resolution: {integrity: sha512-sTitTPYnn23esFR3RlqYBWn4c45WGeLcsKzQiUpXJAyfcWkolvlYpV8FLo7JishK946oQwMFUCHXQ9AjGPKExw==}
     dev: true
 
   /pathe/0.3.8:
@@ -2322,6 +2349,30 @@ packages:
       vue: 3.2.39
     transitivePeerDependencies:
       - supports-color
+    dev: true
+
+  /unplugin/0.8.1_vite@3.1.3:
+    resolution: {integrity: sha512-o7rUZoPLG1fH4LKinWgb77gDtTE6mw/iry0Pq0Z5UPvZ9+HZ1/4+7fic7t58s8/CGkPrDpGq+RltO+DmswcR4g==}
+    peerDependencies:
+      esbuild: '>=0.13'
+      rollup: ^2.50.0
+      vite: ^2.3.0 || ^3.0.0-0
+      webpack: 4 || 5
+    peerDependenciesMeta:
+      esbuild:
+        optional: true
+      rollup:
+        optional: true
+      vite:
+        optional: true
+      webpack:
+        optional: true
+    dependencies:
+      acorn: 8.8.0
+      chokidar: 3.5.3
+      vite: 3.1.3_sass@1.54.9
+      webpack-sources: 3.2.3
+      webpack-virtual-modules: 0.4.5
     dev: true
 
   /unplugin/0.9.6:

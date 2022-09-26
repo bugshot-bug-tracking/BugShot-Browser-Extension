@@ -1,16 +1,8 @@
 import { UserModule } from "~/types";
 import { createI18n } from "vue-i18n";
 
-// Import i18n resources
-// https://vitejs.dev/guide/features.html#glob-import
-const messages = Object.fromEntries(
-	Object.entries(
-		import.meta.glob("~/../locales/*.json", { eager: true })
-	).map(([key, value]: any) => {
-		const json = key.endsWith(".json");
-		return [key.slice(11, json ? -5 : -4), value.default];
-	})
-);
+import messages from "@intlify/unplugin-vue-i18n/messages";
+import datetimeFormats from "~/config/datetimeFormats";
 
 export const install: UserModule = ({ app }) => {
 	const i18n = createI18n({
@@ -19,7 +11,7 @@ export const install: UserModule = ({ app }) => {
 		locale: "en",
 		fallbackLocale: "en",
 		messages: messages,
-		// datetimeFormats: datetimeFormats,
+		datetimeFormats: datetimeFormats,
 	});
 
 	app.use(i18n);

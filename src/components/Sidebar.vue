@@ -41,6 +41,8 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from "vue-i18n";
+
 const props = defineProps({
 	id: {
 		required: true,
@@ -61,8 +63,7 @@ const open = reactive({
 	},
 });
 
-//! replace this with the appropriate vue-18n method
-const t = (value: any, value2?: any) => value;
+const { t } = useI18n();
 
 const openBugList = () => {
 	emit("openBugList");
