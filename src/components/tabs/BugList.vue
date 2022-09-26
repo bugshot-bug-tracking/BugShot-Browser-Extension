@@ -11,21 +11,7 @@
 			/>
 		</h2>
 
-		<section class="bs-container">
-			<h4 class="bs-bb">{{ t("current_project") }}</h4>
-
-			<div
-				grid
-				gap-4
-				style="grid-template-columns: auto 1fr; font-size: 0.875rem"
-			>
-				<b>{{ t("company") }}:</b>
-				<div>{{ company }}</div>
-
-				<b>{{ t("project") }}</b>
-				<div>{{ project }}</div>
-			</div>
-		</section>
+		<ProjectManager />
 
 		<div class="statuses bs-scroll">
 			<div v-for="status in statuses" :key="status.id">
@@ -37,57 +23,55 @@
 						<BugCard
 							:title="item.attributes.designation"
 							:deadline="
-								item.attributes.deadline ?? 'No deadline'
+								item.attributes.deadline
+									? d(
+											new Date(
+												dateFix(
+													item.attributes.deadline
+												)
+											),
+											'short'
+									  )
+									: t('no_deadline')
 							"
 							:priority="item.attributes.priority.id"
-							:active="info.id === item.id"
-							@info="info.open(item.id)"
+							:active="activeBug.id === item.id"
+							@info="openInfo(item.id)"
 						/>
 					</template>
 				</CollapsableList>
 			</div>
 		</div>
 	</article>
-
-	<BugInfo v-if="info.show" :id="info.id" @close="info.close" />
 </template>
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import { useMainStore } from "~/stores/main";
+import dateFix from "~/util/dateFixISO";
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits<{
+	(event: "close"): void;
+	(event: "openInfo", id: string): void;
+}>();
 
-const company = "[PH] Company";
-const project = "[PH] Project";
+const { t, d } = useI18n();
+
 const store = useMainStore();
 
 const statuses = computed(() => store.getStatuses);
 
-const { t } = useI18n();
+const activeBug = computed(() => store.getActiveBug);
 
-const info = reactive({
-	show: false,
-	id: "",
-	open: (id: string) => {
-		info.id = id;
-		info.show = true;
-	},
-	close: () => {
-		info.id = "";
-		info.show = false;
-	},
-});
+const openInfo = (id: string) => {
+	store.setActiveBug(id);
+	emit("openInfo", id);
+};
 </script>
 
 <style lang="scss" scoped>
 .bs-tab {
 	min-width: 22rem;
-}
-
-h4 {
-	margin: 0 0 1rem 0;
-	padding-bottom: 0.5rem;
 }
 
 .statuses {
