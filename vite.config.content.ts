@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import { sharedConfig } from "./vite.config";
 import { r } from "./scripts/utils";
 import packageJson from "./package.json";
-import Vue from "@vitejs/plugin-vue";
 
 // bundling the content script using Vite
 export default defineConfig({
@@ -21,7 +20,7 @@ export default defineConfig({
 		lib: {
 			entry: r("src/content/index.ts"),
 			name: packageJson.name,
-			formats: ["es"],
+			formats: ["iife"],
 		},
 		rollupOptions: {
 			output: {

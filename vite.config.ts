@@ -29,9 +29,9 @@ export default defineConfig(() => {
 			},
 			minify: false,
 			// https://developer.chrome.com/docs/webstore/program_policies/#:~:text=Code%20Readability%20Requirements
-			terserOptions: {
-				mangle: false,
-			},
+			// terserOptions: {
+			// 	mangle: false,
+			// },
 		},
 
 		plugins: [...sharedConfig.plugins!],
