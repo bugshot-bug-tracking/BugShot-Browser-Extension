@@ -6,3 +6,5 @@ export const install: UserModule = ({ app }) => {
 	app.component("v-select", vSelect);
 	app.component("Datepicker", Datepicker);
 };
+
+export default { install };

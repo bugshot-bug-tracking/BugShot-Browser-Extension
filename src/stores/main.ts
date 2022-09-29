@@ -7,6 +7,7 @@ import { Status } from "~/models/Status";
 import { Bug } from "~/models/Bug";
 import { useAuthStore } from "./auth";
 import { User } from "~/models/User";
+import { BugUserRole } from "~/models/BugUserRole";
 
 export const useMainStore = defineStore("main", {
 	state: () => ({
@@ -119,10 +120,20 @@ export const useMainStore = defineStore("main", {
 		},
 
 		async setActiveBug(id: string) {
-			/**
-			 * - set the active bug for the bugInfo tab
-			 *
-			 */
+			const bug = this.getBugById(id);
+
+			if (!bug) throw "Could not set active bug.";
+
+			this.bug = bug;
+
+			this.fetchAttachments(this.bug.id);
+			this.fetchComments(this.bug.id);
+			this.fetchBugUsers(this.bug.id);
+			// this.fetchScreenshots(this.bug.id)
+		},
+
+		async resetActiveBug() {
+			this.bug = {} as Bug;
 		},
 
 		async syncBug(payload: any) {
@@ -268,7 +279,8 @@ export const useMainStore = defineStore("main", {
 
 			try {
 				// fetch bug screenshots
-				let users = (await axios.get(`bugs/${id}/users`)).data.data;
+				let users = (await axios.get(`bugs/${id}/users`)).data
+					.data as BugUserRole[];
 
 				bug.users = users;
 			} catch (error) {
@@ -311,5 +323,7 @@ export const useMainStore = defineStore("main", {
 
 			return state.statuses?.find((x) => x.attributes.order_number === 0);
 		},
+
+		getActiveBug: (state) => state.bug,
 	},
 });

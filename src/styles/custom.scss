@@ -235,8 +235,8 @@
 		&:focus,
 		&:focus-visible,
 		&:hover {
-			border-color: hsl(265, 79%, 41%);
-			outline-color: hsl(265, 79%, 41%);
+			border: 1px solid hsl(265, 79%, 41%);
+			outline: 1px solid hsl(265, 79%, 41%);
 		}
 
 		&.error {

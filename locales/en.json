@@ -238,5 +238,6 @@
 	"please_login": "Please login",
 	"bug_list": "Bug List",
 	"admin": "Admin",
-	"current_project": "Current project"
+	"current_project": "Current project",
+	"members_updated": "Members updated!"
 }

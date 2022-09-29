@@ -8,7 +8,13 @@
 			v-show="!addMode"
 		/>
 
-		<BugList v-if="buglist.show" @close="buglist.close" v-show="!addMode" />
+		<BugList
+			v-if="buglist.show && !addMode"
+			@close="buglist.close"
+			@openInfo="bugInfo.open"
+		/>
+
+		<BugTab v-if="bugInfo.show" :id="bugInfo.id" @close="bugInfo.close" />
 	</div>
 </template>
 
@@ -36,6 +42,20 @@ const buglist = reactive({
 	},
 	close: () => {
 		buglist.show = false;
+	},
+});
+
+const bugInfo = reactive({
+	show: false,
+	id: "",
+	open: (id: string) => {
+		bugInfo.id = id;
+		bugInfo.show = true;
+	},
+	close: () => {
+		bugInfo.id = "";
+		bugInfo.show = false;
+		store.resetActiveBug();
 	},
 });
 
