@@ -7,6 +7,7 @@ export {}
 
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
+    AddBug: typeof import('./components/AddBug.vue')['default']
     Assignees: typeof import('./components/Assignees.vue')['default']
     AssignModal: typeof import('./components/Modals/AssignModal.vue')['default']
     AttachmentsItem: typeof import('./components/Attachments/AttachmentsItem.vue')['default']
@@ -27,6 +28,7 @@ declare module '@vue/runtime-core' {
     Message: typeof import('./components/Comments/Message.vue')['default']
     Modal: typeof import('./components/Modals/Modal.vue')['default']
     ModalTemplate: typeof import('./components/ModalTemplate.vue')['default']
+    Overlay: typeof import('./components/Overlay.vue')['default']
     ProjectManager: typeof import('./components/ProjectManager.vue')['default']
     Screenshot: typeof import('./components/tabs/BugTab/Screenshot.vue')['default']
     Sidebar: typeof import('./components/Sidebar.vue')['default']

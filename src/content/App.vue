@@ -14,13 +14,22 @@
 			@openInfo="bugInfo.open"
 		/>
 
-		<BugTab v-if="bugInfo.show" :id="bugInfo.id" @close="bugInfo.close" />
+		<BugTab
+			v-if="bugInfo.show && !addMode"
+			:id="bugInfo.id"
+			@close="bugInfo.close"
+		/>
+
+		<AddBug :show="add.formTab" @close="add.cancel" />
 	</div>
+
+	<Overlay v-if="add.overlay" @done="add.stage2" @close="add.cancel" />
 </template>
 
 <script setup lang="ts">
 import { useAuthStore } from "~/stores/auth";
 import { useMainStore } from "~/stores/main";
+import { useReportStore } from "~/stores/report";
 
 const store = useMainStore();
 
@@ -83,6 +92,7 @@ const add = reactive({
 	cancel: () => {
 		add.formTab = false;
 		add.overlay = false;
+		useReportStore().destroy;
 	},
 });
 </script>

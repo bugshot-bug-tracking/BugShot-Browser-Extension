@@ -97,10 +97,13 @@ const loadScreenshots = async () => {
 loadScreenshots();
 
 // called on update
-watch(bug, () => {
-	if (!bug.value) return;
-	loadScreenshots();
-});
+watch(
+	props,
+	() => {
+		loadScreenshots();
+	},
+	{ deep: true }
+);
 
 const deleteAsk = async () => {
 	if (!status.value || !bug.value) return console.log("Strange error!");
