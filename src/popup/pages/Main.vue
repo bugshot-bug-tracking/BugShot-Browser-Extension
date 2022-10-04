@@ -1,7 +1,7 @@
 <template>
 	<main>
 		<div class="bs-container">
-			<h5>{{ t("companies_on_link") }}</h5>
+			<h5>{{ t("company", 2) }}</h5>
 
 			<div class="selector">
 				<v-select
