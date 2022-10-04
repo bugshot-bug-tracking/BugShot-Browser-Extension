@@ -17,7 +17,7 @@
 				:class="{ active: locale === 'auto' }"
 				@click="change('auto')"
 			>
-				[auto]
+				[{{ t("auto") }}]
 			</li>
 		</ul>
 	</div>
@@ -26,6 +26,8 @@
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
 import { useI18nStore } from "~/stores/i18n";
+
+const emit = defineEmits<{ (event: "change", value: string): void }>();
 
 const store = useI18nStore();
 
@@ -36,6 +38,7 @@ const availableLocales = computed(() => store.getSupportedLocales);
 
 const change = (value: string) => {
 	store.setLocale(value);
+	emit("change", value);
 };
 </script>
 

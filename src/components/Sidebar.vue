@@ -1,5 +1,8 @@
 <template>
-	<div id="sidebar" :class="{ open: open.value }">
+	<div
+		id="sidebar"
+		:class="{ open: open.value, top: settings.position === 2 }"
+	>
 		<img
 			class="logo"
 			src="/assets/icons/bugshot.svg"
@@ -42,6 +45,7 @@
 
 <script setup lang="ts">
 import { useI18n } from "vue-i18n";
+import { useSettingsStore } from "~/stores/settings";
 
 const props = defineProps({
 	id: {
@@ -52,6 +56,8 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["open", "close", "openBugList", "add"]);
+
+const settings = useSettingsStore();
 
 const open = reactive({
 	value: false,
@@ -95,6 +101,20 @@ const openProject = () => {
 		hsl(230deg, 40%, 20%) 50%,
 		hsl(230deg, 40%, 20%) 100%
 	);
+
+	&.top {
+		background: linear-gradient(
+			to top right,
+			transparent 0%,
+			transparent 49%,
+			hsl(230deg, 40%, 20%) 50%,
+			hsl(230deg, 40%, 20%) 100%
+		);
+
+		.logo {
+			margin: 0.5rem 0.5rem auto auto;
+		}
+	}
 
 	&.open {
 		height: 100vh;

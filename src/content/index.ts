@@ -61,17 +61,6 @@ import App from "./App.vue";
 		// create a containing element to host the custom element
 		bugshot = document.createElement("div");
 
-		bugshot.style.cssText = `
-		position: fixed;
-		bottom: 0;
-		right: 0;
-		width: fit-content;
-		height: fit-content;
-		overflow: hidden;
-		background-color: transparent;
-		z-index: 2047483647;
-		`;
-
 		bugshot.appendChild(document.createElement("bugshot-sidebar"));
 
 		document.body.append(bugshot);

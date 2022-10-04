@@ -15,6 +15,7 @@
 </template>
 
 <script setup lang="ts">
+import { sendMessage } from "webext-bridge";
 import { useReportStore } from "~/stores/report";
 import unique from "~/util/unique-selector";
 
@@ -51,9 +52,7 @@ const createMark = async (event: MouseEvent) => {
 	overlay.show = false;
 	await nextTick(); // wait for the document update so the overlay is not captured
 
-	let response = await chrome.runtime.sendMessage({
-		message: "takeScreenshot",
-	});
+	let response = await sendMessage("takeScreenshot", {});
 
 	store.screenshots.push(response.payload);
 

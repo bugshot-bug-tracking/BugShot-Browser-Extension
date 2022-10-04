@@ -1,7 +1,7 @@
 <template>
 	<main>
 		<div class="bs-container">
-			<h5>Companies on this link</h5>
+			<h5>{{ t("companies_on_link") }}</h5>
 
 			<div class="selector">
 				<v-select
@@ -31,7 +31,7 @@
 				</v-select>
 			</div>
 
-			<h5>Projects</h5>
+			<h5>{{ t("project", 2) }}</h5>
 
 			<div class="selector">
 				<v-select
@@ -63,63 +63,68 @@
 		</div>
 
 		<div class="bs-container">
-			<h5>Settings</h5>
+			<h5>{{ t("setting", 2) }}</h5>
 
-			<div class="visible" :class="{ off: !sidebar.active }">
+			<div class="visible" :class="{ off: !store.sidebar }">
 				<p>
-					Sidebar:
-					<span>{{ sidebar.active ? $t("on") : $t("off") }}</span>
+					{{ t("sidebar") }}:
+					<span>{{ store.sidebar ? t("on") : t("off") }}</span>
 				</p>
 
 				<label class="switch">
 					<input
 						type="checkbox"
-						v-model="sidebar.active"
-						@change=""
+						v-model="store.sidebar"
+						@change="store.setSidebar"
 					/>
 
 					<span class="slider round"></span>
 				</label>
 			</div>
 
-			<h5 v-show="sidebar.active">Sidebar position</h5>
+			<h5 v-show="store.sidebar">{{ t("sidebar_position") }}</h5>
 
-			<div class="position" v-show="sidebar.active">
+			<div class="position" v-show="store.sidebar">
 				<div>
 					<div
-						class="left"
-						:class="{ active: sidebar.position === 'left' }"
-						@click="sidebar.changePosition('left')"
+						class="position"
+						:class="{
+							active: store.position === Position.BottomRight,
+						}"
+						@click="store.setPosition(Position.BottomRight)"
 					/>
 
-					<p>Bottom right corner</p>
+					<p>{{ t("bottom_right_corner") }}</p>
 				</div>
 
 				<div>
 					<div
-						class="right"
-						:class="{ active: sidebar.position === 'right' }"
-						@click="sidebar.changePosition('right')"
+						class="position top-right"
+						:class="{
+							active: store.position === Position.TopRight,
+						}"
+						@click="store.setPosition(Position.TopRight)"
 					/>
 
-					<p>Top right corner</p>
+					<p>{{ t("top_right_corner") }}</p>
 				</div>
 			</div>
 
-			<hr />
+			<hr v-if="false" />
 
-			<div class="themes">
-				<p>Themes</p>
+			<div class="themes" v-if="false">
+				<p>{{ t("theme", 2) }}</p>
 
 				<div class="selector">
 					<v-select
 						:options="themes"
-						:placeholder="'Please choose....'"
-						:get-option-label="(option) => option.displayName"
-						:reduce="(option) => option.value"
-						v-model="theme"
+						:placeholder="t('please_choose') + '....'"
+						:get-option-label="(option:any) => option.name"
+						:reduce="(option:any) => option.value"
+						v-model="store.theme"
 						:clearable="false"
 						:searchable="false"
+						@option:selected="store.setTheme"
 					>
 						<template #open-indicator="{ attributes }">
 							<img
@@ -131,11 +136,11 @@
 						</template>
 
 						<template v-slot:option="option">
-							{{ option.displayName }}
+							{{ option.name }}
 						</template>
 
 						<template v-slot:selected-option="option">
-							{{ option.displayName }}
+							{{ option.name }}
 						</template>
 					</v-select>
 				</div>
@@ -144,65 +149,44 @@
 			<hr />
 
 			<div class="lang">
-				<LanguageSwitch />
-			</div>
-
-			<hr />
-
-			<div
-				flex
-				items-center
-				gap-2
-				cursor-pointer
-				@click="sidebar.refresh"
-			>
-				<img src="/assets/icons/refresh.svg" alt="refresh" />
-				Refresh extension
+				<LanguageSwitch @change="store.setlocale" />
 			</div>
 		</div>
 
 		<a class="log-out" @click="logout">
 			<img src="/assets/icons/logout.svg" alt="logout" />
-			Log out
+			{{ t("log_out") }}
 		</a>
 	</main>
 
 	<footer class="bs-bt" pt-2 mt-2>
-		BugShot WebExtension v{{ pkg.version }}
+		{{ t("bugshot_extension") }} v{{ pkg.version }}
 	</footer>
 </template>
 
 <script setup lang="ts">
 import pkg from "~/../package.json";
 import { useAuthStore } from "~/stores/auth";
+import { useI18n } from "vue-i18n";
+import { useSettingsPopupStore } from "~/stores/settings-popup";
+import { Position, Theme } from "~/models/settings-store";
 
-const sidebar = reactive({
-	active: true,
-	position: "left",
-	changePosition: (value: "left" | "right") => {
-		sidebar.position = value;
-	},
-	refresh: () => {},
-});
+const { t } = useI18n();
 
-const theme = ref(0);
-const themes = [
-	{
-		value: 0,
-		displayName: "Light mode",
-	},
-	{
-		value: 1,
-		displayName: "Dark mode",
-	},
-	{
-		value: 2,
-		displayName: "System",
-	},
-];
-const auth = useAuthStore();
+let store = useSettingsPopupStore();
 
-const logout = auth.logout;
+store.init();
+
+
+
+const themes = Object.keys(Theme)
+	.filter((v) => isNaN(Number(v)))
+	.map((x) => ({
+		name: x,
+		value: Theme[x as keyof typeof Theme],
+	}));
+
+const logout = useAuthStore().logout;
 </script>
 
 <style lang="scss" scoped>
@@ -250,8 +234,7 @@ div.position {
 		margin: 0.5rem 0 0 0;
 	}
 
-	.left,
-	.right {
+	.position {
 		height: 4rem;
 		background: #f8f8fc;
 		position: relative;
@@ -275,7 +258,7 @@ div.position {
 		}
 	}
 
-	.right::after {
+	.position.top-right::after {
 		transform: rotateZ(45deg);
 		top: -1rem;
 	}

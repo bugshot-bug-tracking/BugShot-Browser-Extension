@@ -239,5 +239,17 @@
 	"bug_list": "Bug List",
 	"admin": "Admin",
 	"current_project": "Current project",
-	"members_updated": "Members updated!"
+	"members_updated": "Members updated!",
+	"on": "On",
+	"off": "Off",
+	"sidebar": "Sidebar",
+	"sidebar_position": "Sidebar position",
+	"bottom_right_corner": "Bottom right corner",
+	"top_right_corner": "Top right corner",
+	"theme": "Theme | Themes",
+	"please_choose": "Please choose",
+	"refresh_sidebar": "Refresh sidebar",
+	"bugshot_extension": "BugShot WebExtension",
+	"companies_on_link": "Companies on this link",
+	"auto": "Auto"
 }

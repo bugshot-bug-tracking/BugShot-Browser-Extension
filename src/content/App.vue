@@ -1,48 +1,62 @@
 <template>
-	<div flex flex-row-reverse v-if="done">
-		<Sidebar
-			:id="store.getCompany.id"
-			@openBugList="buglist.open"
-			@close="buglist.close"
-			@add="add.start"
-			v-show="!addMode"
+	<article :class="`poss-${position}`">
+		<div flex flex-row-reverse v-if="done && settings.sidebar">
+			<Sidebar
+				:id="store.getCompany.id"
+				@openBugList="buglist.open"
+				@close="buglist.close"
+				@add="add.start"
+				v-show="!addMode"
+			/>
+
+			<BugList
+				v-if="buglist.show && !addMode"
+				@close="buglist.close"
+				@openInfo="bugInfo.open"
+			/>
+
+			<BugTab
+				v-if="bugInfo.show && !addMode"
+				:id="bugInfo.id"
+				@close="bugInfo.close"
+			/>
+
+			<AddBug :show="add.formTab" @close="add.cancel" />
+		</div>
+
+		<Overlay
+			v-if="add.overlay && settings.sidebar"
+			@done="add.stage2"
+			@close="add.cancel"
 		/>
-
-		<BugList
-			v-if="buglist.show && !addMode"
-			@close="buglist.close"
-			@openInfo="bugInfo.open"
-		/>
-
-		<BugTab
-			v-if="bugInfo.show && !addMode"
-			:id="bugInfo.id"
-			@close="bugInfo.close"
-		/>
-
-		<AddBug :show="add.formTab" @close="add.cancel" />
-	</div>
-
-	<Overlay v-if="add.overlay" @done="add.stage2" @close="add.cancel" />
+	</article>
 </template>
 
 <script setup lang="ts">
 import { useAuthStore } from "~/stores/auth";
 import { useMainStore } from "~/stores/main";
 import { useReportStore } from "~/stores/report";
+import { useI18nStore } from "~/stores/i18n";
+import { useSettingsStore } from "~/stores/settings";
+
+useI18nStore().init();
 
 const store = useMainStore();
+const settings = useSettingsStore();
 
 //WIP use for loading animation; now used for proper component init
 const done = ref(false);
 
 onMounted(async () => {
 	await useAuthStore().init();
+	settings.init();
 
 	await store.init(new URL(window.location.href).origin);
 
 	done.value = true;
 });
+
+const position = computed(() => settings.getPosition);
 
 const buglist = reactive({
 	show: false,
@@ -51,6 +65,8 @@ const buglist = reactive({
 	},
 	close: () => {
 		buglist.show = false;
+		bugInfo.close();
+		add.cancel();
 	},
 });
 
@@ -101,8 +117,23 @@ const add = reactive({
 @import "~/styles/Style.scss";
 
 :host {
-	position: relative;
 	font-size: 16px;
 	color: #1a2040;
+	width: fit-content;
+	height: fit-content;
+	overflow: hidden;
+	background-color: transparent;
+}
+
+article {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	z-index: 2047483647;
+
+	&.poss-2 {
+		top: 0;
+		bottom: unset;
+	}
 }
 </style>

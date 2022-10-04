@@ -1,3 +1,4 @@
+import axios from "axios";
 import { defineStore } from "pinia";
 
 import { useI18n } from "vue-i18n";
@@ -8,15 +9,19 @@ export const useI18nStore = defineStore("i18n", {
 		supportedLocales: useI18n().availableLocales,
 		auto_locale: "en",
 		globalI18n: useI18n(),
+
+		script: false, // indicator that the store is run under a content-script
 	}),
 
 	actions: {
-		init() {
-			let localStorageLocale = localStorage.getItem("locale");
+		init(script: boolean = false) {
+			this.script = script;
+
+			let localStorageLocale = localStorage.getItem("bugshot-locale");
 
 			if (!localStorageLocale) {
 				localStorageLocale = "auto";
-				localStorage.setItem("locale", "auto");
+				localStorage.setItem("bugshot-locale", "auto");
 			}
 
 			this.setLocale(localStorageLocale);
@@ -28,7 +33,7 @@ export const useI18nStore = defineStore("i18n", {
 			if (payload.toLowerCase() === "auto") {
 				let autoLoc = this.determineLocale();
 				if (autoLoc) {
-					localStorage.setItem("auto_locale", autoLoc);
+					localStorage.setItem("bugshot-auto_locale", autoLoc);
 
 					this.auto_locale = autoLoc;
 				}
@@ -37,12 +42,15 @@ export const useI18nStore = defineStore("i18n", {
 				locale = autoLoc || import.meta.env.VITE_I18N_LOCALE || "en";
 			}
 
-			document.querySelector("html")?.setAttribute("lang", locale);
+			if (!this.script)
+				document.querySelector("html")?.setAttribute("lang", locale);
+
 			this.globalI18n.locale = locale;
 
 			this.locale = payload;
 
-			localStorage.setItem("locale", payload);
+			localStorage.setItem("bugshot-locale", payload);
+			axios.defaults.headers.common["locale"] = locale;
 		},
 
 		determineLocale() {
