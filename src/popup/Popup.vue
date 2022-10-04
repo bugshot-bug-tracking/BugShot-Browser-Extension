@@ -43,7 +43,7 @@ html input {
 
 body {
 	margin: 0;
-	min-width: 20rem;
+	min-width: 22rem;
 	min-height: 30rem;
 	background-color: #f8f8fc;
 	padding: 1rem;

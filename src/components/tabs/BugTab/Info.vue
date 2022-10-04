@@ -633,6 +633,7 @@ textarea {
 	padding: 0.5rem;
 	background: white;
 	resize: vertical;
+	color: #1a2040;
 
 	&:focus,
 	&:focus-visible,

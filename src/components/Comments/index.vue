@@ -68,7 +68,7 @@
 				class="bs-btn green"
 				:class="{ disabled: messageLength > 250 }"
 				@click="postComment"
-				self-end
+				style="align-self: end"
 			>
 				{{ t("add.comment") }}
 			</div>
