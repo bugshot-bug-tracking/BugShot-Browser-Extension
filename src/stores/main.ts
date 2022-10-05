@@ -9,6 +9,9 @@ import { useAuthStore } from "./auth";
 import { User } from "~/models/User";
 import { BugUserRole } from "~/models/BugUserRole";
 
+import { onMessage } from "webext-bridge";
+import { useStorage } from "@vueuse/core";
+
 export const useMainStore = defineStore("main", {
 	state: () => ({
 		company: {} as Company,
@@ -19,6 +22,8 @@ export const useMainStore = defineStore("main", {
 		statuses: [] as Status[],
 
 		bug: {} as Bug,
+
+		prefProjectId: useStorage("bugshot-pref-proj", ""),
 	}),
 
 	actions: {
@@ -68,11 +73,37 @@ export const useMainStore = defineStore("main", {
 			this.setProject();
 		},
 
-		async setProject() {
-			this.project = this.projects[0];
+		setProject() {
+			// if there is a preffered project use that otherwise use the first available
+			if (!this.prefProjectId || this.prefProjectId === "")
+				this.prefProjectId = this.projects[0].id;
+
+			// find the project in the list of projects
+			let project = this.projects.find(
+				(x) => x.id === this.prefProjectId
+			);
+
+			// if the project was not found fall back to the first available
+			if (project === undefined) {
+				this.project = this.projects[0];
+				// register the choice (treats the case where a preference is set and the project is not in the list)
+				this.prefProjectId = this.project.id;
+			} else this.project = project;
+
+			// set the company based on the project
 			this.company = this.project.attributes.company;
+
 			this.fetchStatuses();
 			this.fetchProjectUsers();
+		},
+
+		changePreference(project_id: string) {
+			if (!project_id || project_id == "") return "";
+
+			this.prefProjectId = project_id;
+			this.setProject();
+
+			return this.prefProjectId;
 		},
 
 		async fetchProjectUsers() {
@@ -326,5 +357,15 @@ export const useMainStore = defineStore("main", {
 		},
 
 		getActiveBug: (state) => state.bug,
+		getProjectPreference: (state) => state.prefProjectId,
 	},
+});
+
+onMessage("content-get-project-preference", () => {
+	return useMainStore().getProjectPreference;
+});
+onMessage("content-set-project-preference", ({ data }) => {
+	let { project_id } = data;
+
+	return useMainStore().changePreference(project_id);
 });

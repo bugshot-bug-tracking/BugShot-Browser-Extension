@@ -39,5 +39,10 @@ declare module "webext-bridge" {
 		>;
 
 		"content-status": ProtocolWithReturn<{}, string>;
+		"content-get-project-preference": ProtocolWithReturn<{}, string>;
+		"content-set-project-preference": ProtocolWithReturn<
+			{ project_id: string },
+			string
+		>;
 	}
 }

@@ -3,14 +3,17 @@
 		<div class="bs-container">
 			<h5>{{ t("company", 2) }}</h5>
 
-			<div class="selector">
+			<div class="selector" v-if="companies.length > 0">
 				<v-select
-					:options="themes"
-					:placeholder="'Please choose....'"
-					:get-option-label="(option) => option.displayName"
-					:reduce="(option) => option.value"
-					v-model="theme"
+					:options="companies"
+					:placeholder="t('please_choose') + '....'"
+					:get-option-label="
+						(option) => option.attributes.designation
+					"
+					:reduce="(option) => option.id"
+					v-model="main.company"
 					:clearable="false"
+					@option:selected="main.changeCompany"
 				>
 					<template #open-indicator="{ attributes }">
 						<img
@@ -22,11 +25,11 @@
 					</template>
 
 					<template v-slot:option="option">
-						{{ option.displayName }}
+						{{ option.attributes.designation }}
 					</template>
 
 					<template v-slot:selected-option="option">
-						{{ option.displayName }}
+						{{ option.attributes.designation }}
 					</template>
 				</v-select>
 			</div>
@@ -35,12 +38,15 @@
 
 			<div class="selector">
 				<v-select
-					:options="themes"
-					:placeholder="'Please choose....'"
-					:get-option-label="(option) => option.displayName"
-					:reduce="(option) => option.value"
-					v-model="theme"
+					:options="main.getCompanyProjects(main.company)"
+					:placeholder="t('please_choose') + '....'"
+					:get-option-label="
+						(option) => option.attributes.designation
+					"
+					:reduce="(option) => option.id"
+					v-model="main.project"
 					:clearable="false"
+					@option:selected="main.changeProject"
 				>
 					<template #open-indicator="{ attributes }">
 						<img
@@ -52,11 +58,11 @@
 					</template>
 
 					<template v-slot:option="option">
-						{{ option.displayName }}
+						{{ option.attributes.designation }}
 					</template>
 
 					<template v-slot:selected-option="option">
-						{{ option.displayName }}
+						{{ option.attributes.designation }}
 					</template>
 				</v-select>
 			</div>
@@ -149,7 +155,7 @@
 			<hr />
 
 			<div class="lang">
-				<LanguageSwitch @change="store.setlocale" />
+				<LanguageSwitch @change="store.setLocale" />
 			</div>
 		</div>
 
@@ -170,14 +176,18 @@ import { useAuthStore } from "~/stores/auth";
 import { useI18n } from "vue-i18n";
 import { useSettingsPopupStore } from "~/stores/settings-popup";
 import { Position, Theme } from "~/models/settings-store";
+import { useMainPopupStore } from "~/stores/mainPopup";
 
 const { t } = useI18n();
 
 let store = useSettingsPopupStore();
+let main = useMainPopupStore();
 
 store.init();
 
-
+const companies = computed(() => {
+	return Array.from(main.getCompanies.values());
+});
 
 const themes = Object.keys(Theme)
 	.filter((v) => isNaN(Number(v)))

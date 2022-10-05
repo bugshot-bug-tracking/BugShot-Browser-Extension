@@ -250,5 +250,7 @@
 	"please_choose": "Please choose",
 	"refresh_sidebar": "Refresh sidebar",
 	"bugshot_extension": "BugShot WebExtension",
-	"auto": "Auto"
+	"auto": "Auto",
+	"no_project_on_page": "No project on this page",
+	"refresh_the_page": "Please refresh the page"
 }
