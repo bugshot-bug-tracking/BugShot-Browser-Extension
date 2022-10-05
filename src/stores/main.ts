@@ -83,6 +83,9 @@ export const useMainStore = defineStore("main", {
 				(x) => x.id === this.prefProjectId
 			);
 
+			// used for preventing errors when a bug info tab is open and the project changed
+			this.bug = {} as Bug;
+
 			// if the project was not found fall back to the first available
 			if (project === undefined) {
 				this.project = this.projects[0];
