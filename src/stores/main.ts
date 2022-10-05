@@ -120,8 +120,6 @@ export const useMainStore = defineStore("main", {
 
 				this.project.attributes.users = (project.data.data as Project)
 					.attributes.users as User[];
-
-				console.log("proj: ", this.project);
 			} catch (error) {
 				console.log(error);
 				throw error;

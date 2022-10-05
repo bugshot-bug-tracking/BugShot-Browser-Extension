@@ -250,5 +250,7 @@
 	"please_choose": "Bitte wählen",
 	"refresh_sidebar": "Seitenleiste aktualisieren",
 	"bugshot_extension": "BugShot Browser Erweiterung",
-	"auto": "Auto"
+	"auto": "Auto",
+	"no_project_on_page": "Dies Seite enthält kein Projekt",
+	"refresh_the_page": "Bitte die Seite neu laden"
 }

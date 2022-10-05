@@ -56,7 +56,7 @@ import App from "./App.vue";
 	// check to see if the page contains an instance of bugshot
 	let domBugshot = document.getElementsByTagName("bugshot-sidebar");
 
-	// if no instance found define add one otherwise get refference to the one present
+	// if no instance found define add one otherwise get reference to the one present
 	if (domBugshot.length === 0) {
 		// create a containing element to host the custom element
 		bugshot = document.createElement("div");
@@ -67,11 +67,11 @@ import App from "./App.vue";
 	} else {
 		bugshot = domBugshot[0];
 	}
+
+	// used to check if the content-script is present (used by popup and background)
+	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+		if (sender.id !== chrome.runtime.id) console.error(sender);
+
+		if (message === "content-status") sendResponse("ok");
+	});
 })();
-
-// used to check if the content-script is present (used by popup and background)
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-	if (sender.id !== chrome.runtime.id) console.error(sender);
-
-	if (message === "content-status") sendResponse("ok");
-});
