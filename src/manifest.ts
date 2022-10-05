@@ -33,12 +33,12 @@ export function getManifest(): Manifest.WebExtensionManifest {
 			service_worker: "background.js",
 			type: "module",
 		},
-		content_scripts: [
-			{
-				matches: ["http://*/*", "https://*/*"],
-				js: ["./content/index.js"],
-			},
-		],
+		// content_scripts: [
+		// 	{
+		// 		matches: ["http://*/*", "https://*/*"],
+		// 		js: ["./content/index.js"],
+		// 	},
+		// ],
 		web_accessible_resources: [
 			{
 				resources: ["assets/*", "content/*"],

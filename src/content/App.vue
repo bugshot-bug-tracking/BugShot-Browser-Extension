@@ -49,9 +49,10 @@ const done = ref(false);
 
 onMounted(async () => {
 	await useAuthStore().init();
+
 	settings.init();
 
-	await store.init(new URL(window.location.href).origin);
+	await store.init();
 
 	done.value = true;
 });

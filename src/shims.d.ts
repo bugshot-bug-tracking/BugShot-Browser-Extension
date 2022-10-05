@@ -37,5 +37,7 @@ declare module "webext-bridge" {
 			{ theme: Theme; tab_id: number },
 			Theme
 		>;
+
+		"content-status": ProtocolWithReturn<{}, string>;
 	}
 }

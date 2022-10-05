@@ -31,7 +31,7 @@ import App from "./App.vue";
 
 			let modalsNode = document.createElement("div");
 			modalsNode.setAttribute("id", "modals");
-			this.shadowRoot?.append(modalsNode);
+			this.shadowRoot?.firstChild?.appendChild(modalsNode);
 			app.use(VueUniversalModal, {
 				teleportTarget: modalsNode,
 				modalComponent: "MyModal",
@@ -68,3 +68,10 @@ import App from "./App.vue";
 		bugshot = domBugshot[0];
 	}
 })();
+
+// used to check if the content-script is present (used by popup and background)
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+	if (sender.id !== chrome.runtime.id) console.error(sender);
+
+	if (message === "content-status") sendResponse("ok");
+});

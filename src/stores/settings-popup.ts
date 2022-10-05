@@ -32,10 +32,10 @@ export const useSettingsPopupStore = defineStore("settings-popup", {
 					"content-script@" + this.tab?.id
 				);
 
-				this.$state.position = state.position;
-				this.$state.sidebar = state.sidebar;
-				this.$state.theme = state.theme;
-				this.$state.locale = state.locale;
+				this.position = state.position;
+				this.sidebar = state.sidebar;
+				this.theme = state.theme;
+				this.locale = state.locale;
 			} catch (error: any) {
 				console.log(error);
 			}
@@ -95,7 +95,7 @@ export const useSettingsPopupStore = defineStore("settings-popup", {
 			}
 		},
 
-		async setlocale(value: string) {
+		async setLocale(value: string) {
 			this.locale = value;
 
 			try {

@@ -12,7 +12,7 @@
 		/>
 
 		<ul style="display: none">
-			<div>
+			<div text-center>
 				<li @click="openBugList">
 					<img src="/assets/icons/buglist.svg" alt="bug list" />
 					<p>{{ t("bug_list") }}</p>

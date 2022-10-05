@@ -35,12 +35,13 @@ export const useMainStore = defineStore("main", {
 			return true;
 		},
 
-		async init(url: string) {
+		async init() {
 			/*
 				- fetch all projects on the url
 				- set main project/company
 					* compare or set the pref company on the page local storage (bugshot-pref-proj)
 			*/
+			let url = new URL(window.location.href).origin;
 
 			let user = useAuthStore().getUser;
 
