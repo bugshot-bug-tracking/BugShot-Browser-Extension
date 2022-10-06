@@ -252,5 +252,6 @@
 	"bugshot_extension": "BugShot WebExtension",
 	"auto": "Auto",
 	"no_project_on_page": "No project on this page",
-	"refresh_the_page": "Please refresh the page"
+	"refresh_the_page": "Please refresh the page",
+	"markers": "Markers"
 }

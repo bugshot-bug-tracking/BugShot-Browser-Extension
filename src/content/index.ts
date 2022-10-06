@@ -31,7 +31,7 @@ import App from "./App.vue";
 
 			let modalsNode = document.createElement("div");
 			modalsNode.setAttribute("id", "modals");
-			this.shadowRoot?.firstChild?.appendChild(modalsNode);
+			this.shadowRoot?.firstElementChild?.appendChild(modalsNode);
 			app.use(VueUniversalModal, {
 				teleportTarget: modalsNode,
 				modalComponent: "MyModal",

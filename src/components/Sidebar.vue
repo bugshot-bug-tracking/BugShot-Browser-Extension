@@ -1,13 +1,10 @@
 <template>
-	<div
-		id="sidebar"
-		:class="{ open: open.value, top: settings.position === 2 }"
-	>
+	<div id="sidebar" :class="{ open: open, top: settings.position === 2 }">
 		<img
 			class="logo"
 			src="/assets/icons/bugshot.svg"
 			alt="BugShot logo"
-			@click="open.toggle"
+			@click="sidebar.toggle"
 			cursor-pointer
 		/>
 
@@ -48,6 +45,11 @@ import { useI18n } from "vue-i18n";
 import { useSettingsStore } from "~/stores/settings";
 
 const props = defineProps({
+	open: {
+		required: true,
+		type: Boolean,
+		description: "State of the sidebar",
+	},
 	id: {
 		required: true,
 		type: String,
@@ -59,13 +61,10 @@ const emit = defineEmits(["open", "close", "openBugList", "add"]);
 
 const settings = useSettingsStore();
 
-const open = reactive({
-	value: false,
+const sidebar = reactive({
 	toggle: () => {
-		open.value = !open.value;
-
-		if (open.value) emit("open");
-		else emit("close");
+		if (props.open) emit("close");
+		else emit("open");
 	},
 });
 

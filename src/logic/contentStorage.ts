@@ -12,3 +12,7 @@ export const position = useStorageLocal(
 export const locale = useStorageLocal("bugshot-locale", "auto", {
 	listenToStorageChanges: true,
 });
+
+export const markers = useStorageLocal("bugshot-markers", true, {
+	listenToStorageChanges: true,
+});

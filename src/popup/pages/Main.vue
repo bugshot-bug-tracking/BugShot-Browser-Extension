@@ -88,6 +88,23 @@
 				</label>
 			</div>
 
+			<div class="visible" :class="{ off: !store.markers }" mt-2>
+				<p>
+					{{ t("markers") }}:
+					<span>{{ store.markers ? t("on") : t("off") }}</span>
+				</p>
+
+				<label class="switch">
+					<input
+						type="checkbox"
+						v-model="store.markers"
+						@change="store.setMarkers"
+					/>
+
+					<span class="slider round"></span>
+				</label>
+			</div>
+
 			<h5 v-show="store.sidebar">{{ t("sidebar_position") }}</h5>
 
 			<div class="position" v-show="store.sidebar">

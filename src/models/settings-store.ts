@@ -3,6 +3,7 @@ export interface SettingsState {
 	sidebar: boolean;
 	theme: Theme;
 	locale: string;
+	markers: boolean;
 }
 
 export enum Position {

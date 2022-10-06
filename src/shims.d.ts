@@ -25,6 +25,7 @@ declare module "webext-bridge" {
 		// for changing settings return the setting that is the new state in store
 		"set-position": ProtocolWithReturn<{ position: Position }, Position>;
 		"set-sidebar": ProtocolWithReturn<{ sidebar: boolean }, boolean>;
+		"set-markers": ProtocolWithReturn<{ markers: boolean }, boolean>;
 		"set-theme": ProtocolWithReturn<{ theme: Theme }, Theme>;
 		"set-locale": ProtocolWithReturn<{ locale: string }, string>;
 

@@ -252,5 +252,6 @@
 	"bugshot_extension": "BugShot Browser Erweiterung",
 	"auto": "Auto",
 	"no_project_on_page": "Dies Seite enthält kein Projekt",
-	"refresh_the_page": "Bitte die Seite neu laden"
+	"refresh_the_page": "Bitte die Seite neu laden",
+	"markers": "Markierungen"
 }

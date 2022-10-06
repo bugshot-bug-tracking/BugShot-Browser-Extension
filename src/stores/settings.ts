@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { onMessage, sendMessage } from "webext-bridge";
-import { position, locale } from "~/logic/contentStorage";
+import { position, locale, markers } from "~/logic/contentStorage";
 import { Position, SettingsState, Theme } from "~/models/settings-store";
 import { useI18nStore } from "./i18n";
 
@@ -10,6 +10,7 @@ export const useSettingsStore = defineStore("settings", {
 		position: position, // page local storage
 		locale: locale, // global setting
 		theme: Theme.Light, // global setting
+		markers: markers,
 	}),
 
 	actions: {
@@ -48,6 +49,13 @@ export const useSettingsStore = defineStore("settings", {
 			return this.sidebar;
 		},
 
+		setMarkers(markers: boolean) {
+			this.markers = markers;
+			console.log("Markers changed to: ", markers);
+
+			return this.markers;
+		},
+
 		setTheme(theme: Theme) {
 			this.theme = theme;
 			console.log("Theme changed to: ", theme);
@@ -79,6 +87,10 @@ onMessage("set-position", ({ data }) => {
 onMessage("set-sidebar", ({ data }) => {
 	let { sidebar } = data;
 	return useSettingsStore().setSidebar(sidebar);
+});
+onMessage("set-markers", ({ data }) => {
+	let { markers } = data;
+	return useSettingsStore().setMarkers(markers);
 });
 onMessage("set-theme", ({ data }) => {
 	let { theme } = data;

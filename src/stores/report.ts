@@ -89,6 +89,7 @@ export const useReportStore = defineStore("report", {
 							position_y: this.clientY,
 							web_position_x: this.pageX,
 							web_position_y: this.pageY,
+							markers: this.markers,
 						});
 				})
 			);
@@ -104,6 +105,7 @@ export const useReportStore = defineStore("report", {
 			await this.destroy();
 
 			await useMainStore().fetchStatuses();
+			await useMainStore().fetchMarkers();
 		},
 	},
 

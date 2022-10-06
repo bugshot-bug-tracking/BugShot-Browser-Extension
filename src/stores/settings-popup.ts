@@ -10,6 +10,7 @@ export const useSettingsPopupStore = defineStore("settings-popup", {
 		sidebar: true,
 		theme: Theme.Dark,
 		locale: "en",
+		markers: false,
 
 		tab: undefined as Tabs.Tab | undefined,
 	}),
@@ -36,6 +37,7 @@ export const useSettingsPopupStore = defineStore("settings-popup", {
 				this.sidebar = state.sidebar;
 				this.theme = state.theme;
 				this.locale = state.locale;
+				this.markers = state.markers;
 			} catch (error: any) {
 				console.log(error);
 			}
@@ -77,6 +79,20 @@ export const useSettingsPopupStore = defineStore("settings-popup", {
 				);
 
 				console.log("response set-sidebar: ", response);
+			} catch (error: any) {
+				console.log(error);
+			}
+		},
+
+		async setMarkers() {
+			try {
+				let response = await sendMessage(
+					"set-markers",
+					{ markers: this.markers },
+					"content-script@" + this.tab?.id
+				);
+
+				console.log("response set-markers: ", response);
 			} catch (error: any) {
 				console.log(error);
 			}

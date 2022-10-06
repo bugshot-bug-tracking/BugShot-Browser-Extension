@@ -25,6 +25,8 @@ declare module '@vue/runtime-core' {
     Info: typeof import('./components/tabs/BugTab/Info.vue')['default']
     LanguageSwitch: typeof import('./components/LanguageSwitch.vue')['default']
     LoadingModal2: typeof import('./components/Modals/LoadingModal2.vue')['default']
+    Marker: typeof import('./components/Marker.vue')['default']
+    MarkerList: typeof import('./components/MarkerList.vue')['default']
     Message: typeof import('./components/Comments/Message.vue')['default']
     Modal: typeof import('./components/Modals/Modal.vue')['default']
     ModalTemplate: typeof import('./components/ModalTemplate.vue')['default']

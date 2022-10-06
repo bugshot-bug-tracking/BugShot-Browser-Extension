@@ -3,8 +3,13 @@
 		<div flex flex-row-reverse v-if="done && settings.sidebar">
 			<Sidebar
 				:id="store.getCompany.id"
+				:open="sidebar.state"
 				@openBugList="buglist.open"
-				@close="buglist.close"
+				@open="sidebar.open"
+				@close="
+					sidebar.close();
+					buglist.close();
+				"
 				@add="add.start"
 				v-show="!addMode"
 			/>
@@ -30,6 +35,14 @@
 			@close="add.cancel"
 		/>
 	</article>
+
+	<div class="markers" v-if="markerList.length > 0">
+		<MarkerList
+			:show="settings.markers"
+			:list="markerList"
+			@open="openMarker"
+		/>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -55,6 +68,16 @@ onMounted(async () => {
 	await store.init();
 
 	done.value = true;
+});
+
+const sidebar = reactive({
+	state: false,
+	open: () => {
+		sidebar.state = true;
+	},
+	close: () => {
+		sidebar.state = false;
+	},
 });
 
 const position = computed(() => settings.getPosition);
@@ -112,6 +135,16 @@ const add = reactive({
 		useReportStore().destroy;
 	},
 });
+
+const markerList = computed(() => store.getMarkers);
+
+const openMarker = (bug_id: string) => {
+	store.setActiveBug(bug_id);
+
+	sidebar.open();
+
+	bugInfo.open(bug_id);
+};
 </script>
 
 <style lang="scss">

@@ -24,6 +24,8 @@ export const useMainStore = defineStore("main", {
 		bug: {} as Bug,
 
 		prefProjectId: useStorage("bugshot-pref-proj", ""),
+
+		markers: [],
 	}),
 
 	actions: {
@@ -98,6 +100,23 @@ export const useMainStore = defineStore("main", {
 
 			this.fetchStatuses();
 			this.fetchProjectUsers();
+			this.fetchMarkers();
+		},
+
+		async fetchMarkers() {
+			let params = new URLSearchParams();
+			params.set("url", window.location.href);
+
+			try {
+				let markers = await axios.get(
+					`projects/${this.project.id}/markers?${params.toString()}`
+				);
+
+				this.markers = markers.data.data;
+			} catch (error) {
+				console.log(error);
+				throw error;
+			}
 		},
 
 		changePreference(project_id: string) {
@@ -359,6 +378,8 @@ export const useMainStore = defineStore("main", {
 
 		getActiveBug: (state) => state.bug,
 		getProjectPreference: (state) => state.prefProjectId,
+
+		getMarkers: (state) => state.markers,
 	},
 });
 
