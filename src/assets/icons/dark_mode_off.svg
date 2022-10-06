@@ -1,0 +1,16 @@
+<svg id="dark_mode_off" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Layer_3" data-name="Layer 3">
+    <rect id="Rectangle_2858" data-name="Rectangle 2858" width="24" height="24" fill="none"/>
+  </g>
+  <g id="Layer_2" data-name="Layer 2">
+    <rect id="Rectangle_2859" data-name="Rectangle 2859" width="2" height="5" transform="translate(11 2)" fill="#1a2040"/>
+    <rect id="Rectangle_2860" data-name="Rectangle 2860" width="2" height="5" transform="translate(11 17)" fill="#1a2040"/>
+    <rect id="Rectangle_2861" data-name="Rectangle 2861" width="5" height="2" transform="translate(17 11)" fill="#1a2040"/>
+    <rect id="Rectangle_2862" data-name="Rectangle 2862" width="5" height="2" transform="translate(2 11)" fill="#1a2040"/>
+    <rect id="Rectangle_2863" data-name="Rectangle 2863" width="2" height="4.99" transform="translate(4.223 5.646) rotate(-45)" fill="#1a2040"/>
+    <rect id="Rectangle_2864" data-name="Rectangle 2864" width="2" height="4.99" transform="translate(14.835 16.249) rotate(-45)" fill="#1a2040"/>
+    <path id="Path_891" data-name="Path 891" d="M12,18a6,6,0,1,1,4.25-1.76A6,6,0,0,1,12,18ZM12,8a4,4,0,1,0,2.83,1.16A4,4,0,0,0,12,8Z" fill="#1a2040"/>
+    <rect id="Rectangle_2865" data-name="Rectangle 2865" width="4.99" height="2" transform="translate(14.833 7.758) rotate(-45)" fill="#1a2040"/>
+    <rect id="Rectangle_2866" data-name="Rectangle 2866" width="4.99" height="2" transform="translate(4.223 18.363) rotate(-45)" fill="#1a2040"/>
+  </g>
+</svg>

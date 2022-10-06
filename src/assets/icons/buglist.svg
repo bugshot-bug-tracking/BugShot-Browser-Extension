@@ -1,0 +1,11 @@
+<svg id="buglist" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Layer_3" data-name="Layer 3">
+    <rect id="Rectangle_2919" data-name="Rectangle 2919" width="24" height="24" fill="none"/>
+  </g>
+  <g id="Layer_2" data-name="Layer 2">
+    <rect id="Rectangle_2920" data-name="Rectangle 2920" width="10" height="2" transform="translate(7 11)" fill="#1a2040"/>
+    <rect id="Rectangle_2921" data-name="Rectangle 2921" width="10" height="2" transform="translate(7 16)" fill="#1a2040"/>
+    <path id="Path_956" data-name="Path 956" d="M17.52,22.05H6.58L4,19.47V5.53L5.59,3.95H9v2H6.41L6,6.36V18.64l1.41,1.41h9.28L18,18.74V6.36l-.41-.41H15v-2h3.41L20,5.53V19.57Z" fill="#1a2040"/>
+    <path id="Path_957" data-name="Path 957" d="M17,9H7V4.42L9.42,2h5L17,4.6ZM9,7h6V5.43L13.57,4H10.25L9,5.25Z" fill="#1a2040"/>
+  </g>
+</svg>

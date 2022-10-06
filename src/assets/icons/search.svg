@@ -1,0 +1,9 @@
+<svg id="search" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Layer_3" data-name="Layer 3">
+    <rect id="Rectangle_2906" data-name="Rectangle 2906" width="24" height="24" fill="none"/>
+  </g>
+  <g id="Layer_2" data-name="Layer 2">
+    <path id="Path_923" data-name="Path 923" d="M10.5,18A7.5,7.5,0,1,1,18,10.5,7.5,7.5,0,0,1,10.5,18Zm0-13A5.5,5.5,0,1,0,16,10.5,5.5,5.5,0,0,0,10.5,5Z" fill="#1a2040"/>
+    <rect id="Rectangle_2907" data-name="Rectangle 2907" width="2" height="7.07" transform="translate(14.289 15.704) rotate(-45)" fill="#1a2040"/>
+  </g>
+</svg>

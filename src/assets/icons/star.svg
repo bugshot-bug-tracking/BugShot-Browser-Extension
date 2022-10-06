@@ -1,0 +1,10 @@
+<svg id="star" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Layer_3" data-name="Layer 3">
+    <rect id="Rectangle_2908" data-name="Rectangle 2908" width="24" height="24" fill="none"/>
+  </g>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Icon_awesome-star" data-name="Icon awesome-star">
+      <path id="Path_924" data-name="Path 924" d="M11,3.87,8.79,8.38l-5,.73a1.1,1.1,0,0,0-.93,1.24,1.16,1.16,0,0,0,.32.63L6.8,14.49l-.86,5a1.09,1.09,0,0,0,.9,1.26,1,1,0,0,0,.69-.11L12,18.27l4.47,2.34a1.09,1.09,0,0,0,1.58-1.15l-.85-5L20.81,11a1.1,1.1,0,0,0-.61-1.87l-5-.73L13,3.87a1.09,1.09,0,0,0-1.46-.49,1,1,0,0,0-.54.49Z" fill="#1a2040"/>
+    </g>
+  </g>
+</svg>
