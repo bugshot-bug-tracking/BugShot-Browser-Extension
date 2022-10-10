@@ -36,6 +36,9 @@ export const useAuthStore = defineStore("auth", {
 				await sendMessage("setToken", {
 					token: response.data.data.token,
 				});
+				await sendMessage("setUser", {
+					user: response.data.data.user.id,
+				});
 
 				return await this.attempt(response.data.data.token);
 			} catch (error) {

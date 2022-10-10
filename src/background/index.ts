@@ -117,6 +117,25 @@ onMessage("setToken", ({ data }) => {
 	}
 });
 
+onMessage("getUser", () => {
+	try {
+		return storage.user.value;
+	} catch (error) {
+		console.log(error);
+		return "";
+	}
+});
+
+onMessage("setUser", ({ data }) => {
+	try {
+		storage.user.value = data.user;
+		return true;
+	} catch (error) {
+		console.log(error);
+		return false;
+	}
+});
+
 onMessage("invalidate", () => {
 	try {
 		storage.token.value = "";
