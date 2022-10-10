@@ -1,10 +1,14 @@
 <template>
 	<Spinner v-if="loading" style="height: 30rem" />
 
-	<component
-		v-else
-		:is="auth ? (!errorPage ? (noProject ? Empty : Main) : Error) : Login"
-	/>
+	<div v-else>
+		<Login v-if="!auth" @onSuccess="init" />
+
+		<component
+			v-if="auth && initDone"
+			:is="!errorPage ? (noProject ? Empty : Main) : Error"
+		/>
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -29,7 +33,12 @@ let main = useMainPopupStore();
 const noProject = ref(false);
 const errorPage = ref(false);
 
-onMounted(async () => {
+// used as a way to wait until init is done so that Main doesn't throw errors
+const initDone = ref(false);
+
+const init = async () => {
+	initDone.value = false;
+
 	try {
 		let result = await store.init();
 
@@ -47,8 +56,12 @@ onMounted(async () => {
 		errorPage.value = true;
 	} finally {
 		loading.value = false;
+
+		initDone.value = true;
 	}
-});
+};
+
+onMounted(init);
 </script>
 
 <style lang="scss">
