@@ -1,0 +1,9 @@
+<svg id="refresh" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Layer_3" data-name="Layer 3">
+    <rect id="Rectangle_2903" data-name="Rectangle 2903" width="24" height="24" fill="none"/>
+  </g>
+  <g id="Layer_2" data-name="Layer 2">
+    <path id="Path_920" data-name="Path 920" d="M15.68,12.86H13.42v-2h1.29l2.75-3.48L14.71,3.91H13.42v-2h2.26l4.33,5.47Z" fill="#1a2040"/>
+    <path id="Path_921" data-name="Path 921" d="M12.11,22.09h-.33a7.86,7.86,0,0,1,0-15.71h7.11v2H11.78a5.86,5.86,0,0,0,0,11.71h.33a5.82,5.82,0,0,0,5.78-5.85v-.56h2v.56A7.82,7.82,0,0,1,12.11,22.09Z" fill="#1a2040"/>
+  </g>
+</svg>
