@@ -1,5 +1,5 @@
 <template>
-	<main>
+	<main v-if="loaded">
 		<div class="bs-container">
 			<h5>{{ t("company", 2) }}</h5>
 
@@ -195,12 +195,28 @@ import { useSettingsPopupStore } from "~/stores/settings-popup";
 import { Position, Theme } from "~/models/settings-store";
 import { useMainPopupStore } from "~/stores/mainPopup";
 
+const emit = defineEmits(["noProjects", "error"]);
+
 const { t } = useI18n();
 
 let store = useSettingsPopupStore();
 let main = useMainPopupStore();
 
-store.init();
+const loaded = ref(false);
+
+onMounted(async () => {
+	loaded.value = false;
+	try {
+		await main.init();
+		if (main.projects.length < 1) emit("noProjects");
+
+		await store.init();
+	} catch (error) {
+		emit("error", error);
+	} finally {
+		loaded.value = true;
+	}
+});
 
 const companies = computed(() => {
 	return Array.from(main.getCompanies.values());

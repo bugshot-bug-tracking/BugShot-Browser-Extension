@@ -139,12 +139,11 @@ const password = reactive({
 const submit = async () => {
 	try {
 		loading.value = true;
-		let response = await store.login({
+
+		await store.login({
 			email: email.value,
 			password: password.value,
 		});
-
-		console.log(response);
 	} catch (error: Error) {
 		console.log(error);
 		password.error = true;

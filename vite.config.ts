@@ -1,22 +1,22 @@
-import { resolve } from "path";
-import type { UserConfig } from "vite";
-import { defineConfig } from "vite";
+import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
 import Vue from "@vitejs/plugin-vue";
+import { resolve } from "path";
+import Unocss from "unocss/vite";
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
-import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
-import Unocss from "unocss/vite";
+import type { UserConfig } from "vite";
+import { defineConfig } from "vite";
+import { isDev, r, target } from "./scripts/utils";
 
-const r = (...args: string[]) => resolve(__dirname, ...args);
-
-export default defineConfig(() => {
+export default defineConfig(({ mode }) => {
 	return {
 		...sharedConfig,
 
 		build: {
-			outDir: r("extension/dev"),
+			watch: isDev ? {} : undefined,
+			outDir: r(`dist/${mode}/${target}`),
 			emptyOutDir: false,
-			sourcemap: true,
+			sourcemap: isDev,
 			rollupOptions: {
 				input: {
 					background: r("src/background"),
@@ -27,11 +27,8 @@ export default defineConfig(() => {
 					entryFileNames: "[name].js",
 				},
 			},
-			minify: false,
 			// https://developer.chrome.com/docs/webstore/program_policies/#:~:text=Code%20Readability%20Requirements
-			// terserOptions: {
-			// 	mangle: false,
-			// },
+			minify: !isDev,
 		},
 
 		plugins: [...sharedConfig.plugins!],

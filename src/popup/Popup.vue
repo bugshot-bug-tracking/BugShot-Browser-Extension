@@ -1,10 +1,19 @@
 <template>
 	<Spinner v-if="loading" style="height: 30rem" />
 
-	<component
-		v-else
-		:is="auth ? (!errorPage ? (noProject ? Empty : Main) : Error) : Login"
-	/>
+	<div v-else>
+		<Login v-if="!auth" />
+
+		<Main
+			v-if="auth && !noProject && !errorPage"
+			@noProjects="noProject = true"
+			@error="errorPage = true"
+		/>
+
+		<Empty v-if="auth && noProject && !errorPage" />
+
+		<Error v-if="auth && errorPage" />
+	</div>
 </template>
 
 <script setup lang="ts">
@@ -15,7 +24,6 @@ import Error from "./pages/Error.vue";
 
 import { useI18nStore } from "~/stores/i18n";
 import { useAuthStore } from "~/stores/auth";
-import { useMainPopupStore } from "~/stores/mainPopup";
 
 useI18nStore().init();
 
@@ -24,12 +32,10 @@ const loading = ref(true);
 const store = useAuthStore();
 const auth = computed(() => store.isAuthenticated);
 
-let main = useMainPopupStore();
-
 const noProject = ref(false);
 const errorPage = ref(false);
 
-onMounted(async () => {
+const init = async () => {
 	try {
 		let result = await store.init();
 
@@ -38,17 +44,15 @@ onMounted(async () => {
 			console.log("An error occured!", result);
 			return;
 		}
-
-		await main.init();
-
-		if (main.projects.length < 1) noProject.value = true;
 	} catch (error) {
 		console.log(error);
 		errorPage.value = true;
 	} finally {
 		loading.value = false;
 	}
-});
+};
+
+onMounted(init);
 </script>
 
 <style lang="scss">

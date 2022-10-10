@@ -1,13 +1,20 @@
 {
 	"name": "bug-shot-extension",
 	"version": "1.1.0",
-	"description": "Bugshot version 1.1",
-	"displayName": "BugShot v1.1",
+	"description": "BugShot is an easy-to-use tool to track the bugs on your projects.",
+	"displayName": "BugShot",
 	"scripts": {
-		"dev": "rimraf extension/dev && run-p dev:*",
-		"dev:prepare": "esno scripts/prepare-dev.ts",
-		"dev:build": "vite build --watch",
-		"dev:content": "vite build --config vite.config.content.ts "
+		"dev": "clear; rimraf dist/development && cross-env NODE_ENV=development run-p dev:*",
+		"dev:chrome": "cross-env NODE_TARGET=chrome esno scripts/build.ts",
+		"dev:firefox": "cross-env NODE_TARGET=firefox esno scripts/build.ts",
+		"dev:edge": "cross-env NODE_TARGET=edge esno scripts/build.ts",
+		"dev:opera": "cross-env NODE_TARGET=opera esno scripts/build.ts",
+		"empty": "",
+		"build": "clear; rimraf dist/production && cross-env NODE_ENV=production run-p build:*",
+		"build:chrome": "cross-env NODE_TARGET=chrome esno scripts/build.ts",
+		"build:firefox": "cross-env NODE_TARGET=firefox esno scripts/build.ts",
+		"build:edge": "cross-env NODE_TARGET=edge esno scripts/build.ts",
+		"build:opera": "cross-env NODE_TARGET=opera esno scripts/build.ts"
 	},
 	"devDependencies": {
 		"@intlify/unplugin-vue-i18n": "^0.7.0",
@@ -22,6 +29,7 @@
 		"@webcomponents/webcomponentsjs": "^2.6.0",
 		"axios": "^0.27.2",
 		"chokidar": "^3.5.3",
+		"cross-env": "^7.0.3",
 		"esno": "^0.16.3",
 		"fs-extra": "^10.1.0",
 		"kolorist": "^1.6.0",

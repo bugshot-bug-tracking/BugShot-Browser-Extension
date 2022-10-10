@@ -13,6 +13,7 @@ specifiers:
   '@webcomponents/webcomponentsjs': ^2.6.0
   axios: ^0.27.2
   chokidar: ^3.5.3
+  cross-env: ^7.0.3
   esno: ^0.16.3
   fs-extra: ^10.1.0
   kolorist: ^1.6.0
@@ -48,6 +49,7 @@ devDependencies:
   '@webcomponents/webcomponentsjs': 2.6.0
   axios: 0.27.2
   chokidar: 3.5.3
+  cross-env: 7.0.3
   esno: 0.16.3
   fs-extra: 10.1.0
   kolorist: 1.6.0
@@ -846,6 +848,14 @@ packages:
 
   /consola/2.15.3:
     resolution: {integrity: sha512-9vAdYbHj6x2fLKC4+oPH0kFzY/orMZyG2Aj+kNylHxKGJ/Ed4dpNyAQYwJOdqO4zdM7XpVHmyejQDcQHrnuXbw==}
+    dev: true
+
+  /cross-env/7.0.3:
+    resolution: {integrity: sha512-+/HKd6EgcQCJGh2PSjZuUitQBQynKor4wrFbRg4DtAgS1aWO+gU52xpH7M9ScGgXSYmAVS9bIJ8EzuaGw0oNAw==}
+    engines: {node: '>=10.14', npm: '>=6', yarn: '>=1'}
+    hasBin: true
+    dependencies:
+      cross-spawn: 7.0.3
     dev: true
 
   /cross-spawn/6.0.5:
