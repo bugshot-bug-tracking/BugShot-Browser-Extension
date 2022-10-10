@@ -1,0 +1,10 @@
+<svg id="edit" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Layer_3" data-name="Layer 3">
+    <rect id="Rectangle_2874" data-name="Rectangle 2874" width="24" height="24" fill="none"/>
+  </g>
+  <g id="Layer_2" data-name="Layer 2">
+    <path id="Path_897" data-name="Path 897" d="M3.25,20.76l1.87-7.48L15.39,3H19l2,2V8.61L10.73,18.89ZM6.92,14.3,6,18l3.7-.92L19,7.78v-2L18.19,5h-2Z" fill="#1a2040"/>
+    <rect id="Rectangle_2875" data-name="Rectangle 2875" width="2" height="5.93" transform="matrix(0.707, -0.707, 0.707, 0.707, 13.003, 6.801)" fill="#1a2040"/>
+    <rect id="Rectangle_2876" data-name="Rectangle 2876" width="2" height="5.93" transform="matrix(0.707, -0.707, 0.707, 0.707, 6.009, 13.796)" fill="#1a2040"/>
+  </g>
+</svg>

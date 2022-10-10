@@ -1,0 +1,9 @@
+<svg id="time" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Layer_3" data-name="Layer 3">
+    <rect id="Rectangle_2909" data-name="Rectangle 2909" width="24" height="24" fill="none"/>
+  </g>
+  <g id="Layer_2" data-name="Layer 2">
+    <path id="Path_925" data-name="Path 925" d="M12,22A10,10,0,1,1,22,12,10,10,0,0,1,12,22ZM12,4a8,8,0,1,0,8,8A8,8,0,0,0,12,4Z" fill="#1a2040"/>
+    <path id="Path_926" data-name="Path 926" d="M14.98,16.4,11,12.41V6h2v5.59l3.4,3.39Z" fill="#1a2040"/>
+  </g>
+</svg>
