@@ -1,0 +1,42 @@
+$gray-blue: hsl(230, 45%, 75%);
+
+.project-grid-container {
+	display: grid;
+	grid-template-columns: 0.5fr 1.5fr;
+	grid-template-rows: 1.5fr 0.5fr 0.5fr;
+	gap: 6px 3px;
+	grid-auto-flow: row;
+	grid-template-areas:
+		"top top"
+		"company company-name"
+		"project project-name";
+
+	align-items: center;
+
+	.top {
+		grid-area: top;
+		border-bottom: 2px solid #e6e6ff;
+		font-weight: 500;
+		font-size: 18px;
+	}
+
+	.project {
+		grid-area: project;
+		font-weight: 500;
+	}
+
+	.project-name {
+		grid-area: project-name;
+		color: $gray-blue;
+	}
+
+	.company {
+		grid-area: company;
+		font-weight: 500;
+	}
+
+	.company-name {
+		grid-area: company-name;
+		color: $gray-blue;
+	}
+}
