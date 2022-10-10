@@ -1,0 +1,19 @@
+<svg id="calendar" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <g id="Layer_3" data-name="Layer 3">
+    <rect id="Rectangle_2838" data-name="Rectangle 2838" width="24" height="24" fill="none"/>
+  </g>
+  <g id="Layer_2" data-name="Layer 2">
+    <path id="Path_886" data-name="Path 886" d="M19.54,22H4.41L2,19.86V6.14L4.41,4H19.54L22,6.14V19.86ZM5.17,20H18.78L20,19V7L18.78,6H5.17L4,7V19Z" fill="#1a2040"/>
+    <rect id="Rectangle_2839" data-name="Rectangle 2839" width="18.18" height="2" transform="translate(2.91 9)" fill="#1a2040"/>
+    <rect id="Rectangle_2840" data-name="Rectangle 2840" width="2" height="5.45" transform="translate(6 2)" fill="#1a2040"/>
+    <rect id="Rectangle_2841" data-name="Rectangle 2841" width="2" height="5.45" transform="translate(16 2)" fill="#1a2040"/>
+    <rect id="Rectangle_2842" data-name="Rectangle 2842" width="2" height="2" transform="translate(5 13)" fill="#1a2040"/>
+    <rect id="Rectangle_2843" data-name="Rectangle 2843" width="2" height="2" transform="translate(9 13)" fill="#1a2040"/>
+    <rect id="Rectangle_2844" data-name="Rectangle 2844" width="2" height="2" transform="translate(13 13)" fill="#1a2040"/>
+    <rect id="Rectangle_2845" data-name="Rectangle 2845" width="2" height="2" transform="translate(17 13)" fill="#1a2040"/>
+    <rect id="Rectangle_2846" data-name="Rectangle 2846" width="2" height="2" transform="translate(5 17)" fill="#1a2040"/>
+    <rect id="Rectangle_2847" data-name="Rectangle 2847" width="2" height="2" transform="translate(9 17)" fill="#1a2040"/>
+    <rect id="Rectangle_2848" data-name="Rectangle 2848" width="2" height="2" transform="translate(13 17)" fill="#1a2040"/>
+    <rect id="Rectangle_2849" data-name="Rectangle 2849" width="2" height="2" transform="translate(17 17)" fill="#1a2040"/>
+  </g>
+</svg>

@@ -1,0 +1,41 @@
+hr {
+	color: #eee5fc;
+	opacity: 1;
+	margin: 0;
+	background-color: currentColor;
+	border: 0;
+	height: 1px;
+}
+
+a {
+	text-decoration: none;
+	color: #1a2040;
+
+	&:hover {
+		color: #1a2040;
+	}
+}
+
+ul,
+ol {
+	list-style: none;
+	margin: unset;
+	padding: unset;
+}
+
+body {
+	background-color: hsl(240, 40%, 98%);
+	overflow: hidden;
+	margin: unset;
+	color: #1a2040;
+}
+
+*,
+::after,
+::before {
+	box-sizing: border-box;
+}
+
+p {
+	margin: unset;
+}
