@@ -106,10 +106,10 @@ watch(
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 22rem;
-	height: 24rem;
-	padding: 1rem;
-	border-radius: 0.5rem;
+	width: 22em;
+	height: 24em;
+	padding: 1em;
+	border-radius: 0.5em;
 
 	> * {
 		width: 100%;
@@ -122,7 +122,7 @@ watch(
 
 	.success,
 	.error {
-		gap: 1rem;
+		gap: 1em;
 
 		img {
 			height: 50%;
@@ -131,7 +131,7 @@ watch(
 		> div {
 			color: #5916b9;
 			font-weight: bold;
-			font-size: 2rem;
+			font-size: 2em;
 		}
 	}
 
@@ -140,9 +140,9 @@ watch(
 	}
 
 	span {
-		font-size: 1.125rem;
+		font-size: 1.125em;
 		border-top: 1px solid #eee5fc;
-		padding: 1rem;
+		padding: 1em;
 		width: 100%;
 		text-align: center;
 	}

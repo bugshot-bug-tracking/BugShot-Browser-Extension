@@ -71,17 +71,17 @@ const openInfo = (id: string) => {
 
 <style lang="scss" scoped>
 .bs-tab {
-	min-width: 22rem;
+	min-width: 22em;
 }
 
 .statuses {
 	display: flex;
 	flex-direction: column;
-	gap: 1rem;
+	gap: 1em;
 	height: 100%;
 	max-height: 100%;
 	overflow: auto;
-	padding: 0 0.5rem 1rem 0;
-	margin: 1rem 0 0 0;
+	padding: 0 0.5em 1em 0;
+	margin: 1em 0 0 0;
 }
 </style>

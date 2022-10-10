@@ -139,7 +139,7 @@ const priorityIcon = computed(() => {
 		top: -46px;
 		left: 18px;
 		border-radius: 8px;
-		min-height: 2rem;
+		min-height: 2em;
 		padding: 8px;
 		display: flex;
 		align-items: center;

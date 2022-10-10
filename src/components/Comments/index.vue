@@ -55,10 +55,10 @@
 			<div
 				:hidden="messageLength <= 250"
 				style="
-					font-size: 0.875rem;
+					font-size: 0.875em;
 					color: red;
 					align-self: start;
-					margin-top: -0.5rem;
+					margin-top: -0.5em;
 				"
 			>
 				{{ t("limits.characters_exceeded") }}
@@ -259,8 +259,8 @@ section {
 		transition: 0.3s;
 
 		img {
-			width: 2rem;
-			height: 2rem;
+			width: 2em;
+			height: 2em;
 		}
 
 		&:hover {
@@ -282,8 +282,8 @@ section {
 }
 
 img {
-	width: 1.5rem;
-	height: 1.5rem;
+	width: 1.5em;
+	height: 1.5em;
 }
 
 ul {
@@ -304,14 +304,14 @@ ul {
 		justify-content: space-between;
 		align-items: center;
 		width: 100%;
-		margin: 0.5rem 0;
+		margin: 0.5em 0;
 
 		> span {
 			font-weight: 500;
 		}
 
 		> div {
-			font-size: 0.75rem;
+			font-size: 0.75em;
 		}
 
 		.over-limit {
@@ -322,16 +322,16 @@ ul {
 	#comment-input {
 		width: 100%;
 		border: 1px solid hsl(265, 80%, 80%);
-		border-radius: 0.75rem;
-		padding: 0.25rem 0.5rem;
-		font-size: 0.875rem;
+		border-radius: 0.75em;
+		padding: 0.25em 0.5em;
+		font-size: 0.875em;
 		transition: ease-out 0.1s;
 		resize: none;
-		margin-bottom: 0.5rem;
+		margin-bottom: 0.5em;
 		line-height: 1.5;
 		text-align: left;
-		height: 4.5rem;
-		max-height: 4.5rem;
+		height: 4.5em;
+		max-height: 4.5em;
 
 		appearance: textarea;
 

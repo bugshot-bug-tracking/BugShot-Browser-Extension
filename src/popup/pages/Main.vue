@@ -236,7 +236,7 @@ const logout = useAuthStore().logout;
 main {
 	display: flex;
 	flex-direction: column;
-	gap: 1rem;
+	gap: 1em;
 }
 
 footer {
@@ -245,8 +245,8 @@ footer {
 }
 
 h5 {
-	margin: 0.5rem 0;
-	font-size: 0.875rem;
+	margin: 0.5em 0;
+	font-size: 0.875em;
 
 	&:first-of-type {
 		margin-top: 0;
@@ -254,31 +254,31 @@ h5 {
 }
 
 p {
-	font-size: 0.875rem;
+	font-size: 0.875em;
 }
 
 hr {
-	margin: 1rem 0;
+	margin: 1em 0;
 }
 
 div.position {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 0.5rem 0;
+	padding: 0.5em 0;
 
 	> div {
 		width: 45%;
 	}
 
 	p {
-		font-size: 0.75rem;
+		font-size: 0.75em;
 
-		margin: 0.5rem 0 0 0;
+		margin: 0.5em 0 0 0;
 	}
 
 	.position {
-		height: 4rem;
+		height: 4em;
 		background: #f8f8fc;
 		position: relative;
 		border: 2px solid #eee5fc;
@@ -289,10 +289,10 @@ div.position {
 			content: "";
 			width: 0;
 			height: 0;
-			border: 1rem solid transparent;
-			border-bottom: 1rem solid black;
-			bottom: -1rem;
-			right: -1rem;
+			border: 1em solid transparent;
+			border-bottom: 1em solid black;
+			bottom: -1em;
+			right: -1em;
 			transform: rotateZ(135deg);
 		}
 
@@ -303,7 +303,7 @@ div.position {
 
 	.position.top-right::after {
 		transform: rotateZ(45deg);
-		top: -1rem;
+		top: -1em;
 	}
 }
 
@@ -329,8 +329,8 @@ div.position {
 .switch {
 	position: relative;
 	display: inline-block;
-	width: 3rem;
-	height: 1.5rem;
+	width: 3em;
+	height: 1.5em;
 
 	/* Hide default HTML checkbox */
 	input {
@@ -353,16 +353,16 @@ div.position {
 		&:before {
 			position: absolute;
 			content: "";
-			height: 1.125rem;
-			width: 1.125rem;
-			left: 0.2rem;
-			bottom: 0.2rem;
+			height: 1.125em;
+			width: 1.125em;
+			left: 0.2em;
+			bottom: 0.2em;
 			background-color: hsl(0deg, 0%, 100%);
 			transition: 0.2s;
 		}
 
 		&.round {
-			border-radius: 1rem;
+			border-radius: 1em;
 
 			&:before {
 				border-radius: 100%;
@@ -375,13 +375,13 @@ div.position {
 			background-color: hsl(158, 80%, 47%);
 
 			&:before {
-				transform: translateX(1.5rem);
+				transform: translateX(1.5em);
 			}
 		}
 	}
 
 	input:focus + .slider {
-		// box-shadow: 0 0 0.125rem hsl(158, 80%, 47%);
+		// box-shadow: 0 0 0.125em hsl(158, 80%, 47%);
 	}
 }
 
@@ -389,10 +389,10 @@ div.position {
 	display: flex;
 	align-items: center;
 	font-weight: bold;
-	font-size: 1.125rem;
-	gap: 0.5rem;
+	font-size: 1.125em;
+	gap: 0.5em;
 	cursor: pointer;
-	margin-bottom: 0.5rem;
+	margin-bottom: 0.5em;
 }
 .themes {
 	display: flex;
@@ -400,7 +400,7 @@ div.position {
 	justify-content: space-between;
 
 	.v-select {
-		width: 10rem;
+		width: 10em;
 	}
 }
 </style>

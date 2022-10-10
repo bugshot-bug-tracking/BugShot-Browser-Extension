@@ -77,7 +77,7 @@
 				text-red
 				text-end
 				mt--3
-				style="font-size: 0.875rem"
+				style="font-size: 0.875em"
 				v-if="password.error"
 			>
 				{{ password.errorMessage }}
@@ -97,7 +97,7 @@
 	</main>
 
 	<footer class="bs-bt">
-		<div class="bs-bb" p-5 text-center style="font-size: 0.875rem">
+		<div class="bs-bb" p-5 text-center style="font-size: 0.875em">
 			{{ t("forgot_password") }}?
 			<a
 				href="https://dev.bugshot.de/auth/forgot"

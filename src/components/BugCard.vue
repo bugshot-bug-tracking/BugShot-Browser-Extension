@@ -74,14 +74,14 @@ const priorities = computed(() => [
 
 <style lang="scss" scoped>
 section {
-	padding: 0.5rem 1rem;
+	padding: 0.5em 1em;
 	border-width: 2px;
 
 	h1 {
-		font-size: 1rem;
+		font-size: 1em;
 		font-weight: bold;
 		text-align: left;
-		padding: 0.5rem 0;
+		padding: 0.5em 0;
 		margin: unset;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -99,16 +99,16 @@ section {
 .card-body {
 	display: grid;
 	grid-template-columns: auto auto 1fr;
-	font-size: 0.875rem;
-	gap: 1rem;
-	padding: 1rem 0 0.5rem 0;
+	font-size: 0.875em;
+	gap: 1em;
+	padding: 1em 0 0.5em 0;
 
 	p {
 		color: #9ba5d7;
 	}
 
 	div {
-		font-size: 0.75rem;
+		font-size: 0.75em;
 	}
 }
 </style>

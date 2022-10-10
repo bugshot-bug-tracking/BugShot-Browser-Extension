@@ -178,15 +178,15 @@ const loadingModal = reactive({
 <style lang="scss" scoped>
 .add {
 	align-self: end;
-	margin-top: 1rem;
+	margin-top: 1em;
 }
 
 .options {
 	display: flex;
 	flex-direction: column;
-	gap: 0.5rem;
-	width: 19rem;
-	margin-left: -1rem;
+	gap: 0.5em;
+	width: 19em;
+	margin-left: -1em;
 }
 
 .item {
@@ -209,7 +209,7 @@ const loadingModal = reactive({
 			}
 
 			& ~ label {
-				padding-left: 0.5rem;
+				padding-left: 0.5em;
 				padding-right: 0;
 			}
 		}
@@ -219,30 +219,30 @@ const loadingModal = reactive({
 		display: flex;
 		align-items: center;
 		justify-content: flex-start;
-		gap: 0.5rem;
-		padding: 0.25rem 0.5rem 0.25rem 0;
+		gap: 0.5em;
+		padding: 0.25em 0.5em 0.25em 0;
 		transition: 0.25s;
 		cursor: pointer;
 	}
 
 	.check-state {
-		width: 1.5rem;
-		height: 1.5rem;
+		width: 1.5em;
+		height: 1.5em;
 		opacity: 0;
-		margin-left: -0.65rem;
-		border-radius: 0.375rem;
+		margin-left: -0.65em;
+		border-radius: 0.375em;
 		transition: 0.25s;
-		border-right: 0.875rem solid hsl(158, 80%, 47%);
+		border-right: 0.875em solid hsl(158, 80%, 47%);
 	}
 
 	.avatar {
 		color: hsl(0, 0%, 100%);
 		background-color: hsl(265, 80%, 50%);
-		font-size: 0.75rem;
-		padding: 0.5rem;
-		border-radius: 1.5rem;
-		height: 2rem;
-		width: 2rem;
+		font-size: 0.75em;
+		padding: 0.5em;
+		border-radius: 1.5em;
+		height: 2em;
+		width: 2em;
 
 		text-align: center;
 		text-transform: uppercase;
@@ -256,16 +256,16 @@ const loadingModal = reactive({
 		background: hsl(158, 79%, 87%);
 
 		label {
-			padding-left: 0.5rem;
+			padding-left: 0.5em;
 			padding-right: 0;
 		}
 	}
 }
 
 .remove-user {
-	height: 1rem;
-	width: 1rem;
-	margin-right: 1rem;
+	height: 1em;
+	width: 1em;
+	margin-right: 1em;
 	cursor: pointer;
 
 	&:hover {

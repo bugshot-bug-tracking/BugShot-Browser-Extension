@@ -32,13 +32,13 @@ const logout = useAuthStore().logout;
 main {
 	display: flex;
 	flex-direction: column;
-	gap: 1rem;
+	gap: 1em;
 
 	section {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		padding: 1rem;
+		padding: 1em;
 	}
 
 	img {
@@ -55,9 +55,9 @@ footer {
 	display: flex;
 	align-items: center;
 	font-weight: bold;
-	font-size: 1.125rem;
-	gap: 0.5rem;
+	font-size: 1.125em;
+	gap: 0.5em;
 	cursor: pointer;
-	margin-bottom: 0.5rem;
+	margin-bottom: 0.5em;
 }
 </style>

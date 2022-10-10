@@ -43,13 +43,13 @@ defineEmits(["download", "delete"]);
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 0.5rem 1rem;
+	padding: 0.5em 1em;
 	background: transparent;
 	transition: 0.3s;
 
 	&:hover {
 		background: hsl(158, 79%, 87%);
-		border-radius: 0.5rem;
+		border-radius: 0.5em;
 
 		.controls {
 			transition: 0.3s;
@@ -67,11 +67,11 @@ defineEmits(["download", "delete"]);
 .controls {
 	opacity: 0;
 	display: inline-flex;
-	gap: 0.5rem;
+	gap: 0.5em;
 
 	img {
-		width: 1.5rem;
-		height: 1.5rem;
+		width: 1.5em;
+		height: 1.5em;
 		cursor: pointer;
 	}
 }

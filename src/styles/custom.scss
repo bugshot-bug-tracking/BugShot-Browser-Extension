@@ -28,9 +28,9 @@
 }
 
 .bs-btn {
-	border-radius: 1.375rem;
-	font-size: 1rem;
-	padding: 0.5rem 1rem;
+	border-radius: 1.375em;
+	font-size: 1em;
+	padding: 0.5em 1em;
 	box-shadow: none;
 	width: auto !important;
 	height: auto !important;
@@ -41,7 +41,7 @@
 	&.green {
 		background: hsl(158, 80%, 47%);
 		color: hsl(0, 0%, 100%);
-		border: 0.125rem solid hsl(158, 80%, 47%);
+		border: 0.125em solid hsl(158, 80%, 47%);
 
 		&:hover {
 			background: hsl(158, 80%, 41%);
@@ -62,7 +62,7 @@
 	&.purple {
 		background: hsl(265, 79%, 54%);
 		color: hsl(0, 0%, 100%);
-		border: 0.125rem solid hsl(265, 79%, 54%);
+		border: 0.125em solid hsl(265, 79%, 54%);
 
 		&:hover {
 			background: hsl(265, 80%, 41%);
@@ -83,7 +83,7 @@
 	&.red {
 		background: hsl(0, 88%, 58%);
 		color: hsl(0, 0%, 100%);
-		border: 0.125rem solid hsl(0, 88%, 58%);
+		border: 0.125em solid hsl(0, 88%, 58%);
 
 		&:hover {
 			background: hsl(0, 88%, 45%);
@@ -113,8 +113,8 @@
 
 	/* width */
 	&::-webkit-scrollbar {
-		width: 0.5rem;
-		height: 0.5rem;
+		width: 0.5em;
+		height: 0.5em;
 	}
 
 	/* Track */
@@ -124,7 +124,7 @@
 
 	/* Handle */
 	&::-webkit-scrollbar-thumb {
-		border-radius: 0.5rem;
+		border-radius: 0.5em;
 
 		background: hsl(263, 80%, 83%);
 	}
@@ -153,13 +153,13 @@
 		color: #9ba5d7;
 		text-transform: uppercase;
 		border-bottom: 1px solid #eee5fc;
-		padding: 0.5rem;
+		padding: 0.5em;
 	}
 
 	.group-content {
 		width: 100%;
 		height: 100%;
-		padding: 1rem 0;
+		padding: 1em 0;
 	}
 }
 
@@ -169,9 +169,9 @@
 	align-items: stretch;
 	background: #ffffff;
 	border: 1px solid #e5e5ff;
-	border-radius: 1rem;
-	padding: 1.25rem;
-	box-shadow: 0 0.125rem 0.25rem hsla(0, 0%, 0%, 0.16);
+	border-radius: 1em;
+	padding: 1.25em;
+	box-shadow: 0 0.125em 0.25em hsla(0, 0%, 0%, 0.16);
 }
 
 .bs-bt {
@@ -188,11 +188,11 @@
 }
 
 .dot {
-	width: 0.75rem;
-	height: 0.75rem;
+	width: 0.75em;
+	height: 0.75em;
 	border-radius: 100%;
 	background: black;
-	margin: 0.25rem;
+	margin: 0.25em;
 }
 
 .bs-input {
@@ -200,7 +200,7 @@
 	flex-direction: column;
 	text-align: left;
 	align-items: stretch;
-	gap: 0.5rem;
+	gap: 0.5em;
 	position: relative;
 
 	label {
@@ -209,26 +209,26 @@
 		align-items: center;
 
 		span {
-			font-size: 0.75rem;
+			font-size: 0.75em;
 		}
 	}
 
 	.input-image {
 		position: absolute;
-		right: 1rem;
-		bottom: 0.75rem;
+		right: 1em;
+		bottom: 0.75em;
 
 		img {
-			width: 1.5rem;
-			height: 1.5rem;
+			width: 1.5em;
+			height: 1.5em;
 		}
 	}
 
 	input,
 	textarea {
 		border: 1px solid hsl(264deg, 78%, 77%);
-		border-radius: 0.5rem;
-		padding: 0.75rem;
+		border-radius: 0.5em;
+		padding: 0.75em;
 		background: white;
 		resize: vertical;
 		color: #1a2040;
@@ -247,23 +247,23 @@
 
 	label.bs-radio {
 		display: flex;
-		gap: 1rem;
+		gap: 1em;
 		align-items: center;
 
 		input {
 			display: none;
 
 			&:checked + i.radio {
-				border-width: 0.25rem;
+				border-width: 0.25em;
 			}
 		}
 
 		i.radio {
-			width: 1rem;
-			height: 1rem;
+			width: 1em;
+			height: 1em;
 			border-radius: 100%;
 			background-color: #ffffff;
-			border: 0.125rem solid #7a2ee6;
+			border: 0.125em solid #7a2ee6;
 		}
 	}
 }
@@ -318,10 +318,10 @@
 			background-position: 0 0;
 			background-size: auto;
 			background-repeat: no-repeat;
-			width: 1.5rem;
-			height: 1.5rem;
+			width: 1.5em;
+			height: 1.5em;
 			position: absolute;
-			left: -1.5rem;
+			left: -1.5em;
 		}
 	}
 }
@@ -330,18 +330,18 @@
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
-	gap: 1rem;
+	gap: 1em;
 
 	.form-group {
 		display: flex;
 		flex-direction: column;
 		align-items: stretch;
-		gap: 1rem;
+		gap: 1em;
 
 		h5 {
 			font-weight: bold;
-			padding-bottom: 0.5rem;
-			border-bottom: 0.125rem solid #eee5fc;
+			padding-bottom: 0.5em;
+			border-bottom: 0.125em solid #eee5fc;
 		}
 	}
 
@@ -349,7 +349,7 @@
 		display: flex;
 		justify-content: space-evenly;
 		align-items: center;
-		padding: 0.5rem 0;
+		padding: 0.5em 0;
 	}
 }
 
@@ -360,15 +360,15 @@
 	align-items: stretch;
 	background-color: hsl(240, 40%, 98%);
 	height: 100vh;
-	width: 25rem;
-	max-width: 30rem;
+	width: 25em;
+	max-width: 30em;
 	overflow: auto;
-	padding: 1rem;
+	padding: 1em;
 	position: absolute;
 	z-index: 20;
 	top: 0;
 	right: 0;
-	box-shadow: -0.5rem 0 1.5rem hsla(231, 42%, 18%, 0.11);
+	box-shadow: -0.5em 0 1.5em hsla(231, 42%, 18%, 0.11);
 }
 
 .full-overlay {
@@ -393,13 +393,13 @@
 
 .bs-priority {
 	font-weight: normal;
-	font-size: 0.75rem;
-	line-height: 1rem;
+	font-size: 0.75em;
+	line-height: 1em;
 	color: #ffffff;
-	border-radius: 1rem;
+	border-radius: 1em;
 	width: fit-content;
 	height: fit-content;
-	padding: 0.25rem 0.5rem;
+	padding: 0.25em 0.5em;
 	user-select: none;
 
 	&.priority-1 {

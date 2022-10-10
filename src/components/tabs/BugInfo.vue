@@ -15,7 +15,7 @@
 			<div text-3>
 				<div
 					grid
-					style="grid-template-columns: auto 1fr; gap: 0.5rem 0.5rem"
+					style="grid-template-columns: auto 1fr; gap: 0.5em 0.5em"
 				>
 					<h4>No:</h4>
 					<p>{{ "125-nb" }}</p>
@@ -36,7 +36,7 @@
 			<div flex mb-4 gap-2>
 				<h4>URL:</h4>
 
-				<a href="" style="font-size: 0.875rem">
+				<a href="" style="font-size: 0.875em">
 					<p>https://www......</p>
 				</a>
 			</div>
@@ -44,7 +44,7 @@
 			<div mb-4>
 				<h4 pb-2>Description</h4>
 
-				<p style="font-size: 0.875rem">{{ "a lot of text here" }}</p>
+				<p style="font-size: 0.875em">{{ "a lot of text here" }}</p>
 			</div>
 
 			<div class="technical" :class="{ open: open }">
@@ -58,7 +58,7 @@
 					/>
 				</h4>
 
-				<div grid grid-cols-2 style="font-size: 0.875rem">
+				<div grid grid-cols-2 style="font-size: 0.875em">
 					<h5>Operating System:</h5>
 					<p class="black-to-gray">Windows 10</p>
 
@@ -206,8 +206,8 @@ const attachments = reactive({
 
 <style lang="scss" scoped>
 h3 {
-	margin: 0 0 0.5rem 0;
-	padding-bottom: 0.5rem;
+	margin: 0 0 0.5em 0;
+	padding-bottom: 0.5em;
 }
 
 h4,
@@ -218,12 +218,12 @@ h5 {
 .statuses {
 	display: flex;
 	flex-direction: column;
-	gap: 1rem;
+	gap: 1em;
 	height: 100%;
 	max-height: 100%;
 	overflow: auto;
-	padding: 0 0.5rem 1rem 0;
-	margin: 1rem 0 0 0;
+	padding: 0 0.5em 1em 0;
+	margin: 1em 0 0 0;
 }
 
 .technical {

@@ -178,7 +178,7 @@ const store = useReportStore();
 
 const datepicker = ref(null);
 const altPosition = (el: HTMLElement | undefined) => ({
-	top: "1rem",
+	top: "1em",
 	left: 0,
 });
 
@@ -256,7 +256,7 @@ const loadingModal = reactive({
 
 	> img {
 		filter: invert(1);
-		height: 1.5rem;
+		height: 1.5em;
 	}
 }
 
@@ -264,9 +264,9 @@ const loadingModal = reactive({
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 0.25rem 1rem;
+	padding: 0.25em 1em;
 
-	font-size: 1.4rem;
+	font-size: 1.4em;
 
 	img {
 		width: 20px;

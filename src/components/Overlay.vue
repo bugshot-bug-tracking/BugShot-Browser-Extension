@@ -51,6 +51,7 @@ const createMark = async (event: MouseEvent) => {
 
 	overlay.show = false;
 	await nextTick(); // wait for the document update so the overlay is not captured
+	await new Promise((resolve) => setTimeout(resolve, 150));
 
 	let response = await sendMessage("takeScreenshot", {});
 

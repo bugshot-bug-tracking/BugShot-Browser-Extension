@@ -53,7 +53,7 @@ ul {
 	margin: unset;
 	padding: unset;
 	display: flex;
-	gap: 1rem;
+	gap: 1em;
 }
 
 li {

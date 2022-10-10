@@ -245,8 +245,8 @@ const loadingModal = reactive({
 
 	text-transform: capitalize;
 	font-weight: 600;
-	font-size: 1.25rem;
+	font-size: 1.25em;
 
-	gap: 0.5rem;
+	gap: 0.5em;
 }
 </style>

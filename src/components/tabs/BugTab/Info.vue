@@ -33,7 +33,7 @@
 					<img
 						src="/assets/icons/check.svg"
 						alt="save"
-						style="width: 1.5rem"
+						style="width: 1.5em"
 						cursor-pointer
 						@click="changeDesignation"
 					/>
@@ -41,7 +41,7 @@
 					<img
 						src="/assets/icons/close_2.svg"
 						alt="cancel"
-						style="width: 1.5rem"
+						style="width: 1.5em"
 						cursor-pointer
 						@click="bugData.flag1 = false"
 					/>
@@ -131,14 +131,14 @@
 						<img
 							src="/assets/icons/check.svg"
 							alt="save"
-							style="width: 1.5rem"
+							style="width: 1.5em"
 							cursor-pointer
 							@click="changeDescription"
 						/>
 						<img
 							src="/assets/icons/close_2.svg"
 							alt="cancel"
-							style="width: 1.5rem"
+							style="width: 1.5em"
 							cursor-pointer
 							@click="bugData.flag2 = false"
 						/>
@@ -315,7 +315,7 @@ const props = defineProps({
 const datepicker = ref(null);
 
 const altPosition = (el: HTMLElement | undefined) => ({
-	top: "1rem",
+	top: "1em",
 	left: 0,
 });
 
@@ -629,8 +629,8 @@ const format = (date: Date) => d(new Date(date).toISOString(), "short");
 input,
 textarea {
 	border: 1px solid hsl(264deg, 78%, 77%);
-	border-radius: 0.5rem;
-	padding: 0.5rem;
+	border-radius: 0.5em;
+	padding: 0.5em;
 	background: white;
 	resize: vertical;
 	color: #1a2040;

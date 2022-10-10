@@ -120,18 +120,18 @@ const loadingModal = reactive({
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	width: 25rem;
-	height: 12.5rem;
+	width: 25em;
+	height: 12.5em;
 	justify-content: center;
-	gap: 1.25rem;
-	padding: 1.25rem;
+	gap: 1.25em;
+	padding: 1.25em;
 	background-color: #ffffff;
-	border-radius: 0.5rem;
+	border-radius: 0.5em;
 
 	.actions {
 		display: flex;
 		align-items: center;
-		gap: 2.5rem;
+		gap: 2.5em;
 	}
 
 	.text {

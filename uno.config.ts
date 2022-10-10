@@ -19,4 +19,9 @@ export default defineConfig({
 			},
 		}),
 	],
+	rules: [
+		[/^m-(\d+)$/, ([, d]) => ({ margin: `${d / 4}em` })],
+		[/^p-(\d+)$/, (match) => ({ padding: `${match[1] / 4}em` })],
+		[/^text-(\d+)$/, (match) => ({ "font-size": `${match[1] / 4}em` })],
+	],
 });

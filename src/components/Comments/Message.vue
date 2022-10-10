@@ -73,7 +73,7 @@ onMounted(() => {
 .message-wrapper {
 	display: inline-flex;
 	width: 100%;
-	margin: 0.5rem 0;
+	margin: 0.5em 0;
 	flex-direction: row-reverse;
 
 	.content {
@@ -84,31 +84,31 @@ onMounted(() => {
 		align-items: flex-start;
 
 		.message {
-			font-size: 0.875rem;
+			font-size: 0.875em;
 			background: hsl(230, 43%, 95%);
-			border-radius: 1.25rem;
+			border-radius: 1.25em;
 			position: relative;
-			padding: 0.5rem 1rem;
-			margin: 0 0.5rem;
+			padding: 0.5em 1em;
+			margin: 0 0.5em;
 			max-width: 75%;
 			overflow-wrap: anywhere;
 
 			&::before {
-				border-width: 0.6rem;
+				border-width: 0.6em;
 				border-style: solid;
 				border-color: hsl(230, 43%, 95%) transparent transparent
 					transparent;
 				content: "";
 				position: absolute;
 				top: 0;
-				left: -0.25rem;
+				left: -0.25em;
 				right: unset;
 			}
 		}
 
 		.timestamp {
-			font-size: 0.75rem;
-			margin: 0 1rem;
+			font-size: 0.75em;
+			margin: 0 1em;
 		}
 	}
 
@@ -119,7 +119,7 @@ onMounted(() => {
 			align-items: flex-end;
 
 			.message::before {
-				right: -0.25rem;
+				right: -0.25em;
 				left: unset;
 			}
 		}

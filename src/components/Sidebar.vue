@@ -87,10 +87,10 @@ const openProject = () => {
 #sidebar {
 	display: flex;
 	flex-direction: column;
-	min-width: 4rem;
-	min-height: 4rem;
-	width: 5.5rem;
-	height: 5.5rem;
+	min-width: 4em;
+	min-height: 4em;
+	width: 5.5em;
+	height: 5.5em;
 	transition: 0.2s;
 	transition-timing-function: ease-in;
 	background: linear-gradient(
@@ -111,7 +111,7 @@ const openProject = () => {
 		);
 
 		.logo {
-			margin: 0.5rem 0.5rem auto auto;
+			margin: 0.5em 0.5em auto auto;
 		}
 	}
 
@@ -127,7 +127,7 @@ const openProject = () => {
 			height: 100%;
 
 			li {
-				height: 5.5rem;
+				height: 5.5em;
 				display: flex;
 				flex-direction: column;
 				justify-content: center;
@@ -142,15 +142,15 @@ const openProject = () => {
 				}
 
 				img {
-					width: 2rem;
+					width: 2em;
 					filter: brightness(0) invert(1);
 				}
 			}
 		}
 
 		.logo {
-			width: 2.5rem;
-			min-height: 5.5rem;
+			width: 2.5em;
+			min-height: 5.5em;
 			margin: 0 auto;
 		}
 
@@ -158,7 +158,7 @@ const openProject = () => {
 			color: #18d992;
 
 			img {
-				width: 2.5rem;
+				width: 2.5em;
 
 				filter: brightness(0) saturate(1) invert(76%) sepia(16%)
 					saturate(4475%) hue-rotate(102deg) brightness(96%)
@@ -177,7 +177,7 @@ const openProject = () => {
 }
 
 .logo {
-	width: 2.125rem;
-	margin: auto 0.5rem 0.5rem auto;
+	width: 2.125em;
+	margin: auto 0.5em 0.5em auto;
 }
 </style>

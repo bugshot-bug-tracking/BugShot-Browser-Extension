@@ -74,41 +74,41 @@ const background_color = computed(() => {
 	}
 
 	&.XS {
-		width: 2rem;
-		height: 2rem;
-		font-size: 0.75rem;
+		width: 2em;
+		height: 2em;
+		font-size: 0.75em;
 	}
 
 	&.S {
-		width: 2.5rem;
-		height: 2.5rem;
-		font-size: 1rem;
+		width: 2.5em;
+		height: 2.5em;
+		font-size: 1em;
 	}
 
 	//WIP no use found yet
 	&.M {
-		width: 3.5rem;
-		height: 3.5rem;
-		font-size: 1.25rem;
+		width: 3.5em;
+		height: 3.5em;
+		font-size: 1.25em;
 	}
 
 	//WIP no use found yet
 	&.L {
-		width: 4.5rem;
-		height: 4.5rem;
-		font-size: 2rem;
+		width: 4.5em;
+		height: 4.5em;
+		font-size: 2em;
 	}
 
 	&.XL {
-		width: 9rem;
-		height: 9rem;
-		font-size: 4rem;
+		width: 9em;
+		height: 9em;
+		font-size: 4em;
 	}
 }
 
 .initials {
 	text-transform: uppercase;
 	color: white;
-	padding: 0.5rem;
+	padding: 0.5em;
 }
 </style>

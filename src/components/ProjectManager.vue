@@ -5,7 +5,7 @@
 		<div
 			grid
 			gap-4
-			style="grid-template-columns: auto 1fr; font-size: 0.875rem"
+			style="grid-template-columns: auto 1fr; font-size: 0.875em"
 		>
 			<b>{{ t("company") }}:</b>
 			<div>{{ company.attributes.designation }}</div>
@@ -30,7 +30,7 @@ const project = computed(() => store.getProject);
 
 <style lang="scss" scoped>
 h4 {
-	margin: 0 0 1rem 0;
-	padding-bottom: 0.5rem;
+	margin: 0 0 1em 0;
+	padding-bottom: 0.5em;
 }
 </style>

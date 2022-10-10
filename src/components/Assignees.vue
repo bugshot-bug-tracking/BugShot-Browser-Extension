@@ -33,14 +33,14 @@ const emit = defineEmits(["add"]);
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
-	gap: 0.375rem;
+	gap: 0.375em;
 	flex-wrap: wrap;
 }
 
 .item {
 	display: flex;
 	align-items: center;
-	gap: 0.5rem;
+	gap: 0.5em;
 }
 
 .add {
@@ -50,8 +50,8 @@ const emit = defineEmits(["add"]);
 	transition: 0.2s;
 
 	img {
-		width: 2rem;
-		height: 2rem;
+		width: 2em;
+		height: 2em;
 
 		// color: #18d992;
 		filter: brightness(0) saturate(1) invert(63%) sepia(74%) saturate(493%)

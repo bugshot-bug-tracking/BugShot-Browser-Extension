@@ -1,5 +1,5 @@
 <template>
-	<Spinner v-if="loading" style="height: 30rem" />
+	<Spinner v-if="loading" style="height: 30em" />
 
 	<div v-else>
 		<Login v-if="!auth" />
@@ -61,16 +61,16 @@ onMounted(init);
 @import "vue-select/dist/vue-select.css";
 
 html input {
-	font-size: 1rem;
-	line-height: 1.5rem;
+	font-size: 1em;
+	line-height: 1.5em;
 }
 
 body {
 	margin: 0;
-	min-width: 22rem;
+	min-width: 22em;
 	background-color: #f8f8fc;
-	padding: 1rem;
-	font-size: 1rem;
+	padding: 1em;
+	font-size: 1em;
 	color: #1a2040;
 	font-family: "Open Sans", sans-serif;
 	-webkit-font-smoothing: antialiased;

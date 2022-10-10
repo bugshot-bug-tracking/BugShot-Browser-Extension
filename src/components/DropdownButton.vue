@@ -128,9 +128,9 @@ if (!props.dumb) {
 	user-select: none;
 
 	a {
-		font-size: 0.75rem;
-		padding: 0.25rem 0.5rem;
-		border-radius: 1rem;
+		font-size: 0.75em;
+		padding: 0.25em 0.5em;
+		border-radius: 1em;
 		background: #9ba5d7;
 		cursor: pointer;
 		color: white;
@@ -142,10 +142,10 @@ if (!props.dumb) {
 		&.open::after {
 			content: "";
 			position: absolute;
-			top: 2rem;
-			left: 1rem;
-			width: 1.25rem;
-			height: 1.25rem;
+			top: 2em;
+			left: 1em;
+			width: 1.25em;
+			height: 1.25em;
 			transform: rotate(45deg);
 			background-color: #eee5fc;
 			border: 1px solid #eee5fc;
@@ -154,10 +154,10 @@ if (!props.dumb) {
 
 	.dropdown-container {
 		position: absolute;
-		top: 2.5rem;
+		top: 2.5em;
 		right: 0;
 		background-color: #eee5fc;
-		max-width: 10rem;
+		max-width: 10em;
 
 		border: 1px solid #eee5fc;
 		display: none;
@@ -170,7 +170,7 @@ if (!props.dumb) {
 			position: relative;
 			background-color: white;
 			scrollbar-gutter: auto;
-			max-height: 8.5rem;
+			max-height: 8.5em;
 
 			ul {
 				margin: unset;
@@ -178,14 +178,14 @@ if (!props.dumb) {
 				padding: unset;
 
 				li {
-					padding: 0.25rem 1.5rem 0.25rem 1rem;
+					padding: 0.25em 1.5em 0.25em 1em;
 					transition: 0.2s;
 					cursor: pointer;
 
 					&.active,
 					&:hover {
 						background-color: hsl(158, 79%, 87%);
-						padding: 00.25rem 1rem 00.25rem 1.5rem;
+						padding: 00.25em 1em 00.25em 1.5em;
 					}
 				}
 			}

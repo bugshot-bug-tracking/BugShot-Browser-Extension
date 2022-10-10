@@ -112,8 +112,8 @@ section {
 		transition: 0.3s;
 
 		img {
-			width: 2rem;
-			height: 2rem;
+			width: 2em;
+			height: 2em;
 		}
 
 		&:hover {
@@ -137,12 +137,12 @@ section {
 .error {
 	color: hsl(0, 90%, 60%);
 	font-weight: bold;
-	padding-bottom: 0.5rem;
+	padding-bottom: 0.5em;
 	border-bottom: 1px solid hsl(240, 100%, 95%);
 }
 
 img {
-	width: 1.5rem;
-	height: 1.5rem;
+	width: 1.5em;
+	height: 1.5em;
 }
 </style>

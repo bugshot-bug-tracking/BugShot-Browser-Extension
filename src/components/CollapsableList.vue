@@ -40,8 +40,8 @@ ol {
 	display: none;
 	flex-direction: column;
 	align-items: stretch;
-	gap: 1rem;
-	margin: 1rem 0;
+	gap: 1em;
+	margin: 1em 0;
 }
 
 div.active {
@@ -58,7 +58,7 @@ h4 {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 0.25rem;
+	padding: 0.25em;
 	margin: unset;
 	cursor: pointer;
 	user-select: none;
