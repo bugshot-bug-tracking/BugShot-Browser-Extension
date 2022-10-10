@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => {
 		...sharedConfig,
 
 		define: {
-			"process.env.NODE_ENV": mode,
+			"process.env.NODE_ENV": `"'${mode}'"`,
 		},
 
 		build: {

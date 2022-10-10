@@ -117,8 +117,6 @@
 import { useI18n } from "vue-i18n";
 import { useAuthStore } from "~/stores/auth";
 
-const emit = defineEmits(["onSuccess"]);
-
 const { t } = useI18n();
 const store = useAuthStore();
 
@@ -141,14 +139,11 @@ const password = reactive({
 const submit = async () => {
 	try {
 		loading.value = true;
-		let response = await store.login({
+
+		await store.login({
 			email: email.value,
 			password: password.value,
 		});
-
-		console.log(response);
-
-		emit("onSuccess");
 	} catch (error: Error) {
 		console.log(error);
 		password.error = true;

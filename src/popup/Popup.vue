@@ -2,12 +2,17 @@
 	<Spinner v-if="loading" style="height: 30rem" />
 
 	<div v-else>
-		<Login v-if="!auth" @onSuccess="init" />
+		<Login v-if="!auth" />
 
-		<component
-			v-if="auth && initDone"
-			:is="!errorPage ? (noProject ? Empty : Main) : Error"
+		<Main
+			v-if="auth && !noProject && !errorPage"
+			@noProjects="noProject = true"
+			@error="errorPage = true"
 		/>
+
+		<Empty v-if="auth && noProject && !errorPage" />
+
+		<Error v-if="auth && errorPage" />
 	</div>
 </template>
 
@@ -19,7 +24,6 @@ import Error from "./pages/Error.vue";
 
 import { useI18nStore } from "~/stores/i18n";
 import { useAuthStore } from "~/stores/auth";
-import { useMainPopupStore } from "~/stores/mainPopup";
 
 useI18nStore().init();
 
@@ -28,17 +32,10 @@ const loading = ref(true);
 const store = useAuthStore();
 const auth = computed(() => store.isAuthenticated);
 
-let main = useMainPopupStore();
-
 const noProject = ref(false);
 const errorPage = ref(false);
 
-// used as a way to wait until init is done so that Main doesn't throw errors
-const initDone = ref(false);
-
 const init = async () => {
-	initDone.value = false;
-
 	try {
 		let result = await store.init();
 
@@ -47,17 +44,11 @@ const init = async () => {
 			console.log("An error occured!", result);
 			return;
 		}
-
-		await main.init();
-
-		if (main.projects.length < 1) noProject.value = true;
 	} catch (error) {
 		console.log(error);
 		errorPage.value = true;
 	} finally {
 		loading.value = false;
-
-		initDone.value = true;
 	}
 };
 
