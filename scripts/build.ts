@@ -43,23 +43,23 @@ const mode = isDev ? Mode.DEV : Mode.PROD;
 		log("INFO", `moved background.html for ${target}`);
 	}
 
-	// execSync(`pnpm vite build --mode ${mode}`, { stdio: "inherit" });
-	// execSync(`pnpm vite build --mode ${mode} --config vite.config.content.ts`, {
-	// 	stdio: "inherit",
-	// });
-
-	let popup_background = spawn(`pnpm vite build --mode ${mode}`, {
-		shell: true,
+	execSync(`pnpm vite build --mode ${mode}`, { stdio: "inherit" });
+	execSync(`pnpm vite build --mode ${mode} --config vite.config.content.ts`, {
+		stdio: "inherit",
 	});
-	popup_background.stdout.on("data", (data) => console.log(data.toString()));
 
-	let content = spawn(
-		`pnpm vite build --mode ${mode} --config vite.config.content.ts`,
-		{
-			shell: true,
-		}
-	);
-	content.stdout.on("data", (data) => console.log(data.toString()));
+	// let popup_background = spawn(`pnpm vite build --mode ${mode}`, {
+	// 	shell: true,
+	// });
+	// popup_background.stdout.on("data", (data) => console.log(data.toString()));
+
+	// let content = spawn(
+	// 	`pnpm vite build --mode ${mode} --config vite.config.content.ts`,
+	// 	{
+	// 		shell: true,
+	// 	}
+	// );
+	// content.stdout.on("data", (data) => console.log(data.toString()));
 })();
 
 async function writeManifest() {
