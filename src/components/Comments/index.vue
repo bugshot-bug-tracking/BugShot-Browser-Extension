@@ -40,17 +40,17 @@
 				</div>
 			</div>
 
-			<vue-tribute :options="options" style="width: 100%">
-				<div
-					id="comment-input"
-					contenteditable="true"
-					ref="message"
-					class="bs-scroll"
-					data-max-length="250"
-					@input="setLength"
-					@paste="paste"
-				/>
-			</vue-tribute>
+			<!-- <vue-tribute :options="options" style="width: 100%"> -->
+			<div
+				id="comment-input"
+				contenteditable="true"
+				ref="message"
+				class="bs-scroll"
+				data-max-length="250"
+				@input="setLength"
+				@paste="paste"
+			/>
+			<!-- </vue-tribute> -->
 
 			<div
 				:hidden="messageLength <= 250"
@@ -78,7 +78,7 @@
 
 <script setup lang="ts">
 import axios from "axios";
-import { VueTribute } from "vue-tribute";
+// import { VueTribute } from "vue-tribute";
 import colors from "~/util/colors";
 import { maxlengthContentEditable } from "~/util/maxlength-contenteditable.js";
 import { useAuthStore } from "~/stores/auth";

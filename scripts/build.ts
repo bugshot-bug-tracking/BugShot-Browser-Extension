@@ -17,7 +17,14 @@ const mode = isDev ? Mode.DEV : Mode.PROD;
 
 	fs.ensureDirSync(r(`dist/${mode}/${target}`));
 
-	await fs.copy(r("src/assets"), r(`dist/${mode}/${target}/assets`));
+	await fs.copy(
+		r("src/assets/extension_icons"),
+		r(`dist/${mode}/${target}/assets/extension_icons`)
+	);
+	await fs.copy(
+		r("src/assets/marks"),
+		r(`dist/${mode}/${target}/assets/marks`)
+	);
 
 	if (isDev) {
 		await writeManifestDev();
