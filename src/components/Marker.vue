@@ -87,19 +87,19 @@ onUnmounted(() => {
 const priorityIcon = computed(() => {
 	switch (props.priority) {
 		case 1:
-			return chrome.runtime.getURL("/assets/marks/mark_min.svg");
+			return browser.runtime.getURL("/assets/marks/mark_min.svg");
 
 		case 2:
-			return chrome.runtime.getURL("/assets/marks/mark_normal.svg");
+			return browser.runtime.getURL("/assets/marks/mark_normal.svg");
 
 		case 3:
-			return chrome.runtime.getURL("/assets/marks/mark_imp.svg");
+			return browser.runtime.getURL("/assets/marks/mark_imp.svg");
 
 		case 4:
-			return chrome.runtime.getURL("/assets/marks/mark_crit.svg");
+			return browser.runtime.getURL("/assets/marks/mark_crit.svg");
 
 		default:
-			return chrome.runtime.getURL("/assets/marks/mark_normal.svg");
+			return browser.runtime.getURL("/assets/marks/mark_normal.svg");
 	}
 });
 </script>

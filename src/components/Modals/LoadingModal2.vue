@@ -11,7 +11,7 @@
 				<slot name="success">
 					<slot name="success-img">
 						<img
-							src="/assets/animations/bug_confirmation.gif"
+							src="/assets/animations/bug_confirmation_compressed.gif"
 							alt="Success"
 						/>
 					</slot>
@@ -29,7 +29,7 @@
 				<slot name="error">
 					<slot name="error-img">
 						<img
-							src="/assets/animations/error_bug.gif"
+							src="/assets/animations/error_bug_compressed.gif"
 							alt="error"
 						/>
 					</slot>

@@ -68,6 +68,7 @@ html input {
 body {
 	margin: 0;
 	min-width: 22em;
+	width: 22em;
 	background-color: #f8f8fc;
 	padding: 1em;
 	font-size: 1em;

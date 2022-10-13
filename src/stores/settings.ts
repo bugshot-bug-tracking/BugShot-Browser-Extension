@@ -32,7 +32,13 @@ export const useSettingsStore = defineStore("settings", {
 		},
 
 		getState() {
-			return this.$state;
+			return {
+				sidebar: this.sidebar,
+				position: this.position,
+				locale: this.locale,
+				theme: this.theme,
+				markers: this.markers,
+			};
 		},
 
 		setPosition(position: Position) {
