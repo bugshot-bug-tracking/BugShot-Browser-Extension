@@ -49,6 +49,7 @@
 				data-max-length="250"
 				@input="setLength"
 				@paste="paste"
+				@focus.stop.prevent="focusComment"
 			/>
 			<!-- </vue-tribute> -->
 
@@ -241,6 +242,10 @@ watch(props, () => scrollToBottom(), { deep: true });
 onMounted(() => {
 	maxlengthContentEditable();
 });
+
+const focusComment = () => {
+	message.value.focus();
+};
 </script>
 
 <style lang="scss" scoped>
