@@ -14,6 +14,7 @@ export interface Company {
 		projects?: Array<Project>;
 		role?: Role;
 		users?: User[];
+		organization_id?: string;
 	};
 	pending?: any[];
 }

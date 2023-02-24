@@ -12,7 +12,7 @@
 			</div>
 
 			<div class="bs-container" gap-4>
-				<div class="bs-input">
+				<div class="bs-input" ref="name">
 					<label>
 						{{ t("bug_name") }}
 
@@ -20,6 +20,8 @@
 					</label>
 
 					<input
+						@focus.stop.prevent="focusName"
+						autofocus
 						type="text"
 						:placeholder="t('bug_name')"
 						v-model="store.bug.designation"
@@ -29,7 +31,7 @@
 					/>
 				</div>
 
-				<div class="bs-input">
+				<div class="bs-input" ref="description">
 					<label>
 						{{ t("describe_problem") }}
 
@@ -39,6 +41,7 @@
 					</label>
 
 					<textarea
+						@focus.stop.prevent="focusDescription"
 						:placeholder="t('describe_problem')"
 						v-model="store.bug.description"
 						rows="3"
@@ -169,6 +172,17 @@ defineProps({
 		required: true,
 	},
 });
+
+// this code forces the focus on a field and subsequently crushes the function in a webpage that wants to take the focus away by exceeding stack call size
+const name = ref(null);
+const description = ref(null);
+const focusName = (event) => {
+	name.value.lastChild.focus();
+};
+const focusDescription = (event) => {
+	description.value.lastChild.focus();
+};
+/////////
 
 const emit = defineEmits(["close"]);
 
