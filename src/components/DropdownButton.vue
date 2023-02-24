@@ -154,7 +154,7 @@ if (!props.dumb) {
 
 	.dropdown-container {
 		position: absolute;
-		top: 2.5em;
+		top: 2em;
 		right: 0;
 		background-color: #eee5fc;
 		max-width: 10em;

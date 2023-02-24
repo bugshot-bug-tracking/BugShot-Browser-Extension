@@ -44,6 +44,11 @@ export const useMainPopupStore = defineStore("main-popup", {
 					`users/${user.id}/check-project`,
 					{
 						url: new URL(this.tab.url).origin,
+					},
+					{
+						headers: {
+							"include-organization-id": true,
+						},
 					}
 				);
 

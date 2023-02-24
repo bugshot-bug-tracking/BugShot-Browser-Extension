@@ -34,7 +34,7 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 		let response = await fetch(
 			import.meta.env.VITE_API_ENDPOINT + "/auth/user",
 			{
-				method: "POST",
+				method: "GET",
 				headers: {
 					Authorization: `Bearer ${token}`,
 					Accept: "application/json",
@@ -71,6 +71,7 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 				"Content-type": "application/json",
 				clientId: import.meta.env.VITE_CLIENT_ID,
 				version: import.meta.env.VITE_VERSION,
+				"include-organization-id": "true",
 			},
 			body: JSON.stringify({
 				url: new URL(tab.url).origin,

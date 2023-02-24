@@ -77,7 +77,7 @@ export const useAuthStore = defineStore("auth", {
 
 			try {
 				// test if the token is still valid
-				let response = await axios.post("auth/user");
+				let response = await axios.get("auth/user");
 
 				//if it is set the user and token
 				this.user = response.data.data;

@@ -62,6 +62,7 @@ export const useMainStore = defineStore("main", {
 						headers: {
 							// "include-project-users": true,
 							"include-project-role": true,
+							"include-organization-id": true,
 						},
 					}
 				);
