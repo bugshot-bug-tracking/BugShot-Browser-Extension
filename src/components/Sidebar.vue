@@ -55,6 +55,11 @@ const props = defineProps({
 		type: String,
 		description: "Company ID",
 	},
+	organization_id: {
+		required: true,
+		type: String,
+		description: "Organization ID",
+	},
 });
 
 const emit = defineEmits(["open", "close", "openBugList", "add"]);
@@ -78,7 +83,11 @@ const openAdmin = () => {
 };
 const openProject = () => {
 	window
-		.open(import.meta.env.VITE_WEB_URL + `/company/${props.id}`, "_blank")
+		.open(
+			import.meta.env.VITE_WEB_URL +
+				`/${props.organization_id}/company/${props.id}`,
+			"_blank"
+		)
 		?.focus();
 };
 </script>

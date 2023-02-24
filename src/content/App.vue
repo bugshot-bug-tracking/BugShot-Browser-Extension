@@ -3,6 +3,7 @@
 		<div flex flex-row-reverse v-if="done && settings.sidebar">
 			<Sidebar
 				:id="store.getCompany.id"
+				:organization_id="store.getCompany.attributes.organization_id"
 				:open="sidebar.state"
 				@openBugList="buglist.open"
 				@open="sidebar.open"
