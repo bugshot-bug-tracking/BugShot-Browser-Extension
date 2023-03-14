@@ -37,7 +37,7 @@
 		/>
 	</article>
 
-	<div class="markers" v-if="markerList.length > 0">
+	<div class="markers" v-if="markerList.length > 0 && settings.markerShow">
 		<MarkerList
 			:show="settings.markers"
 			:list="markerList"

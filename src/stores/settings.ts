@@ -11,6 +11,7 @@ export const useSettingsStore = defineStore("settings", {
 		locale: locale, // global setting
 		theme: Theme.Light, // global setting
 		markers: markers,
+		markerShow: true,
 	}),
 
 	actions: {
