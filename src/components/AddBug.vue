@@ -163,7 +163,6 @@
 <script setup lang="ts">
 import toBase64 from "~/util/toBase64";
 import { useReportStore } from "~/stores/report";
-import { useI18n } from "vue-i18n";
 import { useI18nStore } from "~/stores/i18n";
 
 defineProps({

@@ -24,7 +24,6 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
 import { useI18nStore } from "~/stores/i18n";
 
 const emit = defineEmits<{ (event: "change", value: string): void }>();
