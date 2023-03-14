@@ -41,7 +41,9 @@ export const useAuthStore = defineStore("auth", {
 				});
 
 				return await this.attempt(response.data.data.token);
-			} catch (error) {
+			} catch (error: any) {
+				if (error?.response?.status === 503) throw error;
+
 				this.token = "";
 				await sendMessage("invalidate", {});
 
@@ -84,12 +86,14 @@ export const useAuthStore = defineStore("auth", {
 				this.token = token;
 
 				return true;
-			} catch (error) {
+			} catch (error: any) {
+				if (error?.response?.status === 503) throw error;
+
 				//if the token is invalid or it expired set the token from storage to null
 				this.destroy();
 				axios.defaults.headers.common["Authorization"] = "";
 
-				return false;
+				throw error;
 			}
 		},
 	},

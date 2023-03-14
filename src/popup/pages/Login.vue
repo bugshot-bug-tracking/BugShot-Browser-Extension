@@ -146,7 +146,10 @@ const submit = async () => {
 	} catch (error: any) {
 		console.log(error);
 		password.error = true;
-		password.errorMessage = error.response.data.message;
+
+		if (error?.response?.status === 503)
+			password.errorMessage = t("down_for_maintenance");
+		else password.errorMessage = error.response.data.message;
 	} finally {
 		loading.value = false;
 	}
