@@ -8,7 +8,15 @@ import { onMessage, sendMessage } from "webext-bridge";
 	- store settings data
 	- load sidebar(content.js) in page
 
+	- reload the runtime to install the new version
+
 */
+
+browser.runtime.onUpdateAvailable.addListener((details) => {
+	console.log(details);
+
+	browser.runtime.reload();
+});
 
 /** Event listener on page update; injects content.js if there is a project for it */
 browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
