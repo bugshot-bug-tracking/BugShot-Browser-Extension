@@ -92,7 +92,18 @@ export const useMainPopupStore = defineStore("main-popup", {
 					return false;
 				});
 
-			if (alive === false) return false;
+			if (alive === false) {
+				try {
+					let response = await browser.scripting.executeScript({
+						target: { tabId: this.tab.id },
+						files: ["content/index.js"],
+					});
+
+					console.log(response);
+				} catch (error) {
+					return false;
+				}
+			}
 
 			return true;
 		},

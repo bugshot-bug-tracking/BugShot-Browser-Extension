@@ -102,6 +102,13 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 	// console.log(`Injected content-script in "${tabId}".\n`, injectResult);
 });
 
+/**
+ * Used for checking if the extension context is still valid from the content-script
+ */
+onMessage("checkStatus", () => {
+	return "ok";
+});
+
 //** --------- STORAGE --------- */
 
 onMessage("getToken", () => {

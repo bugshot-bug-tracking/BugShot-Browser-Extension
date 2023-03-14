@@ -11,6 +11,7 @@ import "vue-universal-modal/dist/index.css";
 import gComponents from "~/modules/globalComponents";
 
 import App from "./App.vue";
+import { sendMessage } from "webext-bridge";
 
 // Firefox `browser.tabs.executeScript()` requires scripts return a primitive value
 (() => {
@@ -74,4 +75,29 @@ import App from "./App.vue";
 
 		if (message === "content-status") sendResponse("ok");
 	});
+
+	//check every 10s if the context is still valid; if it's not (error) remove the sidebar from the page
+	var checkInterval = setInterval(async () => {
+		try {
+			let response = await sendMessage("checkStatus", {}, "background");
+			console.log(response);
+		} catch (error) {
+			console.log(error);
+			removeSidebar();
+			clearInterval(checkInterval);
+		}
+	}, 1000 * 10);
 })();
+
+function removeSidebar() {
+	let domBugShot = document.getElementsByTagName("bugshot-sidebar");
+
+	if (domBugShot.length !== 0) {
+		for (let index = 0; index < domBugShot.length; index++) {
+			const element = domBugShot[index];
+
+			// preferably delete the parent div but it can be dangerous if somehow the bugshot-sidebar is in body
+			element.remove();
+		}
+	}
+}
