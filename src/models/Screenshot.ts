@@ -8,6 +8,7 @@ export interface Screenshot {
 		position_y?: number;
 		web_position_x?: number;
 		web_position_y?: number;
+		device_pixel_ratio?: number;
 		url: string;
 	};
 }

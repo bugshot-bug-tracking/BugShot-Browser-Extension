@@ -41,8 +41,8 @@ const overlay = reactive({
 });
 
 const markerPosition = computed(() => ({
-	left: store.clientX + "px",
-	top: store.clientY + "px",
+	left: store.getFirstMarkerCoordinates.x + "%",
+	top: store.getFirstMarkerCoordinates.y + "%",
 }));
 
 const createMark = async (event: MouseEvent) => {
@@ -53,9 +53,18 @@ const createMark = async (event: MouseEvent) => {
 	await nextTick(); // wait for the document update so the overlay is not captured
 	await new Promise((resolve) => setTimeout(resolve, 150));
 
-	let response = await sendMessage("takeScreenshot", {});
+	const element = document.elementFromPoint(event.clientX, event.clientY);
+	const coordinates = element?.getBoundingClientRect();
 
-	store.screenshots.push(response.payload);
+	// coordinates relative to what user sees on screen
+	store.clientX = event.clientX;
+	store.clientY = event.clientY;
+
+	// coordinates relative to the top of the page (it considers scroll)
+	store.pageX = event.pageX;
+	store.pageY = event.pageY;
+
+	overlay.showMarker = true;
 
 	const generateQuerySelector = (el: Element | null): string => {
 		if (el === null) return "";
@@ -73,22 +82,9 @@ const createMark = async (event: MouseEvent) => {
 		return generateQuerySelector(el.parentElement) + " > " + str;
 	};
 
-	const element = document.elementFromPoint(event.clientX, event.clientY);
-	const coordinates = element?.getBoundingClientRect();
-
-	overlay.show = true;
-
 	store.selector = generateQuerySelector(element);
 
-	// coordinates relative to what user sees on screen
-	store.clientX = event.clientX;
-	store.clientY = event.clientY;
-
-	// coordinates relative to the top of the page (it considers scroll)
-	store.pageX = event.pageX;
-	store.pageY = event.pageY;
-
-	overlay.showMarker = true;
+	store.devicePixelRatio = window.devicePixelRatio;
 
 	let marker = {
 		position_x: store.clientX,
@@ -107,10 +103,13 @@ const createMark = async (event: MouseEvent) => {
 		screenshot_height: window.innerHeight,
 		screenshot_width: window.innerWidth,
 
+		device_pixel_ratio: store.devicePixelRatio,
+
 		target_full_selector: unique(element, {
 			fromRoot: true,
 		}),
 		target_short_selector: unique(element),
+
 		target_html:
 			element.outerHTML.length < 2 << 15
 				? element.outerHTML
@@ -118,6 +117,12 @@ const createMark = async (event: MouseEvent) => {
 	};
 
 	store.markers.push(marker);
+
+	let response = await sendMessage("takeScreenshot", {});
+
+	store.screenshots.push(response.payload);
+
+	overlay.show = true;
 
 	console.log(store);
 

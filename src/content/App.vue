@@ -133,7 +133,7 @@ const add = reactive({
 	cancel: () => {
 		add.formTab = false;
 		add.overlay = false;
-		useReportStore().destroy();
+		useReportStore().$reset();
 	},
 });
 

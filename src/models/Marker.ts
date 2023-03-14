@@ -18,6 +18,8 @@ export interface Marker {
 		screenshot_height: number;
 		screenshot_width: number;
 
+		device_pixel_ratio?: number;
+
 		target_full_selector: string;
 		target_short_selector: string;
 		target_html: string;

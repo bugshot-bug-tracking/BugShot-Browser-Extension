@@ -5,7 +5,7 @@
 ### Tools used:
 
     - Node v16.16.0
-    - Pnpm v7.13.4
+    - Pnpm v7.29.2
 
 ### Commands to build:
 
