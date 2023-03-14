@@ -256,5 +256,6 @@
 	"markers": "Markers",
 	"down_for_maintenance": "We're down for maintenance",
 	"maintenance_in_progress": "Maintenance in progress!",
-	"maintenance_in_progress_subtext": "Hello! This is not an error, at the moment the website is in maintenance mode, we will be back up shortly!"
+	"maintenance_in_progress_subtext": "Hello! This is not an error, at the moment the website is in maintenance mode, we will be back up shortly!",
+	"bug_created": "Bug report created!"
 }

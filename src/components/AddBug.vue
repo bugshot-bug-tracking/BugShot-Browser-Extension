@@ -232,7 +232,7 @@ const submit = async () => {
 		await store.submit();
 
 		loadingModal.state = 1;
-		loadingModal.message = `Bug report created!`;
+		loadingModal.message = t("bug_created");
 	} catch (error) {
 		loadingModal.state = 2;
 

@@ -256,5 +256,6 @@
 	"markers": "Markierungen",
 	"down_for_maintenance": "Wegen Wartungarbeiten aktuell offline",
 	"maintenance_in_progress": "Wartungsarbeiten im Gange!",
-	"maintenance_in_progress_subtext": "Hallo! Das ist kein Fehler. Im Moment befindet sich die Webseite im Wartungsmodus. BugShot ist in Kürze wieder verfügbar!"
+	"maintenance_in_progress_subtext": "Hallo! Das ist kein Fehler. Im Moment befindet sich die Webseite im Wartungsmodus. BugShot ist in Kürze wieder verfügbar!",
+	"bug_created": "Bug erfasst!"
 }
