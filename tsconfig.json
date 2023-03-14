@@ -17,6 +17,7 @@
 			"vite/client",
 			"vue/macros",
 			"chrome",
+			"@intlify/unplugin-vue-i18n/client",
 			"@intlify/unplugin-vue-i18n/messages"
 		],
 		"paths": {

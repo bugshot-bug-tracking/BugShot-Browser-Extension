@@ -2,14 +2,11 @@ import * as storage from "~/logic/backgroundStorage";
 import { onMessage, sendMessage } from "webext-bridge";
 
 /*
-
 	Background script goals:
 	- store auth info
 	- store settings data
 	- load sidebar(content.js) in page
-
 	- reload the runtime to install the new version
-
 */
 
 browser.runtime.onUpdateAvailable.addListener((details) => {

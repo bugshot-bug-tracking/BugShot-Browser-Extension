@@ -114,7 +114,6 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
 import { useAuthStore } from "~/stores/auth";
 
 const { t } = useI18n();
@@ -144,7 +143,7 @@ const submit = async () => {
 			email: email.value,
 			password: password.value,
 		});
-	} catch (error: Error) {
+	} catch (error: any) {
 		console.log(error);
 		password.error = true;
 		password.errorMessage = error.response.data.message;
