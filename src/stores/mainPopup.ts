@@ -103,6 +103,8 @@ export const useMainPopupStore = defineStore("main-popup", {
 					});
 
 					console.log(response);
+
+					if (response[0]?.error != undefined) return false;
 				} catch (error) {
 					console.log(error);
 
