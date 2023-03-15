@@ -6,15 +6,11 @@
 	<div v-else>
 		<Login v-if="!auth" />
 
-		<Main
-			v-if="auth && !noProject && !errorPage"
-			@noProjects="noProject = true"
-			@error="errorPage = true"
-		/>
+		<Error v-else-if="errorPage" />
 
-		<Empty v-if="auth && noProject && !errorPage" />
+		<Empty v-else-if="noProject" />
 
-		<Error v-if="auth && errorPage" />
+		<Main v-else @noProjects="noProject = true" @error="errorPage = true" />
 	</div>
 </template>
 

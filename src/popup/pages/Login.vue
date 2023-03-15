@@ -115,6 +115,7 @@
 
 <script setup lang="ts">
 import { useAuthStore } from "~/stores/auth";
+import { useMainPopupStore } from "~/stores/mainPopup";
 
 const { t } = useI18n();
 const store = useAuthStore();
@@ -143,6 +144,13 @@ const submit = async () => {
 			email: email.value,
 			password: password.value,
 		});
+
+		let tab = await useMainPopupStore().getActiveTab();
+		if (tab?.id != undefined)
+			await browser.tabs.sendMessage(tab.id, "login").catch((e) => {
+				console.log(e);
+				return false;
+			});
 	} catch (error: any) {
 		console.log(error);
 		password.error = true;

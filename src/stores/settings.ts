@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { onMessage, sendMessage } from "webext-bridge";
 import { position, locale, markers } from "~/logic/contentStorage";
-import { Position, SettingsState, Theme } from "~/models/settings-store";
+import { Position, Theme } from "~/models/settings-store";
 import { useI18nStore } from "./i18n";
 
 export const useSettingsStore = defineStore("settings", {
@@ -12,6 +12,8 @@ export const useSettingsStore = defineStore("settings", {
 		theme: Theme.Light, // global setting
 		markers: markers,
 		markerShow: true,
+
+		disabled: false,
 	}),
 
 	actions: {

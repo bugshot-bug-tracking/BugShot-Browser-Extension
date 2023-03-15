@@ -237,7 +237,15 @@ const themes = Object.keys(Theme)
 		value: Theme[x as keyof typeof Theme],
 	}));
 
-const logout = useAuthStore().logout;
+const logout = async () => {
+	if (store.tab?.id)
+		await browser.tabs.sendMessage(store.tab.id, "logout").catch((e) => {
+			console.log(e);
+			return false;
+		});
+
+	await useAuthStore().logout();
+};
 </script>
 
 <style lang="scss" scoped>

@@ -89,8 +89,11 @@ export const useMainPopupStore = defineStore("main-popup", {
 			let alive = await browser.tabs
 				.sendMessage(this.tab?.id, "content-status")
 				.catch((e) => {
+					console.log(e);
 					return false;
 				});
+
+			console.log(alive);
 
 			if (alive === false) {
 				try {
@@ -101,6 +104,8 @@ export const useMainPopupStore = defineStore("main-popup", {
 
 					console.log(response);
 				} catch (error) {
+					console.log(error);
+
 					return false;
 				}
 			}
