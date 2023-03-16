@@ -71,7 +71,6 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
 import { Screenshot } from "~/models/Screenshot";
 
 const props = defineProps({
@@ -138,13 +137,15 @@ const showImage = computed(() => {
 			img.attributes.position_x <= 0 && bigScreen.value.naturalWidth <= 0
 				? 0
 				: (img.attributes.position_x / bigScreen.value.naturalWidth) *
-				  100;
+				  100 *
+				  (img.attributes.device_pixel_ratio ?? 1);
 
 		mark.y =
 			img.attributes.position_y <= 0 && bigScreen.value.naturalHeight <= 0
 				? 0
 				: (img.attributes.position_y / bigScreen.value.naturalHeight) *
-				  100;
+				  100 *
+				  (img.attributes.device_pixel_ratio ?? 1);
 	});
 
 	return img.attributes.base64;

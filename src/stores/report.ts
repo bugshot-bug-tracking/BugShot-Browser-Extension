@@ -21,6 +21,8 @@ export const useReportStore = defineStore("report", {
 		pageX: 0,
 		pageY: 0,
 
+		devicePixelRatio: 1,
+
 		selector: "",
 
 		screenshots: [] as string[],
@@ -29,30 +31,6 @@ export const useReportStore = defineStore("report", {
 	}),
 
 	actions: {
-		async destroy() {
-			this.bug = {
-				designation: "",
-				description: "",
-				deadline: null as String | null,
-			};
-
-			this.priority = 2;
-
-			this.clientX = 0;
-			this.clientY = 0;
-
-			this.pageX = 0;
-			this.pageY = 0;
-
-			this.selector = "";
-
-			this.screenshots = [] as string[];
-			this.markers = [] as Object[];
-			this.attachments = [] as { designation: string; base64: string }[];
-
-			return true;
-		},
-
 		async submit() {
 			let status_id = useMainStore().getFirstStatus?.id;
 
@@ -89,6 +67,7 @@ export const useReportStore = defineStore("report", {
 							position_y: this.clientY,
 							web_position_x: this.pageX,
 							web_position_y: this.pageY,
+							device_pixel_ratio: this.devicePixelRatio,
 							markers: this.markers,
 						});
 				})
@@ -102,12 +81,30 @@ export const useReportStore = defineStore("report", {
 
 			console.log(bug);
 
-			await this.destroy();
+			this.$reset();
 
 			await useMainStore().fetchStatuses();
 			await useMainStore().fetchMarkers();
 		},
 	},
 
-	getters: {},
+	getters: {
+		getFirstMarkerCoordinates: (state) => {
+			if (state.markers[0] == undefined) return { x: 0, y: 0 };
+
+			let marker = state.markers[0];
+
+			return {
+				x:
+					marker.position_x <= 0
+						? 0
+						: (marker.position_x / marker.screenshot_width) * 100,
+
+				y:
+					marker.position_y <= 0
+						? 0
+						: (marker.position_y / marker.screenshot_height) * 100,
+			};
+		},
+	},
 });

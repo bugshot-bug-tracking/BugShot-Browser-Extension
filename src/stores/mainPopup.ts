@@ -89,10 +89,28 @@ export const useMainPopupStore = defineStore("main-popup", {
 			let alive = await browser.tabs
 				.sendMessage(this.tab?.id, "content-status")
 				.catch((e) => {
+					console.log(e);
 					return false;
 				});
 
-			if (alive === false) return false;
+			console.log(alive);
+
+			if (alive === false) {
+				try {
+					let response = await browser.scripting.executeScript({
+						target: { tabId: this.tab.id },
+						files: ["content/index.js"],
+					});
+
+					console.log(response);
+
+					if (response[0]?.error != undefined) return false;
+				} catch (error) {
+					console.log(error);
+
+					return false;
+				}
+			}
 
 			return true;
 		},

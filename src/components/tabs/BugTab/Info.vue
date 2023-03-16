@@ -293,7 +293,6 @@
 import dateFix from "~/util/dateFixISO";
 import { useMainStore } from "~/stores/main";
 import { useI18nStore } from "~/stores/i18n";
-import { useI18n } from "vue-i18n";
 import { Status } from "~/models/Status.js";
 
 import { BugUserRole } from "~/models/BugUserRole";

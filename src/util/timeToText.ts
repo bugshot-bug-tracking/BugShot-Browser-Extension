@@ -1,5 +1,3 @@
-import { useI18n } from "vue-i18n";
-
 export default function timeToText(time: string | Date) {
 	let i18n = useI18n();
 

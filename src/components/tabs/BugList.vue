@@ -46,7 +46,6 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
 import { useMainStore } from "~/stores/main";
 import dateFix from "~/util/dateFixISO";
 

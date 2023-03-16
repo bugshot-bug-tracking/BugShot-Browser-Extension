@@ -1,5 +1,5 @@
 <template>
-	<article :class="`poss-${position}`">
+	<article :class="`poss-${position}`" v-if="!disabled">
 		<div flex flex-row-reverse v-if="done && settings.sidebar">
 			<Sidebar
 				:id="store.getCompany.id"
@@ -37,7 +37,10 @@
 		/>
 	</article>
 
-	<div class="markers" v-if="markerList.length > 0">
+	<div
+		class="markers"
+		v-if="markerList.length > 0 && settings.markerShow && !disabled"
+	>
 		<MarkerList
 			:show="settings.markers"
 			:list="markerList"
@@ -61,15 +64,26 @@ const settings = useSettingsStore();
 //WIP use for loading animation; now used for proper component init
 const done = ref(false);
 
-onMounted(async () => {
-	await useAuthStore().init();
+const init = async () => {
+	try {
+		await useAuthStore().init();
 
-	settings.init();
+		await settings.init();
 
-	await store.init();
+		await store.init();
 
-	done.value = true;
+		done.value = true;
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+const disabled = computed(() => settings.disabled);
+watch(disabled, (newValue, oldValue) => {
+	if (newValue === false && oldValue === true) init();
 });
+
+onMounted(init);
 
 const sidebar = reactive({
 	state: false,
@@ -133,7 +147,7 @@ const add = reactive({
 	cancel: () => {
 		add.formTab = false;
 		add.overlay = false;
-		useReportStore().destroy();
+		useReportStore().$reset();
 	},
 });
 

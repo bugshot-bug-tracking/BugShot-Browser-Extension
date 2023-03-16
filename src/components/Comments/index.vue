@@ -84,7 +84,6 @@ import colors from "~/util/colors";
 import { maxlengthContentEditable } from "~/util/maxlength-contenteditable.js";
 import { useAuthStore } from "~/stores/auth";
 import { useMainStore } from "~/stores/main";
-import { useI18n } from "vue-i18n";
 
 const props = defineProps({
 	bug_id: {
