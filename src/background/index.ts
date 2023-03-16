@@ -2,13 +2,18 @@ import * as storage from "~/logic/backgroundStorage";
 import { onMessage, sendMessage } from "webext-bridge";
 
 /*
-
 	Background script goals:
 	- store auth info
 	- store settings data
 	- load sidebar(content.js) in page
-
+	- reload the runtime to install the new version
 */
+
+browser.runtime.onUpdateAvailable.addListener((details) => {
+	console.log(details);
+
+	browser.runtime.reload();
+});
 
 /** Event listener on page update; injects content.js if there is a project for it */
 browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
@@ -95,6 +100,13 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 	});
 
 	// console.log(`Injected content-script in "${tabId}".\n`, injectResult);
+});
+
+/**
+ * Used for checking if the extension context is still valid from the content-script
+ */
+onMessage("checkStatus", () => {
+	return "ok";
 });
 
 //** --------- STORAGE --------- */

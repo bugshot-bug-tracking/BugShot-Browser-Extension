@@ -1,8 +1,6 @@
 import axios from "axios";
 import { defineStore } from "pinia";
 
-import { useI18n } from "vue-i18n";
-
 export const useI18nStore = defineStore("i18n", {
 	state: () => ({
 		locale: import.meta.env.VITE_I18N_LOCALE || "en",

@@ -1,153 +1,22 @@
 <template>
-	<main v-if="loaded">
-		<div class="bs-container">
-			<h5>{{ t("company", 2) }}</h5>
+	<Spinner v-if="!loaded" style="height: 30em" />
 
-			<div class="selector" v-if="companies.length > 0">
-				<v-select
-					:options="companies"
-					:placeholder="t('please_choose') + '....'"
-					:get-option-label="
-						(option) => option.attributes.designation
-					"
-					:reduce="(option) => option.id"
-					v-model="main.company"
-					:clearable="false"
-					@option:selected="main.changeCompany"
-				>
-					<template #open-indicator="{ attributes }">
-						<img
-							class="black-to-purple"
-							style="background-color: unset; cursor: pointer"
-							v-bind="attributes"
-							src="/assets/icons/caret_down.svg"
-						/>
-					</template>
+	<div v-else>
+		<main>
+			<div class="bs-container">
+				<h5>{{ t("company", 2) }}</h5>
 
-					<template v-slot:option="option">
-						{{ option.attributes.designation }}
-					</template>
-
-					<template v-slot:selected-option="option">
-						{{ option.attributes.designation }}
-					</template>
-				</v-select>
-			</div>
-
-			<h5>{{ t("project", 2) }}</h5>
-
-			<div class="selector">
-				<v-select
-					:options="main.getCompanyProjects(main.company)"
-					:placeholder="t('please_choose') + '....'"
-					:get-option-label="
-						(option) => option.attributes.designation
-					"
-					:reduce="(option) => option.id"
-					v-model="main.project"
-					:clearable="false"
-					@option:selected="main.changeProject"
-				>
-					<template #open-indicator="{ attributes }">
-						<img
-							class="black-to-purple"
-							style="background-color: unset; cursor: pointer"
-							v-bind="attributes"
-							src="/assets/icons/caret_down.svg"
-						/>
-					</template>
-
-					<template v-slot:option="option">
-						{{ option.attributes.designation }}
-					</template>
-
-					<template v-slot:selected-option="option">
-						{{ option.attributes.designation }}
-					</template>
-				</v-select>
-			</div>
-		</div>
-
-		<div class="bs-container">
-			<h5>{{ t("setting", 2) }}</h5>
-
-			<div class="visible" :class="{ off: !store.sidebar }">
-				<p>
-					{{ t("sidebar") }}:
-					<span>{{ store.sidebar ? t("on") : t("off") }}</span>
-				</p>
-
-				<label class="switch">
-					<input
-						type="checkbox"
-						v-model="store.sidebar"
-						@change="store.setSidebar"
-					/>
-
-					<span class="slider round"></span>
-				</label>
-			</div>
-
-			<div class="visible" :class="{ off: !store.markers }" mt-2>
-				<p>
-					{{ t("markers") }}:
-					<span>{{ store.markers ? t("on") : t("off") }}</span>
-				</p>
-
-				<label class="switch">
-					<input
-						type="checkbox"
-						v-model="store.markers"
-						@change="store.setMarkers"
-					/>
-
-					<span class="slider round"></span>
-				</label>
-			</div>
-
-			<h5 v-show="store.sidebar">{{ t("sidebar_position") }}</h5>
-
-			<div class="position" v-show="store.sidebar">
-				<div>
-					<div
-						class="position"
-						:class="{
-							active: store.position === Position.BottomRight,
-						}"
-						@click="store.setPosition(Position.BottomRight)"
-					/>
-
-					<p>{{ t("bottom_right_corner") }}</p>
-				</div>
-
-				<div>
-					<div
-						class="position top-right"
-						:class="{
-							active: store.position === Position.TopRight,
-						}"
-						@click="store.setPosition(Position.TopRight)"
-					/>
-
-					<p>{{ t("top_right_corner") }}</p>
-				</div>
-			</div>
-
-			<hr v-if="false" />
-
-			<div class="themes" v-if="false">
-				<p>{{ t("theme", 2) }}</p>
-
-				<div class="selector">
+				<div class="selector" v-if="companies.length > 0">
 					<v-select
-						:options="themes"
+						:options="companies"
 						:placeholder="t('please_choose') + '....'"
-						:get-option-label="(option:any) => option.name"
-						:reduce="(option:any) => option.value"
-						v-model="store.theme"
+						:get-option-label="
+						(option:Company) => option.attributes.designation
+					"
+						:reduce="(option:Company) => option.id"
+						v-model="main.company"
 						:clearable="false"
-						:searchable="false"
-						@option:selected="store.setTheme"
+						@option:selected="main.changeCompany"
 					>
 						<template #open-indicator="{ attributes }">
 							<img
@@ -159,41 +28,179 @@
 						</template>
 
 						<template v-slot:option="option">
-							{{ option.name }}
+							{{ option.attributes.designation }}
 						</template>
 
 						<template v-slot:selected-option="option">
-							{{ option.name }}
+							{{ option.attributes.designation }}
+						</template>
+					</v-select>
+				</div>
+
+				<h5>{{ t("project", 2) }}</h5>
+
+				<div class="selector">
+					<v-select
+						:options="main.getCompanyProjects(main.company)"
+						:placeholder="t('please_choose') + '....'"
+						:get-option-label="
+						(option:Company) => option.attributes.designation
+					"
+						:reduce="(option:Company) => option.id"
+						v-model="main.project"
+						:clearable="false"
+						@option:selected="main.changeProject"
+					>
+						<template #open-indicator="{ attributes }">
+							<img
+								class="black-to-purple"
+								style="background-color: unset; cursor: pointer"
+								v-bind="attributes"
+								src="/assets/icons/caret_down.svg"
+							/>
+						</template>
+
+						<template v-slot:option="option">
+							{{ option.attributes.designation }}
+						</template>
+
+						<template v-slot:selected-option="option">
+							{{ option.attributes.designation }}
 						</template>
 					</v-select>
 				</div>
 			</div>
 
-			<hr />
+			<div class="bs-container">
+				<h5>{{ t("setting", 2) }}</h5>
 
-			<div class="lang">
-				<LanguageSwitch @change="store.setLocale" />
+				<div class="visible" :class="{ off: !store.sidebar }">
+					<p>
+						{{ t("sidebar") }}:
+						<span>{{ store.sidebar ? t("on") : t("off") }}</span>
+					</p>
+
+					<label class="switch">
+						<input
+							type="checkbox"
+							v-model="store.sidebar"
+							@change="store.setSidebar"
+						/>
+
+						<span class="slider round"></span>
+					</label>
+				</div>
+
+				<div class="visible" :class="{ off: !store.markers }" mt-2>
+					<p>
+						{{ t("markers") }}:
+						<span>{{ store.markers ? t("on") : t("off") }}</span>
+					</p>
+
+					<label class="switch">
+						<input
+							type="checkbox"
+							v-model="store.markers"
+							@change="store.setMarkers"
+						/>
+
+						<span class="slider round"></span>
+					</label>
+				</div>
+
+				<h5 v-show="store.sidebar">{{ t("sidebar_position") }}</h5>
+
+				<div class="position" v-show="store.sidebar">
+					<div>
+						<div
+							class="position"
+							:class="{
+								active: store.position === Position.BottomRight,
+							}"
+							@click="store.setPosition(Position.BottomRight)"
+						/>
+
+						<p>{{ t("bottom_right_corner") }}</p>
+					</div>
+
+					<div>
+						<div
+							class="position top-right"
+							:class="{
+								active: store.position === Position.TopRight,
+							}"
+							@click="store.setPosition(Position.TopRight)"
+						/>
+
+						<p>{{ t("top_right_corner") }}</p>
+					</div>
+				</div>
+
+				<hr v-if="false" />
+
+				<div class="themes" v-if="false">
+					<p>{{ t("theme", 2) }}</p>
+
+					<div class="selector">
+						<v-select
+							:options="themes"
+							:placeholder="t('please_choose') + '....'"
+							:get-option-label="(option:any) => option.name"
+							:reduce="(option:any) => option.value"
+							v-model="store.theme"
+							:clearable="false"
+							:searchable="false"
+							@option:selected="store.setTheme"
+						>
+							<template #open-indicator="{ attributes }">
+								<img
+									class="black-to-purple"
+									style="
+										background-color: unset;
+										cursor: pointer;
+									"
+									v-bind="attributes"
+									src="/assets/icons/caret_down.svg"
+								/>
+							</template>
+
+							<template v-slot:option="option">
+								{{ option.name }}
+							</template>
+
+							<template v-slot:selected-option="option">
+								{{ option.name }}
+							</template>
+						</v-select>
+					</div>
+				</div>
+
+				<hr />
+
+				<div class="lang">
+					<LanguageSwitch @change="store.setLocale" />
+				</div>
 			</div>
-		</div>
 
-		<a class="log-out" @click="logout">
-			<img src="/assets/icons/logout.svg" alt="logout" />
-			{{ t("log_out") }}
-		</a>
-	</main>
+			<a class="log-out" @click="logout">
+				<img src="/assets/icons/logout.svg" alt="logout" />
+				{{ t("log_out") }}
+			</a>
+		</main>
 
-	<footer class="bs-bt" pt-2 mt-2>
-		{{ t("bugshot_extension") }} v{{ pkg.version }}
-	</footer>
+		<footer class="bs-bt" pt-2 mt-2>
+			{{ t("bugshot_extension") }} v{{ pkg.version }}
+		</footer>
+	</div>
 </template>
 
 <script setup lang="ts">
 import pkg from "~/../package.json";
 import { useAuthStore } from "~/stores/auth";
-import { useI18n } from "vue-i18n";
 import { useSettingsPopupStore } from "~/stores/settings-popup";
 import { Position, Theme } from "~/models/settings-store";
 import { useMainPopupStore } from "~/stores/mainPopup";
+import { Company } from "~/models/Company";
 
 const emit = defineEmits(["noProjects", "error"]);
 
@@ -206,6 +213,7 @@ const loaded = ref(false);
 
 onMounted(async () => {
 	loaded.value = false;
+
 	try {
 		await main.init();
 		if (main.projects.length < 1) emit("noProjects");
@@ -229,7 +237,15 @@ const themes = Object.keys(Theme)
 		value: Theme[x as keyof typeof Theme],
 	}));
 
-const logout = useAuthStore().logout;
+const logout = async () => {
+	if (store.tab?.id)
+		await browser.tabs.sendMessage(store.tab.id, "logout").catch((e) => {
+			console.log(e);
+			return false;
+		});
+
+	await useAuthStore().logout();
+};
 </script>
 
 <style lang="scss" scoped>

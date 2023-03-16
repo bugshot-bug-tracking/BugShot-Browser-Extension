@@ -1,6 +1,12 @@
 <template>
 	<div v-if="show" class="bs-tab bs-scroll">
-		<form @submit.prevent="submit" flex flex-col gap-4>
+		<form
+			@submit.prevent="submit"
+			flex
+			flex-col
+			gap-4
+			@reset.prevent="emit('close')"
+		>
 			<div class="top">
 				<h4 m-0>{{ t("new_bug_report") }}</h4>
 
@@ -10,6 +16,8 @@
 					@click="emit('close')"
 				/>
 			</div>
+
+			<ProjectManager />
 
 			<div class="bs-container" gap-4>
 				<div class="bs-input" ref="name">
@@ -145,9 +153,15 @@
 				</template>
 			</AttachmentsList>
 
-			<button class="bs-btn green" type="submit">
-				{{ t("report_bug") + "!" }}
-			</button>
+			<div flex justify-around>
+				<button class="bs-btn green" type="submit">
+					{{ t("report_bug") + "!" }}
+				</button>
+
+				<button class="bs-btn green empty" type="reset">
+					{{ t("cancel") }}
+				</button>
+			</div>
 		</form>
 
 		<LoadingModal2
@@ -163,7 +177,6 @@
 <script setup lang="ts">
 import toBase64 from "~/util/toBase64";
 import { useReportStore } from "~/stores/report";
-import { useI18n } from "vue-i18n";
 import { useI18nStore } from "~/stores/i18n";
 
 defineProps({
@@ -233,7 +246,7 @@ const submit = async () => {
 		await store.submit();
 
 		loadingModal.state = 1;
-		loadingModal.message = `Bug report created!`;
+		loadingModal.message = t("bug_created");
 	} catch (error) {
 		loadingModal.state = 2;
 

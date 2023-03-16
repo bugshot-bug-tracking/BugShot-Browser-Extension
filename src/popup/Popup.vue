@@ -1,18 +1,16 @@
 <template>
 	<Spinner v-if="loading" style="height: 30em" />
 
+	<Maintenance v-else-if="isMaintenance" />
+
 	<div v-else>
 		<Login v-if="!auth" />
 
-		<Main
-			v-if="auth && !noProject && !errorPage"
-			@noProjects="noProject = true"
-			@error="errorPage = true"
-		/>
+		<Error v-else-if="errorPage" />
 
-		<Empty v-if="auth && noProject && !errorPage" />
+		<Empty v-else-if="noProject" />
 
-		<Error v-if="auth && errorPage" />
+		<Main v-else @noProjects="noProject = true" @error="errorPage = true" />
 	</div>
 </template>
 
@@ -24,6 +22,7 @@ import Error from "./pages/Error.vue";
 
 import { useI18nStore } from "~/stores/i18n";
 import { useAuthStore } from "~/stores/auth";
+import Maintenance from "./pages/Maintenance.vue";
 
 useI18nStore().init();
 
@@ -35,17 +34,19 @@ const auth = computed(() => store.isAuthenticated);
 const noProject = ref(false);
 const errorPage = ref(false);
 
+const isMaintenance = ref(false);
+
 const init = async () => {
 	try {
-		let result = await store.init();
+		loading.value = true;
 
-		// if not authenticated exit
-		if (!result) {
-			console.log("An error occured!", result);
-			return;
-		}
-	} catch (error) {
+		await store.init();
+	} catch (error: any) {
 		console.log(error);
+
+		if (error?.response?.status === 503)
+			return (isMaintenance.value = true);
+
 		errorPage.value = true;
 	} finally {
 		loading.value = false;

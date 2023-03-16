@@ -72,7 +72,6 @@
 import axios from "axios";
 import { User } from "~/models/User";
 import { useMainStore } from "~/stores/main";
-import { useI18n } from "vue-i18n";
 
 const emit = defineEmits(["close"]);
 

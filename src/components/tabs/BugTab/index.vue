@@ -63,7 +63,6 @@
 
 <script setup lang="ts">
 import axios from "axios";
-import { useI18n } from "vue-i18n";
 import { useMainStore } from "~/stores/main";
 import toBase64 from "~/util/toBase64";
 

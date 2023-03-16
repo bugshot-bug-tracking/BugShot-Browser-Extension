@@ -49,6 +49,7 @@ const setCoords = () => {
 	let element = document.querySelector(
 		props.marker.attributes.target_full_selector
 	);
+
 	if (!element) return;
 	const current = element.getBoundingClientRect();
 

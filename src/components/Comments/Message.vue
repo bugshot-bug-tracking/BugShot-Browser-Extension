@@ -18,7 +18,6 @@
 <script setup lang="ts">
 import dateFix from "~/util/dateFixISO";
 import colors from "~/util/colors";
-import { useI18n } from "vue-i18n";
 
 const props = defineProps({
 	content: {

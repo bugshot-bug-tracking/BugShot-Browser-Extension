@@ -114,8 +114,8 @@
 </template>
 
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
 import { useAuthStore } from "~/stores/auth";
+import { useMainPopupStore } from "~/stores/mainPopup";
 
 const { t } = useI18n();
 const store = useAuthStore();
@@ -144,10 +144,20 @@ const submit = async () => {
 			email: email.value,
 			password: password.value,
 		});
-	} catch (error: Error) {
+
+		let tab = await useMainPopupStore().getActiveTab();
+		if (tab?.id != undefined)
+			await browser.tabs.sendMessage(tab.id, "login").catch((e) => {
+				console.log(e);
+				return false;
+			});
+	} catch (error: any) {
 		console.log(error);
 		password.error = true;
-		password.errorMessage = error.response.data.message;
+
+		if (error?.response?.status === 503)
+			password.errorMessage = t("down_for_maintenance");
+		else password.errorMessage = error.response.data.message;
 	} finally {
 		loading.value = false;
 	}
