@@ -2,8 +2,9 @@
 	<article :class="`poss-${position}`" v-if="!disabled">
 		<div flex flex-row-reverse v-if="done && settings.sidebar">
 			<Sidebar
-				:id="store.getCompany.id"
+				:company_id="store.getCompany.id"
 				:organization_id="store.getCompany.attributes.organization_id"
+				:project_id="store.getProject.id"
 				:open="sidebar.state"
 				@openBugList="buglist.open"
 				@open="sidebar.open"
