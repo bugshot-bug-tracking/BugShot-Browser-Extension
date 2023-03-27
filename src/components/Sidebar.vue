@@ -22,7 +22,7 @@
 
 				<li @click="openProject">
 					<img src="/assets/icons/projects.svg" alt="projects" />
-					<p>{{ t("project", 2) }}</p>
+					<p>{{ t("project") }}</p>
 				</li>
 			</div>
 

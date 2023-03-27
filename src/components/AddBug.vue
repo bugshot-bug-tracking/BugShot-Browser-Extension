@@ -22,7 +22,7 @@
 			<div class="bs-container" gap-4>
 				<div class="bs-input" ref="name">
 					<label>
-						{{ t("bug_name") }}
+						{{ t("bug") }}
 
 						<span>{{ `${store.bug.designation.length}/50` }}</span>
 					</label>
@@ -41,7 +41,7 @@
 
 				<div class="bs-input" ref="description">
 					<label>
-						{{ t("describe_problem") }}
+						{{ t("bug_desc") }}
 
 						<span>
 							{{ `${store.bug.description.length}/1500` }}
@@ -155,7 +155,7 @@
 
 			<div flex justify-around>
 				<button class="bs-btn green" type="submit">
-					{{ t("report_bug") + "!" }}
+					{{ t("report_bug") }}
 				</button>
 
 				<button class="bs-btn green empty" type="reset">
@@ -170,7 +170,9 @@
 			:message="loadingModal.message"
 			@close="loadingModal.clear"
 			@onSuccess="close"
-		/>
+		>
+			<template #success-header> {{ t("bug_created") }} </template>
+		</LoadingModal2>
 	</div>
 </template>
 
@@ -246,7 +248,6 @@ const submit = async () => {
 		await store.submit();
 
 		loadingModal.state = 1;
-		loadingModal.message = t("bug_created");
 	} catch (error) {
 		loadingModal.state = 2;
 
