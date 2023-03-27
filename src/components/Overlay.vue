@@ -25,12 +25,20 @@ const emit = defineEmits(["done", "close"]);
 let store = useReportStore();
 const settings = useSettingsStore();
 
+const markerInitialState = ref(undefined as undefined | boolean);
+
 onMounted(() => {
 	document.addEventListener("keydown", closeEvent);
+
+	markerInitialState.value = settings.markerShow;
+	if (settings.markerShow === true) settings.markerShow = false;
 });
 
 onUnmounted(() => {
 	document.removeEventListener("keydown", closeEvent);
+
+	if (settings.markerShow === false && markerInitialState.value === true)
+		settings.markerShow = true;
 });
 
 const closeEvent = (event: KeyboardEvent) => {
@@ -52,9 +60,6 @@ const createMark = async (event: MouseEvent) => {
 	if (overlay.showMarker) return;
 
 	overlay.show = false;
-
-	let initState = settings.markerShow;
-	if (settings.markerShow === true) settings.markerShow = false;
 
 	await nextTick(); // wait for the document update so the overlay is not captured
 	await new Promise((resolve) => setTimeout(resolve, 150));
@@ -129,9 +134,6 @@ const createMark = async (event: MouseEvent) => {
 	store.screenshots.push(response.payload);
 
 	overlay.show = true;
-
-	if (settings.markerShow === false && initState === true)
-		settings.markerShow = true;
 
 	console.log(store);
 
