@@ -336,7 +336,6 @@ const loadingModal = reactive({
 		padding: 3px 10px;
 		user-select: none;
 		border: 2px solid;
-		text-transform: capitalize;
 		cursor: pointer;
 
 		&.i1 {

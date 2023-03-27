@@ -242,7 +242,6 @@ const loadingModal = reactive({
 	justify-content: center;
 	cursor: pointer;
 
-	text-transform: capitalize;
 	font-weight: 600;
 	font-size: 1.25em;
 

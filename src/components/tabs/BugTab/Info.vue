@@ -455,7 +455,6 @@ const format = (date: Date) => d(new Date(date).toISOString(), "short");
 		font-weight: bold;
 		color: hsl(230, 40%, 20%);
 		font-size: 14px;
-		text-transform: capitalize;
 		margin-right: 5px;
 		align-self: start;
 	}
