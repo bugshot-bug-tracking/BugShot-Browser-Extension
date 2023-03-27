@@ -24,7 +24,7 @@
 	"bug": "Bug | Bugs",
 	"attachment": "Anhang | Anhänge",
 	"comment": "Kommentar | Kommentare",
-	"member": "Member | Members",
+	"member": "Mitglied | Mitglieder",
 	"invoice": "Rechnung | Rechnungen",
 	"role": "Rolle | Rollen",
 	"user": "User | Users",
@@ -179,13 +179,13 @@
 		"max_file_size_limit": "Folgende Dateien überschreiten ein Maximum von {x} MB:\n",
 		"characters_exceeded": "Zeichenbegrenzung überschritten"
 	},
-	"new_bug_report": "Neuer Fehlerbericht",
+	"new_bug_report": "Bug Report",
 	"bug_name": "Fehlername",
-	"bug_desc": "Fehlerbeschreibung",
+	"bug_desc": "Bug Beschreibung",
 	"describe_problem": "Beschreibe Dein Problem",
-	"report_bug": "Fehler melden",
-	"set_priority": "Priorität setzen",
-	"pick_date": "Suche Dir einen Termin aus",
+	"report_bug": "Bug melden!",
+	"set_priority": "Priorität festlegen",
+	"pick_date": "Deadline",
 	"add_new_column": "Neue Spalte hinzufügen",
 	"enter_column_name": "Spaltennamen eingeben",
 	"team": "Mannschaft",
@@ -236,7 +236,7 @@
 	"remember_me": "An mich erinnern",
 	"welcome_to": "Willkommen bei",
 	"please_login": "Bitte einloggen",
-	"bug_list": "Liste der Bugs",
+	"bug_list": "Bug Übersicht",
 	"admin": "Admin",
 	"current_project": "Aktuelles Projekt",
 	"members_updated": "Mitglieder aktualisiert!",
@@ -257,5 +257,5 @@
 	"down_for_maintenance": "Wegen Wartungarbeiten aktuell offline",
 	"maintenance_in_progress": "Wartungsarbeiten im Gange!",
 	"maintenance_in_progress_subtext": "Hallo! Das ist kein Fehler. Im Moment befindet sich die Webseite im Wartungsmodus. BugShot ist in Kürze wieder verfügbar!",
-	"bug_created": "Bug erfasst!"
+	"bug_created": "Yes! Bug reportet."
 }

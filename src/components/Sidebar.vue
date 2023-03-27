@@ -22,7 +22,7 @@
 
 				<li @click="openProject">
 					<img src="/assets/icons/projects.svg" alt="projects" />
-					<p>{{ t("project", 2) }}</p>
+					<p>{{ t("project") }}</p>
 				</li>
 			</div>
 
@@ -49,7 +49,12 @@ const props = defineProps({
 		type: Boolean,
 		description: "State of the sidebar",
 	},
-	id: {
+	project_id: {
+		required: true,
+		type: String,
+		description: "Project ID",
+	},
+	company_id: {
 		required: true,
 		type: String,
 		description: "Company ID",
@@ -78,13 +83,18 @@ const openBugList = () => {
 	emit("openBugList");
 };
 const openAdmin = () => {
-	window.open(import.meta.env.VITE_WEB_URL, "_blank")?.focus();
+	window
+		.open(
+			import.meta.env.VITE_WEB_URL + `/${props.organization_id}`,
+			"_blank"
+		)
+		?.focus();
 };
 const openProject = () => {
 	window
 		.open(
 			import.meta.env.VITE_WEB_URL +
-				`/${props.organization_id}/company/${props.id}`,
+				`/${props.organization_id}/company/${props.company_id}/project/${props.project_id}`,
 			"_blank"
 		)
 		?.focus();

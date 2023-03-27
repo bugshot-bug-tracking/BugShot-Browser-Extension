@@ -15,9 +15,12 @@
 							alt="Success"
 						/>
 					</slot>
-					<slot name="success-header">
-						<div>{{ t("success") + "!" }}</div>
-					</slot>
+
+					<div>
+						<slot name="success-header">
+							{{ t("success") + "!" }}
+						</slot>
+					</div>
 
 					<slot name="success-message">
 						<span v-if="message !== ''">{{ message }} </span>
