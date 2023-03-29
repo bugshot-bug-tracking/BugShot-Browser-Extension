@@ -29,10 +29,14 @@
 
 			<template v-slot:extra>
 				<div class="controls-bottom">
-					<div class="controls">
+					<div
+						class="controls"
+						v-if="hasMarker || screenshots.length > 1"
+					>
 						<div
 							class="btn-hide-mark"
 							@click="mark.show = !mark.show"
+							v-if="hasMarker"
 						>
 							{{ mark.show ? t("hide_mark") : t("show_mark") }}
 						</div>
@@ -165,6 +169,15 @@ const priority = computed(() => {
 		default:
 			return "normal";
 	}
+});
+
+const hasMarker = computed(() => {
+	let img = props.screenshots[counter.value];
+
+	if (img.attributes.position_x == null || img.attributes.position_y == null)
+		return false;
+
+	return true;
 });
 </script>
 
