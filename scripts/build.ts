@@ -12,7 +12,7 @@ const mode = isDev ? Mode.DEV : Mode.PROD;
 
 	if (!valid)
 		return error(
-			"Target not valid, please set process.env.NODE_TARGET basse on src/manifest Target enum."
+			"Target not valid, please set process.env.NODE_TARGET base on src/manifest Target enum."
 		);
 
 	fs.ensureDirSync(r(`dist/${mode}/${target}`));

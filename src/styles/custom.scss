@@ -16,6 +16,12 @@
 		hue-rotate(331deg) brightness(87%) contrast(121%);
 }
 
+.black-to-yellow {
+	color: #ffb057;
+	filter: brightness(0) saturate(1) invert(85%) sepia(58%) saturate(3673%)
+		hue-rotate(317deg) brightness(102%) contrast(101%);
+}
+
 .black-to-gray {
 	color: #9ba5d7;
 	filter: brightness(0) saturate(1) invert(73%) sepia(14%) saturate(897%)
@@ -25,6 +31,12 @@
 .black-to-white {
 	color: #ffffff;
 	filter: brightness(0) invert(1);
+}
+
+.black-to-blue-light {
+	color: #18bed8;
+	filter: brightness(0) saturate(1) invert(66%) sepia(63%) saturate(529%)
+		hue-rotate(140deg) brightness(82%) contrast(109%);
 }
 
 .bs-btn {
