@@ -5,7 +5,7 @@
 		</slot>
 
 		<div class="popup-wrapper">
-			<div class="container">
+			<div class="container" w-a>
 				<span>
 					<p>{{ text }}</p>
 				</span>
@@ -149,7 +149,6 @@ const priorityIcon = computed(() => {
 
 		p {
 			margin: unset;
-			border-bottom: 2px solid #e6e6ff;
 			width: max-content;
 		}
 

@@ -3,9 +3,10 @@
 		<div class="people">
 			<div class="item" v-for="item in list" :key="item.id">
 				<Avatar
-					:size="'XS'"
+					:size="'S'"
 					:first_name="item.attributes.first_name"
 					:last_name="item.attributes.last_name"
+					style="font-size: 0.75rem"
 				/>
 			</div>
 
