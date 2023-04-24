@@ -23,6 +23,8 @@
 		"@types/node": "^18.15.3",
 		"@types/vue-select": "^3.16.2",
 		"@types/webextension-polyfill": "^0.10.0",
+		"@unocss/preset-rem-to-px": "^0.51.8",
+		"@unocss/reset": "^0.51.8",
 		"@vitejs/plugin-vue": "^4.0.0",
 		"@vuepic/vue-datepicker": "^3.5.2",
 		"@vueuse/core": "^9.13.0",
