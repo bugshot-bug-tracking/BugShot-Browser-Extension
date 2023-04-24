@@ -1,18 +1,5 @@
 @import "@vuepic/vue-datepicker/src/VueDatePicker/style/main.scss";
 
-.v-select {
-	--vs-controls-color: #7a2de6;
-	--vs-border-color: #7a2de6;
-
-	--vs-dropdown-option--active-bg: #eee5fc;
-	--vs-dropdown-option--active-color: #1a2040;
-	--vs-dropdown-max-height: 8em;
-
-	.vs__dropdown-menu {
-		@extend .bs-scroll;
-	}
-}
-
 .vue-universal-modal {
 	&:focus-visible {
 		outline: unset;

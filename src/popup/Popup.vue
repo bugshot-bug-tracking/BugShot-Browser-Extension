@@ -15,18 +15,18 @@
 		<Maintenance v-else-if="isMaintenance" flex-1 />
 
 		<div v-else flex-1 p-4>
-		<Login v-if="!auth" />
+			<Login v-if="!auth" />
 
-		<Error v-else-if="errorPage" />
+			<Error v-else-if="errorPage" />
 
-		<Empty v-else-if="noProject" />
+			<Empty v-else-if="noProject" />
 
 			<Main
 				v-else
 				@noProjects="noProject = true"
 				@error="errorPage = true"
 			/>
-	</div>
+		</div>
 	</n-config-provider>
 </template>
 
@@ -100,7 +100,6 @@ const dateLocale = computed(() => {
 
 <style lang="scss">
 @import "~/styles/Style.scss";
-@import "vue-select/dist/vue-select.css";
 
 html input {
 	font-size: 1em;

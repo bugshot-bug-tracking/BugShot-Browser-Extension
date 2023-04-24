@@ -3,7 +3,7 @@
 		<section>
 			<img src="/assets/images/no-project.png" />
 
-			<h1>{{ t("no_project_on_page") }}</h1>
+			<n-h3>{{ t("no_project_on_page") }}</n-h3>
 		</section>
 
 		<a class="log-out" @click="logout">

@@ -7,67 +7,25 @@
 				<h5>{{ t("company", 2) }}</h5>
 
 				<div class="selector" v-if="companies.length > 0">
-					<v-select
-						:options="companies"
+					<n-select
+						v-model:value="main.company"
+						:options="companyOptions"
+						:show-checkmark="false"
 						:placeholder="t('please_choose') + '....'"
-						:get-option-label="
-						(option:Company) => option.attributes.designation
-					"
-						:reduce="(option:Company) => option.id"
-						v-model="main.company"
-						:clearable="false"
-						@option:selected="main.changeCompany"
-					>
-						<template #open-indicator="{ attributes }">
-							<img
-								class="black-to-purple"
-								style="background-color: unset; cursor: pointer"
-								v-bind="attributes"
-								src="/assets/icons/caret_down.svg"
-							/>
-						</template>
-
-						<template v-slot:option="option">
-							{{ option.attributes.designation }}
-						</template>
-
-						<template v-slot:selected-option="option">
-							{{ option.attributes.designation }}
-						</template>
-					</v-select>
+						@update:value="main.changeCompany"
+					/>
 				</div>
 
 				<h5>{{ t("project", 2) }}</h5>
 
 				<div class="selector">
-					<v-select
-						:options="main.getCompanyProjects(main.company)"
+					<n-select
+						v-model:value="main.project"
+						:options="projectOptions"
+						:show-checkmark="false"
 						:placeholder="t('please_choose') + '....'"
-						:get-option-label="
-						(option:Company) => option.attributes.designation
-					"
-						:reduce="(option:Company) => option.id"
-						v-model="main.project"
-						:clearable="false"
-						@option:selected="main.changeProject"
-					>
-						<template #open-indicator="{ attributes }">
-							<img
-								class="black-to-purple"
-								style="background-color: unset; cursor: pointer"
-								v-bind="attributes"
-								src="/assets/icons/caret_down.svg"
-							/>
-						</template>
-
-						<template v-slot:option="option">
-							{{ option.attributes.designation }}
-						</template>
-
-						<template v-slot:selected-option="option">
-							{{ option.attributes.designation }}
-						</template>
-					</v-select>
+						@update:value="main.changeProject"
+					/>
 				</div>
 			</div>
 
@@ -142,7 +100,7 @@
 					<p>{{ t("theme", 2) }}</p>
 
 					<div class="selector">
-						<v-select
+						<!-- <v-select
 							:options="themes"
 							:placeholder="t('please_choose') + '....'"
 							:get-option-label="(option:any) => option.name"
@@ -171,7 +129,7 @@
 							<template v-slot:selected-option="option">
 								{{ option.name }}
 							</template>
-						</v-select>
+						</v-select> -->
 					</div>
 				</div>
 
@@ -201,6 +159,7 @@ import { useSettingsPopupStore } from "~/stores/settings-popup";
 import { Position, Theme } from "~/models/settings-store";
 import { useMainPopupStore } from "~/stores/mainPopup";
 import { Company } from "~/models/Company";
+import { SelectOption } from "naive-ui";
 
 const emit = defineEmits(["noProjects", "error"]);
 
@@ -246,6 +205,28 @@ const logout = async () => {
 
 	await useAuthStore().logout();
 };
+
+const companyOptions = computed(
+	() =>
+		companies.value?.map((c) => ({
+			label: c.attributes.designation,
+			value: c.id,
+		})) as SelectOption[]
+);
+
+const projectOptions = computed(() => {
+	let v = main.getCompanyProjects(main.company)?.map((p) => ({
+		label: p.attributes.designation,
+		value: p.id,
+	})) as SelectOption[];
+
+	console.log(v);
+	console.log(main.getCompanyProjects(main.company));
+
+	console.log(main);
+
+	return v;
+});
 </script>
 
 <style lang="scss" scoped>
@@ -414,9 +395,5 @@ div.position {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-
-	.v-select {
-		width: 10em;
-	}
 }
 </style>

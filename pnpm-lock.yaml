@@ -13,9 +13,6 @@ devDependencies:
   '@types/node':
     specifier: ^18.15.3
     version: 18.15.3
-  '@types/vue-select':
-    specifier: ^3.16.2
-    version: 3.16.2
   '@types/webextension-polyfill':
     specifier: ^0.10.0
     version: 0.10.0
@@ -97,9 +94,6 @@ devDependencies:
   vue-i18n:
     specifier: ^9.2.2
     version: 9.2.2(vue@3.2.40)
-  vue-select:
-    specifier: 4.0.0-beta.3
-    version: 4.0.0-beta.3(vue@3.2.40)
   vue-tribute:
     specifier: ^2.0.0
     version: 2.0.0(tributejs@5.1.3)
@@ -655,14 +649,22 @@ packages:
       '@types/node': 18.15.3
     dev: true
 
-  /@types/node@18.15.3:
-    resolution: {integrity: sha512-p6ua9zBxz5otCmbpb5D3U4B5Nanw6Pk3PPyX05xnxbB/fRv71N7CPmORg7uAD5P70T0xmx1pzAx/FUfa5X+3cw==}
+  /@types/katex@0.14.0:
+    resolution: {integrity: sha512-+2FW2CcT0K3P+JMR8YG846bmDwplKUTsWgT2ENwdQ1UdVfRk3GQrh6Mi4sTopy30gI8Uau5CEqHTDZ6YvWIUPA==}
     dev: true
 
-  /@types/vue-select@3.16.2:
-    resolution: {integrity: sha512-KkmQiNI7Cei2YV3wn7O2fmM6PpfuM9ybYFMDqq2AvIZNZ2BRHMMV70yaa1EKBRvqu5qY5ekel5WzcRRfNu56PQ==}
+  /@types/lodash-es@4.17.7:
+    resolution: {integrity: sha512-z0ptr6UI10VlU6l5MYhGwS4mC8DZyYer2mCoyysZtSF7p26zOX8UpbrV0YpNYLGS8K4PUFIyEr62IMFFjveSiQ==}
     dependencies:
-      vue: 2.7.10
+      '@types/lodash': 4.14.194
+    dev: true
+
+  /@types/lodash@4.14.194:
+    resolution: {integrity: sha512-r22s9tAS7imvBt2lyHC9B8AGwWnXaYb1tY09oyLkXDs4vArpYJzw09nj8MLx5VfciBPGIb+ZwG0ssYnEPJxn/g==}
+    dev: true
+
+  /@types/node@18.15.3:
+    resolution: {integrity: sha512-p6ua9zBxz5otCmbpb5D3U4B5Nanw6Pk3PPyX05xnxbB/fRv71N7CPmORg7uAD5P70T0xmx1pzAx/FUfa5X+3cw==}
     dev: true
 
   /@types/web-bluetooth@0.0.16:
@@ -908,14 +910,6 @@ packages:
     dependencies:
       '@vue/compiler-core': 3.2.47
       '@vue/shared': 3.2.47
-    dev: true
-
-  /@vue/compiler-sfc@2.7.10:
-    resolution: {integrity: sha512-55Shns6WPxlYsz4WX7q9ZJBL77sKE1ZAYNYStLs6GbhIOMrNtjMvzcob6gu3cGlfpCR4bT7NXgyJ3tly2+Hx8Q==}
-    dependencies:
-      '@babel/parser': 7.19.4
-      postcss: 8.4.21
-      source-map: 0.6.1
     dev: true
 
   /@vue/compiler-sfc@3.2.40:
@@ -2937,14 +2931,6 @@ packages:
       vue: 3.2.40
     dev: true
 
-  /vue-select@4.0.0-beta.3(vue@3.2.40):
-    resolution: {integrity: sha512-sXufbTDluz26a39UUZE9jeh9Hojnn8zr9qDDUlVEBc7E0F+h3+Nzy8YzyFHuVNrrYLmK0zrPkb7hWFulAEW41Q==}
-    peerDependencies:
-      vue: 3.x
-    dependencies:
-      vue: 3.2.40
-    dev: true
-
   /vue-tribute@2.0.0(tributejs@5.1.3):
     resolution: {integrity: sha512-N6H1BqC1ExkMUIN8r9xfuu/hrlqBYcMWQufZiZK6/v5gl0HfXAKFQicY/LmXiHtHW+5uXKifUJbi+nlaZ/DWNw==}
     peerDependencies:
@@ -2955,13 +2941,6 @@ packages:
 
   /vue-universal-modal@1.1.4:
     resolution: {integrity: sha512-MCSVz5bS614LfbDzo2/VDu0DWVUAQws00aPourSduGTzhbm0SpvmRJX/mUI/a+2LkJdcchHd2jpH0JK5Mh0rHg==}
-    dev: true
-
-  /vue@2.7.10:
-    resolution: {integrity: sha512-HmFC70qarSHPXcKtW8U8fgIkF6JGvjEmDiVInTkKZP0gIlEPhlVlcJJLkdGIDiNkIeA2zJPQTWJUI4iWe+AVfg==}
-    dependencies:
-      '@vue/compiler-sfc': 2.7.10
-      csstype: 3.1.1
     dev: true
 
   /vue@3.2.40:
