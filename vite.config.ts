@@ -7,6 +7,7 @@ import Components from "unplugin-vue-components/vite";
 import type { UserConfig } from "vite";
 import { defineConfig } from "vite";
 import { isDev, r, target } from "./scripts/utils";
+import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
 
 export default defineConfig(({ mode }) => {
 	return {
@@ -62,6 +63,7 @@ export const sharedConfig: UserConfig = {
 			dirs: [r("src/components")],
 			// generate `components.d.ts` for ts support with Volar
 			dts: r("src/components.d.ts"),
+			resolvers: [NaiveUiResolver()],
 		}),
 
 		VueI18nPlugin({

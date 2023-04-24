@@ -1,17 +1,33 @@
 <template>
-	<Spinner v-if="loading" style="height: 30em" />
+	<n-config-provider
+		:locale="locale"
+		:date-locale="dateLocale"
+		:theme="theme"
+		:theme-overrides="overrides"
+		flex
+		:inline-theme-disabled="true"
+		:preflight-style-disabled="true"
+	>
+		<n-global-style />
 
-	<Maintenance v-else-if="isMaintenance" />
+		<Spinner v-if="loading" h-120 flex-1 />
 
-	<div v-else>
+		<Maintenance v-else-if="isMaintenance" flex-1 />
+
+		<div v-else flex-1 p-4>
 		<Login v-if="!auth" />
 
 		<Error v-else-if="errorPage" />
 
 		<Empty v-else-if="noProject" />
 
-		<Main v-else @noProjects="noProject = true" @error="errorPage = true" />
+			<Main
+				v-else
+				@noProjects="noProject = true"
+				@error="errorPage = true"
+			/>
 	</div>
+	</n-config-provider>
 </template>
 
 <script setup lang="ts">
@@ -23,6 +39,11 @@ import Error from "./pages/Error.vue";
 import { useI18nStore } from "~/stores/i18n";
 import { useAuthStore } from "~/stores/auth";
 import Maintenance from "./pages/Maintenance.vue";
+import { useTheme } from "~/composables/useThemes";
+
+import { enUS, dateEnUS, deDE, dateDeDE } from "naive-ui";
+
+const { theme, overrides } = useTheme();
 
 useI18nStore().init();
 
@@ -54,6 +75,27 @@ const init = async () => {
 };
 
 onMounted(init);
+
+const locale = computed(() => {
+	switch (useI18nStore().getCurrentLocale) {
+		default:
+		case "en":
+			return enUS;
+
+		case "de":
+			return deDE;
+	}
+});
+const dateLocale = computed(() => {
+	switch (useI18nStore().getCurrentLocale) {
+		default:
+		case "en":
+			return dateEnUS;
+
+		case "de":
+			return dateDeDE;
+	}
+});
 </script>
 
 <style lang="scss">
