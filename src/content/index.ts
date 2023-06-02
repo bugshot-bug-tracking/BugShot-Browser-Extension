@@ -63,12 +63,9 @@ class BugShot extends HTMLElement {
 
 	// if no instance found define add one otherwise get reference to the one present
 	if (domBugshot.length === 0) {
-		// create a containing element to host the custom element
-		bugshot = document.createElement("div");
-
-		bugshot.appendChild(document.createElement("bugshot-sidebar"));
-
-		document.body.append(bugshot);
+		bugshot = document.body.appendChild(
+			document.createElement("bugshot-sidebar")
+		);
 	} else {
 		bugshot = domBugshot[0];
 	}
