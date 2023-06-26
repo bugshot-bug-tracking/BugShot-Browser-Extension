@@ -19,11 +19,6 @@
 					<img src="/assets/icons/admin.svg" alt="admin" />
 					<p>{{ t("admin") }}</p>
 				</li>
-
-				<li @click="openProject">
-					<img src="/assets/icons/projects.svg" alt="projects" />
-					<p>{{ t("project") }}</p>
-				</li>
 			</div>
 
 			<li class="report-button" @click="emit('add')">
