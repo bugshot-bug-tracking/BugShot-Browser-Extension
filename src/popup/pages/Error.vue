@@ -1,9 +1,9 @@
 <template>
 	<main>
 		<section>
-			<img src="/assets/animations/error_bug_purple.gif" />
+			<img src="/assets/images/attention_message.png" />
 
-			<h1 class="black-to-red" m-2>{{ t("error") + "!" }}</h1>
+			<h1 class="black-to-yellow" m-2>{{ t("info") }}!</h1>
 			<p>{{ t("refresh_the_page") }}</p>
 		</section>
 

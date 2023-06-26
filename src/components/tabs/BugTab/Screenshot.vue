@@ -29,10 +29,14 @@
 
 			<template v-slot:extra>
 				<div class="controls-bottom">
-					<div class="controls">
+					<div
+						class="controls"
+						v-if="hasMarker || screenshots.length > 1"
+					>
 						<div
 							class="btn-hide-mark"
 							@click="mark.show = !mark.show"
+							v-if="hasMarker"
 						>
 							{{ mark.show ? t("hide_mark") : t("show_mark") }}
 						</div>
@@ -120,7 +124,7 @@ const next = () => {
 
 let thumbnail = computed(() => {
 	if (props.screenshots.length > 0)
-		return (props.screenshots[0] as Screenshot).attributes.base64;
+		return (props.screenshots[0] as Screenshot).attributes.url;
 	return "/";
 });
 
@@ -129,7 +133,7 @@ const showImage = computed(() => {
 
 	let img = props.screenshots[counter.value] as Screenshot;
 
-	// wait untill rendered to get image sizes
+	// wait until rendered to get image sizes
 	nextTick(() => {
 		// get points relative to the original image to put the marker
 
@@ -148,7 +152,7 @@ const showImage = computed(() => {
 				  (img.attributes.device_pixel_ratio ?? 1);
 	});
 
-	return img.attributes.base64;
+	return img.attributes.url;
 });
 
 const priority = computed(() => {
@@ -165,6 +169,15 @@ const priority = computed(() => {
 		default:
 			return "normal";
 	}
+});
+
+const hasMarker = computed(() => {
+	let img = props.screenshots[counter.value];
+
+	if (img.attributes.position_x == null || img.attributes.position_y == null)
+		return false;
+
+	return true;
 });
 </script>
 

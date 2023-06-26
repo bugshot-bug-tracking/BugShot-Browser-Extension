@@ -237,7 +237,7 @@
 	"welcome_to": "Willkommen bei",
 	"please_login": "Bitte einloggen",
 	"bug_list": "Bug Übersicht",
-	"admin": "Admin",
+	"admin": "Zum Board",
 	"current_project": "Aktuelles Projekt",
 	"members_updated": "Mitglieder aktualisiert!",
 	"on": "An",
@@ -257,5 +257,6 @@
 	"down_for_maintenance": "Wegen Wartungarbeiten aktuell offline",
 	"maintenance_in_progress": "Wartungsarbeiten im Gange!",
 	"maintenance_in_progress_subtext": "Hallo! Das ist kein Fehler. Im Moment befindet sich die Webseite im Wartungsmodus. BugShot ist in Kürze wieder verfügbar!",
-	"bug_created": "Yes! Bug reportet."
+	"bug_created": "Yes! Bug reportet.",
+	"info": "Info"
 }

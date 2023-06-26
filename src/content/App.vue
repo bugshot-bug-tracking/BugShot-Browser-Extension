@@ -186,4 +186,8 @@ article {
 		bottom: unset;
 	}
 }
+
+.markers {
+	z-index: 2047483647;
+}
 </style>

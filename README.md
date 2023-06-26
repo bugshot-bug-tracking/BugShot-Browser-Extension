@@ -5,7 +5,7 @@
 ### Tools used:
 
     - Node v16.16.0
-    - Pnpm v7.29.2
+    - Pnpm v8.0.0
 
 ### Commands to build:
 
@@ -16,4 +16,4 @@
 
     In case only one build is desired in package.json there should only be 1 build:* command for the respective browser.
 
-    This procedure was verified to work on a DigitalOcean droplet runing 1GB RAM and 1 CPU, OS: Ubuntu 22.04 x64; but other systems should work as well, for development WSL2 was used.
+    This procedure was verified to work on a DigitalOcean droplet running 1GB RAM and 1 CPU, OS: Ubuntu 22.04 x64; but other systems should work as well, for development WSL2 was used.

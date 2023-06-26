@@ -72,7 +72,7 @@ const props = defineProps({
 		type: Boolean,
 		required: false,
 		default: false,
-		desctiption: "Switch for enabling dropdown menu",
+		description: "Switch for enabling dropdown menu",
 	},
 });
 
@@ -125,6 +125,11 @@ if (!props.dumb) {
 	z-index: 1;
 	user-select: none;
 
+	> div {
+		white-space: nowrap;
+		display: flex;
+	}
+
 	a {
 		font-size: 0.75em;
 		padding: 0.25em 0.5em;
@@ -132,6 +137,9 @@ if (!props.dumb) {
 		background: #9ba5d7;
 		cursor: pointer;
 		color: white;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 7em;
 
 		&:hover {
 			color: white;
@@ -179,6 +187,8 @@ if (!props.dumb) {
 					padding: 0.25em 1.5em 0.25em 1em;
 					transition: 0.2s;
 					cursor: pointer;
+					overflow: hidden;
+					text-overflow: ellipsis;
 
 					&.active,
 					&:hover {

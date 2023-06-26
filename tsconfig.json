@@ -18,7 +18,8 @@
 			"vue/macros",
 			"chrome",
 			"@intlify/unplugin-vue-i18n/client",
-			"@intlify/unplugin-vue-i18n/messages"
+			"@intlify/unplugin-vue-i18n/messages",
+			"naive-ui/volar"
 		],
 		"paths": {
 			"~/*": ["src/*"]

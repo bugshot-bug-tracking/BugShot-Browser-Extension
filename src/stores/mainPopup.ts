@@ -40,21 +40,24 @@ export const useMainPopupStore = defineStore("main-popup", {
 			if (user.id === undefined) throw "Error while fetching user data!";
 
 			try {
-				let projects = await axios.post(
-					`users/${user.id}/check-project`,
-					{
-						url: new URL(this.tab.url).origin,
-					},
-					{
-						headers: {
-							"include-organization-id": true,
+				let projects = (
+					await axios.post(
+						`users/${user.id}/check-project`,
+						{
+							url: new URL(this.tab.url).origin,
 						},
-					}
-				);
+						{
+							headers: {
+								"include-organization-id": true,
+							},
+						}
+					)
+				).data.data as Project[];
 
-				this.projects = projects.data.data as Project[];
+				projects.forEach((project) => {
+					if (!this.projects.some((p) => p.id === project.id))
+						this.projects.push(project);
 
-				this.projects.forEach((project) => {
 					this.companies.set(
 						project.attributes.company.id,
 						project.attributes.company
