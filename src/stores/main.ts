@@ -279,14 +279,6 @@ export const useMainStore = defineStore("main", {
 				let screenshots = (await axios.get(`bugs/${id}/screenshots`))
 					.data.data;
 
-				for (const screenshot of screenshots) {
-					// fetch each status bugs
-
-					screenshot.attributes.base64 = atob(
-						screenshot.attributes.base64
-					);
-				}
-
 				bug.screenshots = screenshots;
 			} catch (error) {
 				console.log(error);
