@@ -79,7 +79,7 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 				"include-organization-id": "true",
 			},
 			body: JSON.stringify({
-				url: new URL(tab.url).origin,
+				url: tab.url,
 			}),
 		}
 	);

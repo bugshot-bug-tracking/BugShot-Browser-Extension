@@ -48,26 +48,31 @@ export const useMainStore = defineStore("main", {
 				- set main project/company
 					* compare or set the pref company on the page local storage (bugshot-pref-proj)
 			*/
-			let url = new URL(window.location.href).origin;
+			let url = window.location.href;
 
 			let user = useAuthStore().getUser;
 
 			try {
-				let projects = await axios.post(
-					`users/${user.id}/check-project`,
-					{
-						url: url,
-					},
-					{
-						headers: {
-							// "include-project-users": true,
-							"include-project-role": true,
-							"include-organization-id": true,
+				let projects = (
+					await axios.post(
+						`users/${user.id}/check-project`,
+						{
+							url: url,
 						},
-					}
-				);
+						{
+							headers: {
+								// "include-project-users": true,
+								"include-project-role": true,
+								"include-organization-id": true,
+							},
+						}
+					)
+				).data.data;
 
-				this.projects = projects.data.data as Project[];
+				this.projects = [
+					...projects.exact,
+					...projects.additional,
+				] as Project[];
 			} catch (error) {
 				console.log(error);
 				throw error;
@@ -77,7 +82,7 @@ export const useMainStore = defineStore("main", {
 		},
 
 		setProject() {
-			// if there is a preffered project use that otherwise use the first available
+			// if there is a preferred project use that otherwise use the first available
 			if (!this.prefProjectId || this.prefProjectId === "")
 				this.prefProjectId = this.projects[0].id;
 

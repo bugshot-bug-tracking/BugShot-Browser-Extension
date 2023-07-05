@@ -40,11 +40,11 @@ export const useMainPopupStore = defineStore("main-popup", {
 			if (user.id === undefined) throw "Error while fetching user data!";
 
 			try {
-				let projects = (
+				let response = (
 					await axios.post(
 						`users/${user.id}/check-project`,
 						{
-							url: new URL(this.tab.url).origin,
+							url: this.tab.url,
 						},
 						{
 							headers: {
@@ -52,7 +52,12 @@ export const useMainPopupStore = defineStore("main-popup", {
 							},
 						}
 					)
-				).data.data as Project[];
+				).data.data;
+
+				let projects = [
+					...response.exact,
+					...response.additional,
+				] as Project[];
 
 				projects.forEach((project) => {
 					if (!this.projects.some((p) => p.id === project.id))
