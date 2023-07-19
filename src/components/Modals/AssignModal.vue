@@ -1,5 +1,5 @@
 <template>
-	<MyModal v-model="show" z-101 :close="close">
+	<MyModal :modelValue="show" z-101 :close="close">
 		<ModalTemplate @close="close" v-if="bug">
 			<template #header-text>
 				{{ $t("assign_team_member") }}

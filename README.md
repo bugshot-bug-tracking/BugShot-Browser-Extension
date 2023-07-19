@@ -4,8 +4,8 @@
 
 ### Tools used:
 
-    - Node v16.16.0
-    - Pnpm v8.0.0
+    - Node v18.16.1
+    - Pnpm v8.6.8
 
 ### Commands to build:
 

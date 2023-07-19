@@ -1,5 +1,5 @@
 <template>
-	<MyModal v-model="show" :close="close" z-200>
+	<MyModal :modelValue="show" :close="close" z-200>
 		<div class="process">
 			<div class="loading" v-if="state === 0">
 				<slot name="loading">
