@@ -222,7 +222,7 @@ const setLength = (event) => {
 };
 
 const update = () => {
-	store.fetchComments(props.bug_id);
+	store.fetchComments();
 };
 
 const scrollToBottom = () => {

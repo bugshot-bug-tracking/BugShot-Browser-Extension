@@ -1,12 +1,38 @@
 <template>
-	<MyModal :modelValue="show" z-101 :close="close">
-		<ModalTemplate @close="close" v-if="bug">
+	<div flex items-center justify-start gap-2 flex-wrap>
+		<Avatar
+			v-for="item in assignedList"
+			:key="item.id"
+			:size="'XS'"
+			:first_name="item.attributes.first_name"
+			:last_name="item.attributes.last_name"
+		/>
+
+		<a
+			class="bs-btn"
+			style="padding: 0"
+			@click="modal.open"
+			v-if="!disableAdd"
+		>
+			<img
+				src="/assets/icons/add.svg"
+				alt="close"
+				w-8
+				h-8
+				class="black-to-green"
+				vertical-middle
+			/>
+		</a>
+	</div>
+
+	<MyModal v-model="modal.show" :close="modal.close" z-10000>
+		<ModalTemplate @close="modal.close" style="min-width: 22rem">
 			<template #header-text>
-				{{ $t("assign_team_member") }}
+				{{ t("assign_team_member") }}
 			</template>
 
-			<div flex flex-col>
-				<div class="options" v-if="list.length > 0">
+			<template #content>
+				<div class="options" mt-4>
 					<div
 						class="item"
 						v-for="[index, { user, checked }] of list.entries()"
@@ -25,12 +51,11 @@
 
 							<label :for="'cp' + user.id" class="lab">
 								<Avatar
-									:size="'S'"
+									:size="'XS'"
 									:first_name="user.attributes.first_name"
 									:last_name="user.attributes.last_name"
 								/>
-
-								<div>
+								<div class="name">
 									{{
 										user.attributes.first_name +
 										" " +
@@ -42,18 +67,26 @@
 
 						<img
 							src="/assets/icons/close_2.svg"
-							class="remove-user black-to-gray"
-							alt=""
+							alt="close"
+							w-4
+							h-4
+							class="black-to-gray"
 							v-if="checked"
 							@click="changeUser(user, true, index)"
+							mr-4
+							cursor-pointer
 						/>
 					</div>
 				</div>
+			</template>
 
-				<a class="bs-btn green add" @click="submit">
-					{{ $t("add.member", 2) }}
-				</a>
-			</div>
+			<template #footer>
+				<div flex justify-end mt-4>
+					<a class="bs-btn green" @click="submit" ml-a>
+						{{ t("save") }}
+					</a>
+				</div>
+			</template>
 		</ModalTemplate>
 	</MyModal>
 
@@ -63,94 +96,80 @@
 		:message="loadingModal.message"
 		@close="
 			loadingModal.clear();
-			close();
+			modal.close();
 		"
+		:z_index="10000"
 	/>
 </template>
 
 <script setup lang="ts">
-import axios from "axios";
 import { User } from "~/models/User";
 import { useMainStore } from "~/stores/main";
 
-const emit = defineEmits(["close"]);
-
 const props = defineProps({
-	show: {
+	assignedList: {
+		type: Array as PropType<User[]>,
 		required: true,
-		type: Boolean,
-		description: "Determine if the modal is visible or not",
+		default: [],
 	},
 
-	id: {
-		required: true,
-		type: String,
-		desc: "The bug ID",
+	disableAdd: {
+		type: Boolean,
+		required: false,
+		default: false,
+	},
+
+	submit: {
+		type: Function,
+		required: false,
+		default: undefined,
 	},
 });
 
-const close = () => {
-	emit("close");
-};
-
-const store = useMainStore();
+const emit = defineEmits(["submit"]);
 
 const { t } = useI18n();
 
-const list = ref(Array<{ user: User; original: boolean; checked: boolean }>());
-
-const bug = computed(() => {
-	let bug = store.getBugById(props.id);
-
-	if (!bug?.id) list.value = [];
-	else {
-		let project_users = [
-			store.getProject.attributes.creator,
-			...store.getProjectUsers,
-		].filter((x) => x);
-
+const modal = reactive({
+	show: false,
+	open: () => {
 		list.value = [];
 
-		project_users.forEach((user) => {
+		useMainStore().getProjectUsers?.forEach((user) => {
 			let checked = false;
-			if (bug?.users?.find((x) => x.user.id === user.id)) checked = true;
+			if (props.assignedList.some((x) => x.id === user?.id))
+				checked = true;
 
 			list.value.push({
-				user: user,
+				user: user!,
 				original: checked, // compare checked with this to know what operation to execute (add/remove)
 				checked: checked,
 			});
 		});
-	}
 
-	return bug;
+		modal.show = true;
+	},
+	close: () => {
+		modal.show = false;
+	},
 });
+
+const list = ref<{ user: User; original: boolean; checked: boolean }[]>([]);
 
 const changeUser = (user: User, checked: boolean, index: number) => {
 	list.value[index].checked = !checked;
 };
 
 const submit = async () => {
-	if (!bug.value) return;
+	if (!props.submit) {
+		emit("submit", list.value);
+		return modal.close();
+	}
 
 	try {
 		loadingModal.show = true;
 
-		for (const item of list.value) {
-			// if no change was made skip over the item
-			if (item.original === item.checked) continue;
-
-			if (item.checked === true)
-				await axios.post(`bugs/${bug.value.id}/assign-user`, {
-					user_id: item.user.id,
-				});
-			else
-				await axios.delete(
-					`bugs/${bug.value.id}/users/${item.user.id}`
-				);
-		}
-
-		await store.fetchBugUsers(props.id);
+		await props.submit(list.value);
 
 		loadingModal.state = 1;
 		loadingModal.message = t("members_updated");
@@ -175,17 +194,13 @@ const loadingModal = reactive({
 </script>
 
 <style lang="scss" scoped>
-.add {
-	align-self: end;
-	margin-top: 1em;
-}
-
 .options {
 	display: flex;
 	flex-direction: column;
 	gap: 0.5em;
-	width: 19em;
+	width: calc(100% + 2em);
 	margin-left: -1em;
+	margin-right: -1em;
 }
 
 .item {
@@ -234,23 +249,6 @@ const loadingModal = reactive({
 		border-right: 0.875em solid hsl(158, 80%, 47%);
 	}
 
-	.avatar {
-		color: hsl(0, 0%, 100%);
-		background-color: hsl(265, 80%, 50%);
-		font-size: 0.75em;
-		padding: 0.5em;
-		border-radius: 1.5em;
-		height: 2em;
-		width: 2em;
-
-		text-align: center;
-		text-transform: uppercase;
-
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
 	&:hover {
 		background: hsl(158, 79%, 87%);
 
@@ -258,17 +256,6 @@ const loadingModal = reactive({
 			padding-left: 0.5em;
 			padding-right: 0;
 		}
-	}
-}
-
-.remove-user {
-	height: 1em;
-	width: 1em;
-	margin-right: 1em;
-	cursor: pointer;
-
-	&:hover {
-		filter: none;
 	}
 }
 </style>

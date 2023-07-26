@@ -56,7 +56,8 @@
 		"textColor": "#000000FF",
 		"border": "1px solid #7A2EE6",
 		"borderDisabled": "1px solid #7A2EE6",
-		"borderDisabledChecked": "1px solid #7A2EE6"
+		"borderDisabledChecked": "1px solid #7A2EE6",
+		"borderRadius": "0"
 	},
 	"Input": {
 		"paddingTiny": "0 0.5rem",
@@ -229,5 +230,9 @@
 		"heightTiny": "1.5rem",
 		"closeIconSizeTiny": "0.75rem",
 		"closeSizeTiny": "1rem"
+	},
+	"Tooltip": {
+		"color": "rgba(255, 255, 255, 1)",
+		"textColor": "#1a2040FF"
 	}
 }

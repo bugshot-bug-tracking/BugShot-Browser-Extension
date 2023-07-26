@@ -17,7 +17,7 @@
 
 				<div
 					class="close-button"
-					@click="$emit('close')"
+					@click="emit('close')"
 					cursor-pointer
 				/>
 			</div>
@@ -279,9 +279,9 @@
 				<label>{{ t("assigned_to") + ":" }}</label>
 
 				<div class="content">
-					<Assignees
-						:list="(bug as Bug).users?.map((x:BugUserRole) => x.user)"
-						@add="emit('open_assign')"
+					<AssignModal
+						:assignedList="store.getAssignees"
+						:submit="onSubmit"
 					/>
 				</div>
 			</div>
@@ -294,11 +294,10 @@ import dateFix from "~/util/dateFixISO";
 import { useMainStore } from "~/stores/main";
 import { useI18nStore } from "~/stores/i18n";
 import { Status } from "~/models/Status.js";
+import { User } from "~/models/User";
+import axios from "axios";
 
-import { BugUserRole } from "~/models/BugUserRole";
-import { Bug } from "~/models/Bug";
-
-const emit = defineEmits(["close", "open_assign"]);
+const emit = defineEmits(["close"]);
 
 const props = defineProps({
 	bug: {
@@ -445,6 +444,23 @@ const changeDeadline = () => {
 
 const locale = computed(() => useI18nStore().getCurrentLocale);
 const format = (date: Date) => d(new Date(date).toISOString(), "short");
+
+const onSubmit = async (
+	list: { user: User; original: boolean; checked: boolean }[]
+) => {
+	for (const item of list) {
+		// if no change was made skip over the item
+		if (item.original === item.checked) continue;
+
+		if (item.checked === true)
+			await axios.post(`bugs/${store.bug?.id}/assign-user`, {
+				user_id: item.user.id,
+			});
+		else await axios.delete(`bugs/${store.bug?.id}/users/${item.user.id}`);
+	}
+
+	await store.fetchBugUsers();
+};
 </script>
 
 <style lang="scss" scoped>

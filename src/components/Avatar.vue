@@ -63,6 +63,7 @@ const background_color = computed(() => {
 	align-items: center;
 	justify-content: center;
 	margin: auto;
+	line-height: 1;
 
 	.wrapper {
 		border-radius: 100%;
@@ -76,33 +77,53 @@ const background_color = computed(() => {
 	&.XS {
 		width: 2em;
 		height: 2em;
-		font-size: 0.75em;
+		min-width: 2em;
+		min-height: 2em;
+		.initials {
+			font-size: 0.75em;
+		}
 	}
 
 	&.S {
 		width: 2.5em;
 		height: 2.5em;
-		font-size: 1em;
+		min-width: 2.5em;
+		min-height: 2.5em;
+		.initials {
+			font-size: 1em;
+		}
 	}
 
 	//WIP no use found yet
 	&.M {
 		width: 3.5em;
 		height: 3.5em;
-		font-size: 1.25em;
+		min-width: 3.5em;
+		min-height: 3.5em;
+		.initials {
+			font-size: 1.25em;
+		}
 	}
 
 	//WIP no use found yet
 	&.L {
 		width: 4.5em;
 		height: 4.5em;
-		font-size: 2em;
+		min-width: 4.5em;
+		min-height: 4.5em;
+		.initials {
+			font-size: 2em;
+		}
 	}
 
 	&.XL {
-		width: 9em;
-		height: 9em;
-		font-size: 4em;
+		width: 8em;
+		height: 8em;
+		min-width: 8em;
+		min-height: 8em;
+		.initials {
+			font-size: 3.5em;
+		}
 	}
 }
 
@@ -110,5 +131,6 @@ const background_color = computed(() => {
 	text-transform: uppercase;
 	color: white;
 	padding: 0.5em;
+	word-break: keep-all;
 }
 </style>

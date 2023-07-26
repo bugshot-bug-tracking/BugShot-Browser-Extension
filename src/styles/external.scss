@@ -4,23 +4,103 @@
 	&:focus-visible {
 		outline: unset;
 	}
+}
 
-	.vue-universal-modal-content {
+.n-button--success-type.quaternary {
+	--n-color-hover: #ccf7e780 !important;
+}
+
+.n-button--tertiary-type {
+	--n-text-color: #8f809b !important;
+	--n-text-color-hover: #746581 !important;
+	--n-text-color-pressed: #746581 !important;
+	--n-text-color-focus: #746581 !important;
+
+	--n-border: 2px solid #8f809b !important;
+	--n-border-hover: 2px solid #746581 !important;
+	--n-border-pressed: 2px solid #746581 !important;
+	--n-border-focus: 2px solid #746581 !important;
+
+	--n-ripple-color: #8f809b !important;
+}
+
+.n-button--ghost .n-button__border {
+	border-width: 2px !important;
+}
+
+.n-step-splitor {
+	height: 2px !important;
+}
+
+svg {
+	vertical-align: initial;
+}
+
+.n-select {
+	.n-base-selection {
+		--n-border: 1px solid var(--bs-purple-light) !important;
+		--n-border-pressed: 1px solid var(--bs-purple) !important;
+		--n-border-focus: 1px solid var(--bs-purple) !important;
+		--n-border-hover: 1px solid var(--bs-purple) !important;
+		--n-border-active: 1px solid var(--bs-purple) !important;
+
+		--n-box-shadow-active: 0 0 0 2px var(--bs-purple-light) !important;
+		--n-box-shadow-focus: 0 0 0 2px var(--bs-purple-light) !important;
+	}
+}
+.n-select-menu {
+	--n-option-color-active: var(--bs-green-light) !important;
+	--n-option-color-active-pending: var(--bs-purple-light) !important;
+	--n-option-color-pending: var(--bs-purple-light) !important;
+	--n-option-text-color-active: var(--bs-black) !important;
+}
+.n-base-select-group-header {
+	border-bottom: 1px solid var(--bs-purple-light);
+}
+
+.n-card.n-card-container {
+	box-shadow: 0 0.125rem 0.25rem hsla(0, 0%, 0%, 0.15);
+	border-radius: 1rem;
+}
+
+.n-input-group > *:not(:first-child) {
+	margin-left: unset !important;
+}
+
+.n-input__eye {
+	display: flex;
+}
+
+.n-checkbox.checkbox-round-inverted {
+	--n-border-radius: 1rem;
+	--n-check-mark-color: var(--bs-purple);
+
+	.n-checkbox-box {
+		background-color: transparent;
+
+		.n-checkbox-icon {
+			inset: 2px;
+		}
+
+		svg {
+			fill: var(--bs-purple) !important;
+		}
+
+		.n-checkbox-box__border {
+			border-width: 2px;
+		}
 	}
 }
 
-#nprogress {
-	pointer-events: none;
+.n-popover.n-tooltip.n-popover--scrollable {
+	max-width: 50vw;
+	max-height: 3.5rem;
+}
 
-	.bar {
-		background: hsl(158, 80%, 41%);
-		opacity: 0.75;
-		position: fixed;
-		z-index: 1031;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 0.25em;
+.n-image-preview-toolbar {
+	gap: 1rem;
+	.n-base-icon {
+		padding: 0;
 	}
 }
 

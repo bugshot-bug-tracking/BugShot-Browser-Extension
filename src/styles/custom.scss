@@ -1,42 +1,77 @@
+:root,
+:host {
+	--bs-purple-light: #eee5fc;
+	--bs-purple-middle: #bb96f3;
+	--bs-purple: #7a2ee6;
+	--bs-purple-dark: #5916b9;
+	--bs-filter-purple: brightness(0) saturate(1) invert(18%) sepia(72%)
+		saturate(5384%) hue-rotate(263deg) brightness(94%) contrast(92%);
+	--bs-filter-purple-middle: invert(68%) sepia(52%) saturate(1285%)
+		hue-rotate(206deg) brightness(95%) contrast(100%);
+
+	--bs-green-light: #c3f8e5;
+	--bs-green-middle: #68eebd;
+	--bs-green: #18d891;
+	--bs-green-dark: #13aa72;
+	--bs-filter-green: brightness(0) saturate(1) invert(63%) sepia(74%)
+		saturate(493%) hue-rotate(104deg) brightness(96%) contrast(88%);
+
+	--bs-blue-light: #e3ecfc;
+	--bs-blue-middle: #188ed8;
+	--bs-blue: #185ed8;
+	--bs-blue-dark: #134aaa;
+
+	--bs-red-light: #fbc5c5;
+	--bs-red-middle: #ff6e6e;
+	--bs-red: #f23636;
+	--bs-red-dark: #e60f0f;
+	--bs-filter-red: brightness(0) saturate(1) invert(46%) sepia(28%)
+		saturate(5216%) hue-rotate(331deg) brightness(87%) contrast(121%);
+
+	--bs-gray-light: #f8f8fc;
+	--bs-gray: #9ba5d7;
+	--bs-filter-gray: brightness(0) saturate(1) invert(73%) sepia(14%)
+		saturate(897%) hue-rotate(194deg) brightness(90%) contrast(86%);
+
+	--bs-yellow-light: #ffe0bd;
+	--bs-yellow-middle: #ffc88a;
+	--bs-yellow: #ffb057;
+	--bs-yellow-dark: #f08000;
+
+	--bs-black-light: #afb6de;
+	--bs-black-middle: #6774c1;
+
+	--bs-black: #1a2040;
+	--bs-light-blue: #18bed8;
+}
+
 .black-to-green {
-	color: #18d992;
-	filter: brightness(0) saturate(1) invert(63%) sepia(74%) saturate(493%)
-		hue-rotate(104deg) brightness(96%) contrast(88%);
+	color: var(--bs-green);
+	filter: var(--bs-filter-green);
 }
 
 .black-to-purple {
-	color: #7a2ee6;
-	filter: brightness(0) saturate(1) invert(18%) sepia(72%) saturate(5384%)
-		hue-rotate(263deg) brightness(94%) contrast(92%);
+	color: var(--bs-purple);
+	filter: var(--bs-filter-purple);
+}
+.black-to-purple-middle {
+	color: var(--bs-purple-middle);
+	filter: var(--bs-filter-purple-middle);
 }
 
 .black-to-red {
-	color: #f23838;
-	filter: brightness(0) saturate(1) invert(46%) sepia(28%) saturate(5216%)
-		hue-rotate(331deg) brightness(87%) contrast(121%);
-}
-
-.black-to-yellow {
-	color: #ffb057;
-	filter: brightness(0) saturate(1) invert(85%) sepia(58%) saturate(3673%)
-		hue-rotate(317deg) brightness(102%) contrast(101%);
+	color: var(--bs-red);
+	filter: var(--bs-filter-red);
 }
 
 .black-to-gray {
-	color: #9ba5d7;
-	filter: brightness(0) saturate(1) invert(73%) sepia(14%) saturate(897%)
-		hue-rotate(194deg) brightness(90%) contrast(86%);
+	color: var(--bs-gray);
+	filter: var(--bs-filter-gray);
 }
 
 .black-to-white {
 	color: #ffffff;
 	filter: brightness(0) invert(1);
-}
-
-.black-to-blue-light {
-	color: #18bed8;
-	filter: brightness(0) saturate(1) invert(66%) sepia(63%) saturate(529%)
-		hue-rotate(140deg) brightness(82%) contrast(109%);
 }
 
 .bs-btn {

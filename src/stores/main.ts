@@ -184,9 +184,9 @@ export const useMainStore = defineStore("main", {
 
 			this.bug = bug;
 
-			this.fetchAttachments(this.bug.id);
-			this.fetchComments(this.bug.id);
-			this.fetchBugUsers(this.bug.id);
+			this.fetchAttachments();
+			this.fetchComments();
+			this.fetchBugUsers();
 			// this.fetchScreenshots(this.bug.id)
 		},
 
@@ -275,14 +275,16 @@ export const useMainStore = defineStore("main", {
 			}
 		},
 
-		async fetchScreenshots(id: string) {
-			let bug = this.getBugById(id);
+		async fetchScreenshots() {
+			let bug = this.bug;
+
 			if (!bug) throw "Bug not found in memory";
 
 			try {
 				// fetch bug screenshots
-				let screenshots = (await axios.get(`bugs/${id}/screenshots`))
-					.data.data;
+				let screenshots = (
+					await axios.get(`bugs/${bug.id}/screenshots`)
+				).data.data;
 
 				bug.screenshots = screenshots;
 			} catch (error) {
@@ -291,14 +293,15 @@ export const useMainStore = defineStore("main", {
 			}
 		},
 
-		async fetchAttachments(id: string) {
-			let bug = this.getBugById(id);
+		async fetchAttachments() {
+			let bug = this.bug;
 			if (!bug) throw "Bug not found in memory";
 
 			try {
 				// fetch bug screenshots
-				let attachments = (await axios.get(`bugs/${id}/attachments`))
-					.data.data;
+				let attachments = (
+					await axios.get(`bugs/${bug.id}/attachments`)
+				).data.data;
 
 				bug.attachments = attachments;
 			} catch (error) {
@@ -307,13 +310,14 @@ export const useMainStore = defineStore("main", {
 			}
 		},
 
-		async fetchComments(id: string) {
-			let bug = this.getBugById(id);
+		async fetchComments() {
+			let bug = this.bug;
+
 			if (!bug) throw "Bug not found in memory";
 
 			try {
 				// fetch bug screenshots
-				let comments = (await axios.get(`bugs/${id}/comments`)).data
+				let comments = (await axios.get(`bugs/${bug.id}/comments`)).data
 					.data;
 
 				bug.comments = comments;
@@ -323,13 +327,14 @@ export const useMainStore = defineStore("main", {
 			}
 		},
 
-		async fetchBugUsers(id: string) {
-			let bug = this.getBugById(id);
+		async fetchBugUsers() {
+			let bug = this.bug;
+
 			if (!bug) throw "Bug not found in memory";
 
 			try {
 				// fetch bug screenshots
-				let users = (await axios.get(`bugs/${id}/users`)).data
+				let users = (await axios.get(`bugs/${bug.id}/users`)).data
 					.data as BugUserRole[];
 
 				bug.users = users;
@@ -378,6 +383,12 @@ export const useMainStore = defineStore("main", {
 		getProjectPreference: (state) => state.prefProjectId,
 
 		getMarkers: (state) => state.markers,
+
+		getAssignees: (state) =>
+			state.bug.users?.map((x: BugUserRole) => {
+				x.user.role = x.role;
+				return x.user;
+			}),
 	},
 });
 

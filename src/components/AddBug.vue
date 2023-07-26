@@ -131,9 +131,13 @@
 					</div>
 				</div>
 
-				<div class="assign-to" v-if="false">
-					<div>Assign to</div>
-					<Assignees :list="[]" />
+				<div class="assign-to">
+					<div>{{ t("assigned_to") }}:</div>
+
+					<AssignModal
+						:assignedList="store.assignees"
+						@submit="assigneesSubmit"
+					/>
 				</div>
 			</div>
 
@@ -180,6 +184,7 @@
 import toBase64 from "~/util/toBase64";
 import { useReportStore } from "~/stores/report";
 import { useI18nStore } from "~/stores/i18n";
+import { User } from "~/models/User";
 
 defineProps({
 	show: {
@@ -274,6 +279,15 @@ const loadingModal = reactive({
 		loadingModal.message = "";
 	},
 });
+
+const assigneesSubmit = (
+	list: { user: User; original: boolean; checked: boolean }[]
+) => {
+	store.assignees = [];
+	list.forEach((element) => {
+		if (element.checked === true) store.assignees.push(element.user);
+	});
+};
 </script>
 
 <style lang="scss" scoped>
@@ -361,7 +375,7 @@ const loadingModal = reactive({
 .assign-to {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
+	gap: 8px;
 	font-weight: bold;
 	font-size: 14px;
 }
