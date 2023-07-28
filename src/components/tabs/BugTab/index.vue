@@ -1,11 +1,6 @@
 <template>
 	<div v-if="bug.id" class="bs-tab bs-scroll" gap-4>
-		<Info
-			:bug="bug"
-			:status="status"
-			@close="emit('close')"
-			@open_assign="assignModal.open"
-		>
+		<Info :bug="bug" :status="status" @close="emit('close')">
 			<template #screenshot>
 				<Screenshot
 					:screenshots="bug.screenshots ?? []"
@@ -39,8 +34,6 @@
 			{{ t("delete.bug") }}
 		</a>
 	</div>
-
-	<AssignModal :show="assignModal.show" :id="id" @close="assignModal.close" />
 
 	<DeleteModal2
 		:show="deleteModal.show"
@@ -88,7 +81,7 @@ const loading = ref(true);
 
 const loadScreenshots = async () => {
 	loading.value = true;
-	await store.fetchScreenshots(props.id);
+	await store.fetchScreenshots();
 	loading.value = false;
 };
 
@@ -197,7 +190,7 @@ const attachments = reactive({
 	},
 
 	update: () => {
-		store.fetchAttachments(bug.value.id);
+		store.fetchAttachments();
 	},
 });
 

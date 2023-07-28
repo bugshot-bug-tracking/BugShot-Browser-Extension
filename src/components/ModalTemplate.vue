@@ -1,6 +1,9 @@
 <template>
 	<div class="modal-wrapper2">
-		<div class="modal-header2">
+		<div
+			class="modal-header2"
+			v-if="$slots['header'] || $slots['header-text']"
+		>
 			<slot name="header">
 				<h4>
 					<slot name="header-text">[PH] Header</slot>
@@ -14,17 +17,32 @@
 					cursor-pointer
 					class="black-to-purple"
 					@click="$emit('close')"
+					v-if="!noCloseButton"
 				/>
 			</slot>
 		</div>
 
-		<div class="modal-content2">
-			<slot />
-		</div>
+		<slot name="content">
+			<div class="modal-content2" p-1 pr-2>
+				<slot />
+			</div>
+		</slot>
+
+		<footer v-if="$slots['footer']">
+			<slot name="footer" />
+		</footer>
 	</div>
 </template>
 
 <script setup lang="ts">
+defineProps({
+	noCloseButton: {
+		required: false,
+		type: Boolean,
+		default: false,
+	},
+});
+
 defineEmits(["close"]);
 </script>
 
@@ -34,7 +52,9 @@ defineEmits(["close"]);
 	border-radius: 0.5em;
 	padding: 1em;
 	// min-width: 28em;
+	max-height: 90vh;
 	box-shadow: 0 0.125em 0.25em hsla(0, 0%, 0%, 0.161);
+	overflow: auto;
 }
 
 .modal-header2 {
@@ -42,7 +62,7 @@ defineEmits(["close"]);
 	padding-bottom: 1em;
 	display: flex;
 	justify-content: space-between;
-	align-items: baseline;
+	align-items: center;
 }
 
 h4 {

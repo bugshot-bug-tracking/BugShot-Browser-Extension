@@ -58,6 +58,9 @@ const mode = isDev ? Mode.DEV : Mode.PROD;
 		popup_background.stdout.on("data", (data) =>
 			console.log(data.toString())
 		);
+		popup_background.stderr.on("data", (data) =>
+			console.log(data.toString())
+		);
 
 		let content = spawn(
 			`pnpm vite build --mode ${mode} --config vite.config.content.ts`,
@@ -66,6 +69,7 @@ const mode = isDev ? Mode.DEV : Mode.PROD;
 			}
 		);
 		content.stdout.on("data", (data) => console.log(data.toString()));
+		content.stderr.on("data", (data) => console.log(data.toString()));
 	}
 })();
 

@@ -4,6 +4,7 @@ import { useMainStore } from "./main";
 import { Bug } from "~/models/Bug";
 import getOS from "~/util/getOS";
 import getBrowser from "~/util/getBrowser";
+import { User } from "~/models/User";
 
 export const useReportStore = defineStore("report", {
 	state: () => ({
@@ -28,6 +29,8 @@ export const useReportStore = defineStore("report", {
 		screenshots: [] as string[],
 		markers: [] as Object[],
 		attachments: [] as { designation: string; base64: string }[],
+
+		assignees: [] as User[],
 	}),
 
 	actions: {
@@ -43,7 +46,7 @@ export const useReportStore = defineStore("report", {
 
 					...(this.bug.deadline
 						? {
-								deadline: new Date(this.bug.deadline)
+								deadline: new Date(this.bug.deadline as string)
 									.toISOString()
 									.slice(0, -1),
 						  }
@@ -58,7 +61,7 @@ export const useReportStore = defineStore("report", {
 				})
 			).data.data as Bug;
 
-			await Promise.all(
+			await Promise.allSettled([
 				this.screenshots.map(async (s) => {
 					if (s)
 						await axios.post(`bugs/${bug.id}/screenshots`, {
@@ -70,14 +73,16 @@ export const useReportStore = defineStore("report", {
 							device_pixel_ratio: this.devicePixelRatio,
 							markers: this.markers,
 						});
-				})
-			);
-
-			await Promise.all(
+				}),
 				this.attachments.map(async (a) => {
 					await axios.post(`bugs/${bug.id}/attachments`, a);
-				})
-			);
+				}),
+				this.assignees.map(async (a) => {
+					await axios.post(`bugs/${bug.id}/assign-user`, {
+						user_id: a.id,
+					});
+				}),
+			]);
 
 			console.log(bug);
 

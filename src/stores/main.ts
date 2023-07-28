@@ -48,26 +48,31 @@ export const useMainStore = defineStore("main", {
 				- set main project/company
 					* compare or set the pref company on the page local storage (bugshot-pref-proj)
 			*/
-			let url = new URL(window.location.href).origin;
+			let url = window.location.href;
 
 			let user = useAuthStore().getUser;
 
 			try {
-				let projects = await axios.post(
-					`users/${user.id}/check-project`,
-					{
-						url: url,
-					},
-					{
-						headers: {
-							// "include-project-users": true,
-							"include-project-role": true,
-							"include-organization-id": true,
+				let projects = (
+					await axios.post(
+						`users/${user.id}/check-project`,
+						{
+							url: url,
 						},
-					}
-				);
+						{
+							headers: {
+								// "include-project-users": true,
+								"include-project-role": true,
+								"include-organization-id": true,
+							},
+						}
+					)
+				).data.data;
 
-				this.projects = projects.data.data as Project[];
+				this.projects = [
+					...projects.exact,
+					...projects.additional,
+				] as Project[];
 			} catch (error) {
 				console.log(error);
 				throw error;
@@ -77,7 +82,7 @@ export const useMainStore = defineStore("main", {
 		},
 
 		setProject() {
-			// if there is a preffered project use that otherwise use the first available
+			// if there is a preferred project use that otherwise use the first available
 			if (!this.prefProjectId || this.prefProjectId === "")
 				this.prefProjectId = this.projects[0].id;
 
@@ -179,9 +184,9 @@ export const useMainStore = defineStore("main", {
 
 			this.bug = bug;
 
-			this.fetchAttachments(this.bug.id);
-			this.fetchComments(this.bug.id);
-			this.fetchBugUsers(this.bug.id);
+			this.fetchAttachments();
+			this.fetchComments();
+			this.fetchBugUsers();
 			// this.fetchScreenshots(this.bug.id)
 		},
 
@@ -270,14 +275,16 @@ export const useMainStore = defineStore("main", {
 			}
 		},
 
-		async fetchScreenshots(id: string) {
-			let bug = this.getBugById(id);
+		async fetchScreenshots() {
+			let bug = this.bug;
+
 			if (!bug) throw "Bug not found in memory";
 
 			try {
 				// fetch bug screenshots
-				let screenshots = (await axios.get(`bugs/${id}/screenshots`))
-					.data.data;
+				let screenshots = (
+					await axios.get(`bugs/${bug.id}/screenshots`)
+				).data.data;
 
 				bug.screenshots = screenshots;
 			} catch (error) {
@@ -286,14 +293,15 @@ export const useMainStore = defineStore("main", {
 			}
 		},
 
-		async fetchAttachments(id: string) {
-			let bug = this.getBugById(id);
+		async fetchAttachments() {
+			let bug = this.bug;
 			if (!bug) throw "Bug not found in memory";
 
 			try {
 				// fetch bug screenshots
-				let attachments = (await axios.get(`bugs/${id}/attachments`))
-					.data.data;
+				let attachments = (
+					await axios.get(`bugs/${bug.id}/attachments`)
+				).data.data;
 
 				bug.attachments = attachments;
 			} catch (error) {
@@ -302,13 +310,14 @@ export const useMainStore = defineStore("main", {
 			}
 		},
 
-		async fetchComments(id: string) {
-			let bug = this.getBugById(id);
+		async fetchComments() {
+			let bug = this.bug;
+
 			if (!bug) throw "Bug not found in memory";
 
 			try {
 				// fetch bug screenshots
-				let comments = (await axios.get(`bugs/${id}/comments`)).data
+				let comments = (await axios.get(`bugs/${bug.id}/comments`)).data
 					.data;
 
 				bug.comments = comments;
@@ -318,13 +327,14 @@ export const useMainStore = defineStore("main", {
 			}
 		},
 
-		async fetchBugUsers(id: string) {
-			let bug = this.getBugById(id);
+		async fetchBugUsers() {
+			let bug = this.bug;
+
 			if (!bug) throw "Bug not found in memory";
 
 			try {
 				// fetch bug screenshots
-				let users = (await axios.get(`bugs/${id}/users`)).data
+				let users = (await axios.get(`bugs/${bug.id}/users`)).data
 					.data as BugUserRole[];
 
 				bug.users = users;
@@ -373,6 +383,12 @@ export const useMainStore = defineStore("main", {
 		getProjectPreference: (state) => state.prefProjectId,
 
 		getMarkers: (state) => state.markers,
+
+		getAssignees: (state) =>
+			state.bug.users?.map((x: BugUserRole) => {
+				x.user.role = x.role;
+				return x.user;
+			}),
 	},
 });
 
