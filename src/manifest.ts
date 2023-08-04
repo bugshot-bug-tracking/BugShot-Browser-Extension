@@ -12,6 +12,7 @@ export enum Target {
 	FIREFOX = "firefox",
 	EDGE = "edge",
 	OPERA = "opera",
+	SAFARI = "safari",
 }
 
 const sharedConfig = {

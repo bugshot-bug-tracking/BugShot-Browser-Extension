@@ -1,6 +1,6 @@
 {
-	"name": "bug-shot-extension",
-	"version": "1.1.15",
+	"name": "bugshot-extension",
+	"version": "1.1.16",
 	"description": "BugShot is an easy-to-use tool to track the bugs on your projects.",
 	"displayName": "BugShot",
 	"scripts": {
@@ -10,12 +10,14 @@
 		"dev:firefox": "cross-env NODE_TARGET=firefox esno scripts/build.ts",
 		"dev:edge": "cross-env NODE_TARGET=edge esno scripts/build.ts",
 		"dev:opera": "cross-env NODE_TARGET=opera esno scripts/build.ts",
+		"dev:safari": "cross-env NODE_TARGET=safari esno scripts/build.ts",
 		"empty": "",
 		"build": "clear; rimraf dist/production && cross-env NODE_ENV=production run-p build:*",
 		"build:chrome": "cross-env NODE_TARGET=chrome esno scripts/build.ts",
 		"build:firefox": "cross-env NODE_TARGET=firefox esno scripts/build.ts",
 		"build:edge": "cross-env NODE_TARGET=edge esno scripts/build.ts",
-		"build:opera": "cross-env NODE_TARGET=opera esno scripts/build.ts"
+		"build:opera": "cross-env NODE_TARGET=opera esno scripts/build.ts",
+		"build:safari": "cross-env NODE_TARGET=safari esno scripts/build.ts"
 	},
 	"devDependencies": {
 		"@intlify/unplugin-vue-i18n": "^0.12.2",

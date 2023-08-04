@@ -1,19 +1,13 @@
 import * as storage from "~/logic/backgroundStorage";
 import { onMessage, sendMessage } from "webext-bridge";
+import * as browser from "webextension-polyfill";
 
 /*
 	Background script goals:
 	- store auth info
 	- store settings data
 	- load sidebar(content.js) in page
-	- reload the runtime to install the new version
 */
-
-browser.runtime.onUpdateAvailable.addListener((details) => {
-	console.log(details);
-
-	browser.runtime.reload();
-});
 
 /** Event listener on page update; injects content.js if there is a project for it */
 browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
@@ -24,9 +18,22 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 	if (!tab.url || !/^http/.test(tab.url)) return;
 
 	// check if content script is already inserted
-	let res = await browser.tabs
-		.sendMessage(tabId, "content-status")
-		.catch((e) => {});
+	let timer = undefined;
+	let res = await Promise.race([
+		browser.tabs
+			.sendMessage(tabId, "content-status")
+			.then((r) => r)
+			.catch((e) => {
+				console.log(e);
+				return false;
+			}),
+		new Promise((resolve) => {
+			timer = setTimeout(resolve, 2000);
+		}).then(() => false),
+	]);
+
+	if (timer !== undefined) clearTimeout(timer);
+
 	if (res === "ok") return;
 
 	// If not logged in exit
@@ -93,13 +100,12 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 
 	// Inject the scripts in page
 
-	// let injectResult =
-	await browser.scripting.executeScript({
+	let injectResult = await browser.scripting.executeScript({
 		target: { tabId: tabId },
 		files: ["content/index.js"],
 	});
 
-	// console.log(`Injected content-script in "${tabId}".\n`, injectResult);
+	console.log(`Injected content-script in "${tabId}".\n`, injectResult);
 });
 
 /**

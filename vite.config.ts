@@ -20,7 +20,7 @@ export default defineConfig(({ mode }) => {
 			sourcemap: isDev,
 			rollupOptions: {
 				input: {
-					background: r("src/background"),
+					// background: r("src/background"),
 					"popup/index": r("src/popup/index.html"),
 					// options: r("src/options/index.html"),
 				},
