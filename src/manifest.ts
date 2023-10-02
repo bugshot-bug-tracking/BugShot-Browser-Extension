@@ -29,6 +29,13 @@ const sharedConfig = {
 		"256": "./assets/extension_icons/icon_256x256.png",
 	},
 	permissions: ["activeTab", "tabs", "storage", "scripting"],
+
+	content_scripts: [
+		{
+			matches: ["https://*.bugshot.de/*"],
+			js: ["misc-script.js"],
+		},
+	],
 };
 
 export function getManifest(

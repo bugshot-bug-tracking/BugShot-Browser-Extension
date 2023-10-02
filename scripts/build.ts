@@ -78,6 +78,11 @@ const mode = isDev ? Mode.DEV : Mode.PROD;
 				stdio: "inherit",
 			}
 		);
+
+		spawn(`pnpm vite build --mode ${mode} --config vite.config.misc.ts`, {
+			shell: true,
+			stdio: "inherit",
+		});
 	}
 })();
 
