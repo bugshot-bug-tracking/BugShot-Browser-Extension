@@ -248,7 +248,7 @@ const submit = async () => {
 		console.log(error);
 
 		if (mode.value === "token")
-			tokenErrorMessage.value = error.response.data.message;
+			return (tokenErrorMessage.value = error.response.data.message);
 
 		password.error = true;
 
