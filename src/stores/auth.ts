@@ -7,19 +7,26 @@ import { sendMessage } from "webext-bridge";
 export const useAuthStore = defineStore("auth", {
 	state: () => ({
 		token: "",
-		user: <User>{},
+		user: undefined as User | undefined,
 	}),
 
 	actions: {
 		async init() {
 			let token = await sendMessage("getToken", {});
 
-			return await this.attempt(token);
+			let loginResponse = await this.attempt(token);
+
+			// if a user is logged in using the Bearer token return
+			if (loginResponse) return loginResponse;
+
+			// if not try checking for guest token
+			token = await sendMessage("getGuestToken", {});
+
+			return await this.useToken({ token });
 		},
 
 		async destroy() {
-			this.token = "";
-			this.user = <User>{};
+			this.$reset();
 
 			await sendMessage("invalidate", {});
 
@@ -41,6 +48,40 @@ export const useAuthStore = defineStore("auth", {
 				});
 
 				return await this.attempt(response.data.data.token);
+			} catch (error: any) {
+				if (error?.response?.status === 503) throw error;
+
+				this.token = "";
+				await sendMessage("invalidate", {});
+
+				throw error;
+			}
+		},
+
+		async useToken(payload: { token: string }) {
+			// no point in checking the token if it doesn't exist
+			if (payload.token == null || payload.token === "") return false;
+
+			try {
+				await axios.post(
+					"projects/validate-access-token",
+					{},
+					{
+						headers: {
+							"access-token": payload.token,
+						},
+					}
+				);
+
+				axios.defaults.headers.common["access-token"] = payload.token;
+
+				this.token = payload.token;
+
+				await sendMessage("setGuestToken", {
+					token: payload.token,
+				});
+
+				return true;
 			} catch (error: any) {
 				if (error?.response?.status === 503) throw error;
 
@@ -101,5 +142,7 @@ export const useAuthStore = defineStore("auth", {
 	getters: {
 		getUser: (state) => state.user,
 		isAuthenticated: (state) => (state.token !== "" ? true : false),
+		isGuest: (state) =>
+			state.token !== "" && state.user?.id == undefined ? true : false,
 	},
 });

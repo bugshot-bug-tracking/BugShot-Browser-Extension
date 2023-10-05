@@ -1,5 +1,11 @@
 <template>
-	<div id="sidebar" :class="{ open: open, top: settings.position === 2 }">
+	<div
+		id="sidebar"
+		:class="{
+			open: open,
+			top: settings.position === 2,
+		}"
+	>
 		<img
 			class="logo"
 			src="/assets/icons/bugshot.svg"
@@ -9,26 +15,39 @@
 		/>
 
 		<ul style="display: none">
-			<div text-center>
-				<li @click="openBugList">
+			<div text-center v-if="mode === 'normal'">
+				<li @click="emit(`openBugList`)">
 					<img src="/assets/icons/buglist.svg" alt="bug list" />
 					<p>{{ t("bug_list") }}</p>
 				</li>
 
-				<li @click="openAdmin">
+				<li @click="emit('openAdmin')">
 					<img src="/assets/icons/admin.svg" alt="admin" />
 					<p>{{ t("admin") }}</p>
 				</li>
 			</div>
+			<div v-else />
 
 			<li class="report-button" @click="emit('add')">
 				<img src="/assets/icons/add.svg" alt="add" />
 			</li>
 
-			<div>
+			<div v-if="mode === 'normal'">
 				<div h-22 />
 				<div h-22 />
 				<div h-22 />
+			</div>
+			<div
+				v-else
+				class="text-center p-2 text-3.5 font-bold"
+				style="
+					background-color: var(--bs-green-dark);
+					color: #ffffff;
+					letter-spacing: 1px;
+					text-shadow: 1px 1px 2px var(--bs-black);
+				"
+			>
+				<span>{{ t("guest") }}</span>
 			</div>
 		</ul>
 	</div>
@@ -37,62 +56,39 @@
 <script setup lang="ts">
 import { useSettingsStore } from "~/stores/settings";
 
+const { t } = useI18n();
+
 const props = defineProps({
 	open: {
 		required: true,
 		type: Boolean,
 		description: "State of the sidebar",
 	},
-	project_id: {
-		required: true,
-		type: String,
-		description: "Project ID",
-	},
-	company_id: {
-		required: true,
-		type: String,
-		description: "Company ID",
-	},
-	organization_id: {
-		required: true,
-		type: String,
-		description: "Organization ID",
+	mode: {
+		required: false,
+		default: "normal",
+		type: String as PropType<"normal" | "guest">,
 	},
 });
 
-const emit = defineEmits(["open", "close", "openBugList", "add"]);
+const emit = defineEmits([
+	"update:open",
+	"openBugList",
+	"add",
+	"openAdmin",
+	"close",
+]);
 
 const settings = useSettingsStore();
 
 const sidebar = reactive({
 	toggle: () => {
-		if (props.open) emit("close");
-		else emit("open");
+		if (props.open) {
+			emit("update:open", false);
+			emit("close");
+		} else emit("update:open", true);
 	},
 });
-
-const { t } = useI18n();
-
-const openBugList = () => {
-	emit("openBugList");
-};
-const openAdmin = () => {
-	window
-		.open(
-			import.meta.env.VITE_WEB_URL + `/${props.organization_id}`,
-			"_blank"
-		)
-		?.focus();
-};
-const openProject = () => {
-	window
-		.open(
-			import.meta.env.VITE_WEB_URL +
-				`/${props.organization_id}/company/${props.company_id}/project/${props.project_id}`,
-			"_blank"
-		)
-		?.focus();
-};
 </script>
 
 <style lang="scss" scoped>

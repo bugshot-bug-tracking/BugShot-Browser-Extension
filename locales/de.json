@@ -258,5 +258,7 @@
 	"maintenance_in_progress": "Wartungsarbeiten im Gange!",
 	"maintenance_in_progress_subtext": "Hallo! Das ist kein Fehler. Im Moment befindet sich die Webseite im Wartungsmodus. BugShot ist in Kürze wieder verfügbar!",
 	"bug_created": "Yes! Bug reportet.",
-	"info": "Info"
+	"info": "Info",
+	"token": "Token",
+	"guest": "Gast"
 }

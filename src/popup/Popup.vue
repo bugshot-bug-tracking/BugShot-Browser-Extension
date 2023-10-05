@@ -4,9 +4,9 @@
 		:date-locale="dateLocale"
 		:theme="theme"
 		:theme-overrides="overrides"
-		flex
 		:inline-theme-disabled="true"
 		:preflight-style-disabled="true"
+		flex
 	>
 		<n-global-style />
 
@@ -14,12 +14,14 @@
 
 		<Maintenance v-else-if="isMaintenance" flex-1 />
 
-		<div v-else flex-1 p-4>
-			<Login v-if="!auth" />
+		<div v-else flex-1 p-4 class="max-w-100%">
+			<Login v-if="!store.isAuthenticated" />
 
 			<Error v-else-if="errorPage" />
 
 			<Empty v-else-if="noProject" />
+
+			<MainGuest v-else-if="store.isGuest" />
 
 			<Main
 				v-else
@@ -33,6 +35,7 @@
 <script setup lang="ts">
 import Login from "./pages/Login.vue";
 import Main from "./pages/Main.vue";
+import MainGuest from "./pages/MainGuest.vue";
 import Empty from "./pages/Empty.vue";
 import Error from "./pages/Error.vue";
 
@@ -50,7 +53,6 @@ useI18nStore().init();
 const loading = ref(true);
 
 const store = useAuthStore();
-const auth = computed(() => store.isAuthenticated);
 
 const noProject = ref(false);
 const errorPage = ref(false);

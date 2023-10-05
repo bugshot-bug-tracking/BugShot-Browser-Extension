@@ -37,7 +37,7 @@ export const useMainPopupStore = defineStore("main-popup", {
 
 			let user = useAuthStore().getUser;
 
-			if (user.id === undefined) throw "Error while fetching user data!";
+			if (user?.id === undefined) throw "Error while fetching user data!";
 
 			try {
 				let response = (

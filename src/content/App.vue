@@ -1,19 +1,14 @@
 <template>
-	<article :class="`poss-${position}`" v-if="!disabled">
+	<article :class="`poss-${settings.getPosition}`" v-if="!disabled">
 		<div flex flex-row-reverse v-if="done && settings.sidebar">
 			<Sidebar
-				:company_id="store.getCompany.id"
-				:organization_id="store.getCompany.attributes.organization_id"
-				:project_id="store.getProject.id"
-				:open="sidebar.state"
+				v-model:open="sidebar"
 				@openBugList="buglist.open"
-				@open="sidebar.open"
-				@close="
-					sidebar.close();
-					buglist.close();
-				"
+				@open-admin="openAdmin"
+				@close="buglist.close"
 				@add="add.start"
 				v-show="!addMode"
+				:mode="auth.isGuest ? 'guest' : 'normal'"
 			/>
 
 			<BugList
@@ -38,13 +33,20 @@
 		/>
 	</article>
 
+	<div id="modals"></div>
+
 	<div
 		class="markers"
-		v-if="markerList.length > 0 && settings.markerShow && !disabled"
+		v-if="
+			store.getMarkers.length > 0 &&
+			settings.markerShow &&
+			!disabled &&
+			!auth.isGuest
+		"
 	>
 		<MarkerList
 			:show="settings.markers"
-			:list="markerList"
+			:list="store.getMarkers"
 			@open="openMarker"
 		/>
 	</div>
@@ -52,51 +54,44 @@
 
 <script setup lang="ts">
 import { useAuthStore } from "~/stores/auth";
+import { useGuestStore } from "~/stores/guest";
+import { useI18nStore } from "~/stores/i18n";
 import { useMainStore } from "~/stores/main";
 import { useReportStore } from "~/stores/report";
-import { useI18nStore } from "~/stores/i18n";
 import { useSettingsStore } from "~/stores/settings";
 
 useI18nStore().init();
 
 const store = useMainStore();
+const guest = useGuestStore();
 const settings = useSettingsStore();
+const auth = useAuthStore();
 
 //WIP use for loading animation; now used for proper component init
 const done = ref(false);
 
 const init = async () => {
 	try {
-		await useAuthStore().init();
+		await auth.init();
 
 		await settings.init();
 
-		await store.init();
+		if (auth.isGuest) await guest.init();
+		else await store.init();
 
 		done.value = true;
 	} catch (error) {
 		console.log(error);
 	}
 };
+onMounted(init);
 
 const disabled = computed(() => settings.disabled);
 watch(disabled, (newValue, oldValue) => {
 	if (newValue === false && oldValue === true) init();
 });
 
-onMounted(init);
-
-const sidebar = reactive({
-	state: false,
-	open: () => {
-		sidebar.state = true;
-	},
-	close: () => {
-		sidebar.state = false;
-	},
-});
-
-const position = computed(() => settings.getPosition);
+const sidebar = ref(false);
 
 const buglist = reactive({
 	show: false,
@@ -152,14 +147,22 @@ const add = reactive({
 	},
 });
 
-const markerList = computed(() => store.getMarkers);
-
 const openMarker = (bug_id: string) => {
 	store.setActiveBug(bug_id);
 
-	sidebar.open();
+	sidebar.value = true;
 
 	bugInfo.open(bug_id);
+};
+
+const openAdmin = () => {
+	window
+		.open(
+			import.meta.env.VITE_WEB_URL +
+				`/${store.getCompany?.attributes.organization_id}/company/${store.getCompany?.id}/project/${store.getProject.id}`,
+			"_blank"
+		)
+		?.focus();
 };
 </script>
 
@@ -175,7 +178,8 @@ const openMarker = (bug_id: string) => {
 	background-color: transparent;
 }
 
-article {
+article,
+#modals {
 	position: fixed;
 	bottom: 0;
 	right: 0;

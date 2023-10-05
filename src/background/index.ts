@@ -17,6 +17,12 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 	// If tab url is not http or https exit
 	if (!tab.url || !/^http/.test(tab.url)) return;
 
+	// If not logged in exit
+	let token = storage.token.value;
+	let guestToken = storage.guestToken.value;
+
+	if ((!token || token === "") && (!guestToken || guestToken === "")) return;
+
 	// check if content script is already inserted
 	let timer = undefined;
 	let res = await Promise.race([
@@ -33,22 +39,53 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 	]);
 
 	if (timer !== undefined) clearTimeout(timer);
-
 	if (res === "ok") return;
 
-	// If not logged in exit
-	let token = storage.token.value;
+	let normalCheck = await userHasProjectOnPage(tab.url);
 
-	if (!token || token === "") return;
+	if (!normalCheck) {
+		if (guestToken && guestToken !== "") {
+			let response = await fetch(
+				import.meta.env.VITE_API_ENDPOINT +
+					"/projects/check-via-access-token",
+				{
+					method: "POST",
+					headers: {
+						Accept: "application/json",
+						"Content-type": "application/json",
+						clientId: import.meta.env.VITE_CLIENT_ID,
+						version: import.meta.env.VITE_VERSION,
+						"access-token": guestToken,
+					},
+					body: JSON.stringify({
+						url: tab.url,
+					}),
+				}
+			);
 
+			// if the response was successful but there is no project on this url associated to the token exit
+			if (!response.ok || response.status === 204) return;
+		}
+	}
+	// Inject the scripts in page
+	let injectResult = await browser.scripting.executeScript({
+		target: { tabId: tabId },
+		files: ["content/index.js"],
+	});
+
+	console.log(`Injected content-script in "${tabId}".\n`, injectResult);
+});
+
+async function userHasProjectOnPage(url: string): Promise<boolean> {
 	let user = storage.user.value;
+
 	if (!user || user === "") {
 		let response = await fetch(
 			import.meta.env.VITE_API_ENDPOINT + "/auth/user",
 			{
 				method: "GET",
 				headers: {
-					Authorization: `Bearer ${token}`,
+					Authorization: `Bearer ${storage.token.value}`,
 					Accept: "application/json",
 					"Content-type": "application/json",
 					clientId: import.meta.env.VITE_CLIENT_ID,
@@ -61,10 +98,9 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 			if (response.status === 401) {
 				storage.token.value = "";
 				storage.user.value = "";
-				return;
 			}
 
-			return;
+			return false;
 		}
 
 		let userData = undefined;
@@ -78,35 +114,26 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 		{
 			method: "POST",
 			headers: {
-				Authorization: `Bearer ${token}`,
+				Authorization: `Bearer ${storage.token.value}`,
 				Accept: "application/json",
 				"Content-type": "application/json",
 				clientId: import.meta.env.VITE_CLIENT_ID,
 				version: import.meta.env.VITE_VERSION,
 				"include-organization-id": "true",
 			},
-			body: JSON.stringify({
-				url: tab.url,
-			}),
+			body: JSON.stringify({ url }),
 		}
 	);
 
-	if (!response.ok) return;
+	if (!response.ok) return false;
 
 	let data = (await response.json()).data;
 
 	// If no project exit
-	if (data.length < 1) return;
+	if (data.length < 1) return false;
 
-	// Inject the scripts in page
-
-	let injectResult = await browser.scripting.executeScript({
-		target: { tabId: tabId },
-		files: ["content/index.js"],
-	});
-
-	console.log(`Injected content-script in "${tabId}".\n`, injectResult);
-});
+	return true;
+}
 
 /**
  * Used for checking if the extension context is still valid from the content-script
@@ -136,6 +163,25 @@ onMessage("setToken", ({ data }) => {
 	}
 });
 
+onMessage("getGuestToken", () => {
+	try {
+		return storage.guestToken.value;
+	} catch (error) {
+		console.log(error);
+		return "";
+	}
+});
+
+onMessage("setGuestToken", ({ data }) => {
+	try {
+		storage.guestToken.value = data.token;
+		return true;
+	} catch (error) {
+		console.log(error);
+		return false;
+	}
+});
+
 onMessage("getUser", () => {
 	try {
 		return storage.user.value;
@@ -158,6 +204,7 @@ onMessage("setUser", ({ data }) => {
 onMessage("invalidate", () => {
 	try {
 		storage.token.value = "";
+		storage.guestToken.value = "";
 		return true;
 	} catch (error) {
 		console.log(error);

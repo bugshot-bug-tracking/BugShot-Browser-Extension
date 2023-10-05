@@ -32,11 +32,8 @@ class BugShot extends HTMLElement {
 
 		BugShotApp.mount(this.shadowRoot);
 
-		let modalsNode = document.createElement("div");
-		modalsNode.setAttribute("id", "modals");
-		this.shadowRoot?.firstElementChild?.appendChild(modalsNode);
 		BugShotApp.use(VueUniversalModal, {
-			teleportTarget: modalsNode,
+			teleportTarget: this.shadowRoot?.querySelector("#modals"),
 			modalComponent: "MyModal",
 		});
 

@@ -24,7 +24,7 @@
 						first_name: comment.attributes.user.first_name,
 						last_name: comment.attributes.user.last_name,
 					}"
-					:owner="user.id === comment.attributes.user.id"
+					:owner="user?.id === comment.attributes.user.id"
 				/>
 
 				<div />
