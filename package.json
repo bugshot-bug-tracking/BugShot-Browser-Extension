@@ -1,6 +1,6 @@
 {
 	"name": "bugshot-extension",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"description": "BugShot is an easy-to-use tool to track the bugs on your projects.",
 	"displayName": "BugShot",
 	"scripts": {
