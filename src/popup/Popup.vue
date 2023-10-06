@@ -21,7 +21,10 @@
 
 			<Empty v-else-if="noProject" />
 
-			<MainGuest v-else-if="store.isGuest" />
+			<MainGuest
+				v-else-if="store.isGuest"
+				@noProjects="noProject = true"
+			/>
 
 			<Main
 				v-else

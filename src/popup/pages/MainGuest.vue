@@ -112,6 +112,8 @@ onMounted(async () => {
 	try {
 		await main.init();
 
+		if (main.getProject === undefined) return emit("noProjects");
+
 		await store.init();
 	} catch (error) {
 		emit("error", error);
