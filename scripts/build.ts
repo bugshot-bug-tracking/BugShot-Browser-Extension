@@ -47,12 +47,15 @@ const mode = isDev ? Mode.DEV : Mode.PROD;
 		execSync(`pnpm vite build --mode ${mode}`, { stdio: "inherit" });
 		execSync(
 			`pnpm vite build --mode ${mode} --config vite.config.content.ts`,
-			{
-				stdio: "inherit",
-			}
+			{ stdio: "inherit" }
 		);
 		execSync(
 			`pnpm vite build --mode ${mode} --config vite.config.background.ts`,
+			{ stdio: "inherit" }
+		);
+
+		execSync(
+			`pnpm vite build --mode ${mode} --config vite.config.misc.ts`,
 			{
 				stdio: "inherit",
 			}
