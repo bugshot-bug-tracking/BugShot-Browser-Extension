@@ -56,31 +56,12 @@
 			<div class="creator">
 				<label>{{ t("creator") + ":" }}</label>
 
-				<div class="content" v-if="bug.attributes.creator">
-					<div class="name">
-						{{
-							`${bug.attributes.creator.attributes.first_name} ${bug.attributes.creator.attributes.last_name}`
-						}}
-					</div>
+				<div class="content">
+					<div class="name">{{ creatorName }}</div>
 
 					<div class="date black-to-gray">
 						{{
 							"@" +
-							d(
-								new Date(dateFix(bug.attributes.created_at)),
-								"short"
-							)
-						}}
-					</div>
-				</div>
-
-				<div class="content" v-else>
-					<div class="name">
-						{{ `${bug.attributes.selector ?? t("anonymous")}` }}
-					</div>
-
-					<div class="date">
-						{{
 							d(
 								new Date(dateFix(bug.attributes.created_at)),
 								"short"
@@ -461,6 +442,26 @@ const onSubmit = async (
 
 	await store.fetchBugUsers();
 };
+
+const creatorName = computed(() => {
+	if (props.bug == undefined) return undefined;
+
+	if (props.bug.attributes.creator)
+		return `${props.bug.attributes.creator.attributes.first_name} ${props.bug.attributes.creator.attributes.last_name}`;
+
+	if (props.bug.attributes.guest_creator) {
+		if (
+			props.bug.attributes.guest_creator.name ||
+			props.bug.attributes.guest_creator.email
+		)
+			return (
+				props.bug.attributes.guest_creator.name ??
+				props.bug.attributes.guest_creator.email
+			);
+	}
+
+	return t("anonymous");
+});
 </script>
 
 <style lang="scss" scoped>

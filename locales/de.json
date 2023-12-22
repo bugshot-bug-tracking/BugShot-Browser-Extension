@@ -268,5 +268,6 @@
 			"name_info": "Der angegebene Name wird verwendet, um den Ersteller von Berichten zu identifizieren, die im Gastmodus erstellt werden.",
 			"email_info": "Falls Sie über den Status der von Ihnen erstellten Berichte informiert werden möchten."
 		}
-	}
+	},
+	"anonymous": "Anonym"
 }
