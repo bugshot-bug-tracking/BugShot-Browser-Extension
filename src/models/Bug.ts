@@ -1,5 +1,6 @@
 import { Attachment } from "./Attachment";
 import { BugUserRole } from "./BugUserRole";
+import { Comment } from "./Comment";
 import { Priority } from "./Priority";
 import { Screenshot } from "./Screenshot";
 import { User } from "./User";
@@ -23,10 +24,27 @@ export interface Bug {
 		selector: string;
 		status_id: string;
 		updated_at: string;
-		url: URL | string;
+		url: string;
+		done_at: string;
+		archived_at: string;
+		deleted_at: string;
+
+		users?: BugUserRole[];
+		screenshots?: Screenshot[];
+		attachments?: Attachment[];
+		comments?: Comment[];
+
+		time_estimation?: number;
+		time_estimation_type?: "m" | "h" | "d" | "w";
+
+		approval_status: {
+			id: string;
+			designation?: "approved" | "declined" | "pending";
+		};
+
+		guest_creator?: {
+			name?: string;
+			email?: string;
+		};
 	};
-	users?: BugUserRole[];
-	screenshots?: Screenshot[];
-	attachments?: Attachment[];
-	comments?: Comment[];
 }
