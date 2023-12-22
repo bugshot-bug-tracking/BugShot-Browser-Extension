@@ -265,8 +265,8 @@
 		"guest": {
 			"guest_access": "Gastzugang",
 			"display_name": "Name",
-			"name_info": "Der angegebene Name wird verwendet, um den Ersteller von Berichten zu identifizieren, die im Gastmodus erstellt werden.",
-			"email_info": "Falls Sie über den Status der von Ihnen erstellten Berichte informiert werden möchten."
+			"name_info": "Geben Sie bitte Ihren Namen an, um Sie im Gastmodus zuordnen zu können.",
+			"email_info": "Tragen Sie bitte Ihre Mailadresse ein, falls Sie Benachrichtigungen zum Status Ihrer Projekte erhalten möchten."
 		}
 	},
 	"anonymous": "Anonym"
