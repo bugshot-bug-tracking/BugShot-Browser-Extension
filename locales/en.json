@@ -260,5 +260,13 @@
 	"bug_created": "Bug report created!",
 	"info": "Info",
 	"token": "Token",
-	"guest": "Guest"
+	"guest": "Guest",
+	"login_page": {
+		"guest": {
+			"guest_access": "Guest access",
+			"display_name": "Name",
+			"name_info": "The name provided will be used to identify the creator of reports created in guest mode.",
+			"email_info": "In case you want to receive eventual updates regarding the status of the reports you create."
+		}
+	}
 }

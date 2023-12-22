@@ -23,6 +23,7 @@ declare module 'vue' {
     DeleteModal2: typeof import('./components/Modals/DeleteModal2.vue')['default']
     DropdownButton: typeof import('./components/DropdownButton.vue')['default']
     Info: typeof import('./components/tabs/BugTab/Info.vue')['default']
+    InfoPopover: typeof import('./components/InfoPopover.vue')['default']
     LanguageSwitch: typeof import('./components/LanguageSwitch.vue')['default']
     LoadingModal2: typeof import('./components/Modals/LoadingModal2.vue')['default']
     Marker: typeof import('./components/Marker.vue')['default']

@@ -5,6 +5,7 @@ import { Bug } from "~/models/Bug";
 import getOS from "~/util/getOS";
 import getBrowser from "~/util/getBrowser";
 import { User } from "~/models/User";
+import { useAuthStore } from "./auth";
 
 export const useReportStore = defineStore("report", {
 	state: () => ({
@@ -93,6 +94,8 @@ export const useReportStore = defineStore("report", {
 		},
 
 		async guestSubmit() {
+			let creator = await useAuthStore().getGuestUser();
+
 			// send bug data and get bug object
 			let bug = (
 				await axios.post(`bugs/store-with-token`, {
@@ -128,6 +131,8 @@ export const useReportStore = defineStore("report", {
 							};
 					}),
 					attachments: this.attachments,
+
+					...(creator ? { guest_creator: creator } : {}),
 				})
 			).data.data as Bug;
 

@@ -201,10 +201,37 @@ onMessage("setUser", ({ data }) => {
 	}
 });
 
+onMessage("getGuestUser", () => {
+	try {
+		return {
+			name: storage.guestName.value,
+			email: storage.guestEmail.value,
+		};
+	} catch (error) {
+		console.log(error);
+		return undefined;
+	}
+});
+
+onMessage("setGuestUser", ({ data }) => {
+	try {
+		storage.guestName.value = data.name ?? "";
+		storage.guestEmail.value = data.email ?? "";
+
+		return true;
+	} catch (error) {
+		console.log(error);
+		return false;
+	}
+});
+
 onMessage("invalidate", () => {
 	try {
 		storage.token.value = "";
+
 		storage.guestToken.value = "";
+		storage.guestName.value = "";
+		storage.guestEmail.value = "";
 		return true;
 	} catch (error) {
 		console.log(error);

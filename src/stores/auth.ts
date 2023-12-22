@@ -92,6 +92,29 @@ export const useAuthStore = defineStore("auth", {
 			}
 		},
 
+		async saveGuestUser(payload: { name?: string; email?: string }) {
+			try {
+				await sendMessage("setGuestUser", {
+					name: payload.name,
+					email: payload.email,
+				});
+
+				return true;
+			} catch (error: any) {
+				throw error;
+			}
+		},
+
+		async getGuestUser() {
+			try {
+				let response = await sendMessage("getGuestUser", {});
+
+				return response;
+			} catch (error: any) {
+				throw error;
+			}
+		},
+
 		async logout() {
 			return (
 				axios

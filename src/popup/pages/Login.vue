@@ -46,7 +46,7 @@
 				class="text-6 font-bold!"
 				@click="mode = 'token'"
 			>
-				{{ t("token") }}
+				{{ t("login_page.guest.guest_access") }}
 			</n-button>
 		</div>
 
@@ -145,7 +145,6 @@
 					id="token"
 					type="text"
 					name="token"
-					:placeholder="t('token')"
 					class="!pr-12"
 					required
 					v-model="token"
@@ -155,6 +154,48 @@
 				<img
 					src="/assets/icons/token.svg"
 					alt="email"
+					class="input-image"
+				/>
+			</div>
+
+			<div class="bs-input">
+				<label class="flex justify-start! gap-4">
+					{{ `${t("login_page.guest.display_name")} (Optional)` }}
+					<InfoPopover :message="t('login_page.guest.name_info')" />
+				</label>
+
+				<input
+					id="token-name"
+					type="text"
+					name="token-name"
+					class="!pr-12"
+					v-model="token_name"
+				/>
+
+				<img
+					src="/assets/icons/user.svg"
+					alt="name"
+					class="input-image"
+				/>
+			</div>
+
+			<div class="bs-input">
+				<label class="flex justify-start! gap-4">
+					{{ `${t("email")} (Optional)` }}
+					<InfoPopover :message="t('login_page.guest.email_info')" />
+				</label>
+
+				<input
+					id="token-email"
+					type="text"
+					name="token-email"
+					class="!pr-12"
+					v-model="token_email"
+				/>
+
+				<img
+					src="/assets/icons/mail.svg"
+					alt="name"
 					class="input-image"
 				/>
 			</div>
@@ -231,6 +272,11 @@ const submit = async () => {
 			await store.useToken({
 				token: token.value,
 			});
+
+			await store.saveGuestUser({
+				name: token_name.value,
+				email: token_email.value,
+			});
 		} else {
 			await store.login({
 				email: email.value,
@@ -265,6 +311,8 @@ const loading = ref(false);
 const mode = ref<"email" | "token">("email");
 
 const token = ref("");
+const token_name = ref("");
+const token_email = ref("");
 const tokenErrorMessage = ref<string | undefined>(undefined);
 </script>
 

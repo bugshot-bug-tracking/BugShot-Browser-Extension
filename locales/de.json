@@ -260,5 +260,13 @@
 	"bug_created": "Yes! Bug reportet.",
 	"info": "Info",
 	"token": "Token",
-	"guest": "Gast"
+	"guest": "Gast",
+	"login_page": {
+		"guest": {
+			"guest_access": "Gastzugang",
+			"display_name": "Name",
+			"name_info": "Der angegebene Name wird verwendet, um den Ersteller von Berichten zu identifizieren, die im Gastmodus erstellt werden.",
+			"email_info": "Falls Sie über den Status der von Ihnen erstellten Berichte informiert werden möchten."
+		}
+	}
 }

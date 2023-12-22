@@ -20,6 +20,15 @@ declare module "webext-bridge" {
 		getUser: ProtocolWithReturn<{}, User>;
 		getToken: ProtocolWithReturn<{}, string>;
 		setToken: ProtocolWithReturn<{ token: string }, boolean>;
+		setGuestToken: ProtocolWithReturn<{ token: string }, boolean>;
+		setGuestUser: ProtocolWithReturn<
+			{ name?: string; email?: string },
+			boolean
+		>;
+		getGuestUser: ProtocolWithReturn<
+			{},
+			{ name?: string; email?: string } | undefined
+		>;
 		"check-state": ProtocolWithReturn<{}, SettingsState>;
 
 		// for changing settings return the setting that is the new state in store
