@@ -8,10 +8,8 @@ export enum Mode {
 }
 
 export enum Target {
-	CHROME = "chrome",
+	CHROMIUM = "chromium",
 	FIREFOX = "firefox",
-	EDGE = "edge",
-	OPERA = "opera",
 	SAFARI = "safari",
 }
 
@@ -39,7 +37,7 @@ const sharedConfig = {
 };
 
 export function getManifest(
-	target: Target = Target.CHROME
+	target: Target = Target.CHROMIUM
 ): Manifest.WebExtensionManifest {
 	// update this file to update this manifest.json
 	// can also be conditional based on your need
