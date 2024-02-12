@@ -13,10 +13,9 @@ export const useGuestStore = defineStore("guest", {
 			let url = window.location.href;
 
 			try {
-				let response = await axios.post(
-					"projects/check-via-access-token",
-					{ url }
-				);
+				let response = await axios.post("access-tokens/check-url", {
+					url,
+				});
 
 				if (response.status === HttpStatusCode.NoContent) return;
 

@@ -21,12 +21,9 @@ export const useGuestPopupStore = defineStore("guest-popup", {
 			if (this.tab.url === undefined) throw "Not a proper tab url!";
 
 			try {
-				let response = await axios.post(
-					"projects/check-via-access-token",
-					{
-						url: this.tab.url,
-					}
-				);
+				let response = await axios.post("access-tokens/check-url", {
+					url: this.tab.url,
+				});
 
 				if (response.status === HttpStatusCode.NoContent) return;
 

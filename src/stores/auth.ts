@@ -64,7 +64,7 @@ export const useAuthStore = defineStore("auth", {
 
 			try {
 				await axios.post(
-					"projects/validate-access-token",
+					"access-tokens/validate-access-token",
 					{},
 					{
 						headers: {

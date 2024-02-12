@@ -46,8 +46,7 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
 	if (!normalCheck) {
 		if (guestToken && guestToken !== "") {
 			let response = await fetch(
-				import.meta.env.VITE_API_ENDPOINT +
-					"/projects/check-via-access-token",
+				import.meta.env.VITE_API_ENDPOINT + "/access-tokens/check-url",
 				{
 					method: "POST",
 					headers: {
