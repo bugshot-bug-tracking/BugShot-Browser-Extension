@@ -9,6 +9,18 @@ export const token = useStorageLocal("token", "", {
 	listenToStorageChanges: true,
 });
 
+export const guestToken = useStorageLocal("guestToken", "", {
+	listenToStorageChanges: true,
+});
+
+export const guestName = useStorageLocal("guestName", "", {
+	listenToStorageChanges: true,
+});
+
+export const guestEmail = useStorageLocal("guestEmail", "", {
+	listenToStorageChanges: true,
+});
+
 export const settings = useStorageLocal("settings", "settings", {
 	listenToStorageChanges: true,
 });

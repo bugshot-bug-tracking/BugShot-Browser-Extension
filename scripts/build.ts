@@ -47,29 +47,45 @@ const mode = isDev ? Mode.DEV : Mode.PROD;
 		execSync(`pnpm vite build --mode ${mode}`, { stdio: "inherit" });
 		execSync(
 			`pnpm vite build --mode ${mode} --config vite.config.content.ts`,
+			{ stdio: "inherit" }
+		);
+		execSync(
+			`pnpm vite build --mode ${mode} --config vite.config.background.ts`,
+			{ stdio: "inherit" }
+		);
+
+		execSync(
+			`pnpm vite build --mode ${mode} --config vite.config.misc.ts`,
 			{
 				stdio: "inherit",
 			}
 		);
 	} else {
-		let popup_background = spawn(`pnpm vite build --mode ${mode}`, {
+		spawn(`pnpm vite build --mode ${mode}`, {
 			shell: true,
+			stdio: "inherit",
 		});
-		popup_background.stdout.on("data", (data) =>
-			console.log(data.toString())
-		);
-		popup_background.stderr.on("data", (data) =>
-			console.log(data.toString())
-		);
 
-		let content = spawn(
+		spawn(
 			`pnpm vite build --mode ${mode} --config vite.config.content.ts`,
 			{
 				shell: true,
+				stdio: "inherit",
 			}
 		);
-		content.stdout.on("data", (data) => console.log(data.toString()));
-		content.stderr.on("data", (data) => console.log(data.toString()));
+
+		spawn(
+			`pnpm vite build --mode ${mode} --config vite.config.background.ts`,
+			{
+				shell: true,
+				stdio: "inherit",
+			}
+		);
+
+		spawn(`pnpm vite build --mode ${mode} --config vite.config.misc.ts`, {
+			shell: true,
+			stdio: "inherit",
+		});
 	}
 })();
 

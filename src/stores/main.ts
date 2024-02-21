@@ -55,7 +55,7 @@ export const useMainStore = defineStore("main", {
 			try {
 				let projects = (
 					await axios.post(
-						`users/${user.id}/check-project`,
+						`users/${user?.id}/check-project`,
 						{
 							url: url,
 						},

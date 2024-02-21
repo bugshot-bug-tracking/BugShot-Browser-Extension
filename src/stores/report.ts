@@ -5,6 +5,7 @@ import { Bug } from "~/models/Bug";
 import getOS from "~/util/getOS";
 import getBrowser from "~/util/getBrowser";
 import { User } from "~/models/User";
+import { useAuthStore } from "./auth";
 
 export const useReportStore = defineStore("report", {
 	state: () => ({
@@ -90,6 +91,54 @@ export const useReportStore = defineStore("report", {
 
 			await useMainStore().fetchStatuses();
 			await useMainStore().fetchMarkers();
+		},
+
+		async guestSubmit() {
+			let creator = await useAuthStore().getGuestUser();
+
+			// send bug data and get bug object
+			let bug = (
+				await axios.post(`bugs/store-with-token`, {
+					designation: this.bug.designation,
+					description: this.bug.description,
+					priority_id: this.priority,
+
+					...(this.bug.deadline
+						? {
+								deadline: new Date(this.bug.deadline as string)
+									.toISOString()
+									.slice(0, -1),
+						  }
+						: {}),
+
+					url: window.location.href,
+					operating_system: getOS(),
+					browser: `${getBrowser().name} ${getBrowser().version}`,
+					selector: this.selector,
+					resolution: `${window.screen.width}x${window.screen.height}`,
+					order_number: 0,
+
+					screenshots: this.screenshots.map((s) => {
+						if (s)
+							return {
+								base64: btoa(s),
+								position_x: this.clientX,
+								position_y: this.clientY,
+								web_position_x: this.pageX,
+								web_position_y: this.pageY,
+								device_pixel_ratio: this.devicePixelRatio,
+								markers: this.markers,
+							};
+					}),
+					attachments: this.attachments,
+
+					...(creator ? { guest_creator: creator } : {}),
+				})
+			).data.data as Bug;
+
+			console.log(bug);
+
+			this.$reset();
 		},
 	},
 

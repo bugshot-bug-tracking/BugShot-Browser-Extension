@@ -258,5 +258,16 @@
 	"maintenance_in_progress": "Maintenance in progress!",
 	"maintenance_in_progress_subtext": "Hello! This is not an error, at the moment the website is in maintenance mode, we will be back up shortly!",
 	"bug_created": "Bug report created!",
-	"info": "Info"
+	"info": "Info",
+	"token": "Token",
+	"guest": "Guest",
+	"login_page": {
+		"guest": {
+			"guest_access": "Guest access",
+			"display_name": "Name",
+			"name_info": "The name provided will be used to identify the creator of reports created in guest mode.",
+			"email_info": "Please enter your e-mail address if you would like to receive notifications about the status of your projects."
+		}
+	},
+	"anonymous": "Anonymous"
 }

@@ -17,7 +17,7 @@
 				/>
 			</div>
 
-			<ProjectManager />
+			<ProjectManager v-if="!auth.isGuest" />
 
 			<div class="bs-container" gap-4>
 				<div class="bs-input" ref="name">
@@ -131,7 +131,7 @@
 					</div>
 				</div>
 
-				<div class="assign-to">
+				<div class="assign-to" v-if="!auth.isGuest">
 					<div>{{ t("assigned_to") }}:</div>
 
 					<AssignModal
@@ -185,6 +185,7 @@ import toBase64 from "~/util/toBase64";
 import { useReportStore } from "~/stores/report";
 import { useI18nStore } from "~/stores/i18n";
 import { User } from "~/models/User";
+import { useAuthStore } from "~/stores/auth";
 
 defineProps({
 	show: {
@@ -192,6 +193,8 @@ defineProps({
 		required: true,
 	},
 });
+
+const auth = useAuthStore();
 
 // this code forces the focus on a field and subsequently crushes the function in a webpage that wants to take the focus away by exceeding stack call size
 const name = ref(null);
@@ -250,7 +253,8 @@ const submit = async () => {
 			}))
 		);
 
-		await store.submit();
+		if (!auth.isGuest) await store.submit();
+		else await store.guestSubmit();
 
 		loadingModal.state = 1;
 	} catch (error) {

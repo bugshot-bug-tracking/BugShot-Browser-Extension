@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { onMessage, sendMessage } from "webext-bridge";
+import { sendMessage } from "webext-bridge";
 import { Tabs } from "webextension-polyfill";
 
 import { Position, Theme } from "~/models/settings-store";

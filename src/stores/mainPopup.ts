@@ -37,7 +37,7 @@ export const useMainPopupStore = defineStore("main-popup", {
 
 			let user = useAuthStore().getUser;
 
-			if (user.id === undefined) throw "Error while fetching user data!";
+			if (user?.id === undefined) throw "Error while fetching user data!";
 
 			try {
 				let response = (
@@ -94,16 +94,25 @@ export const useMainPopupStore = defineStore("main-popup", {
 		async checkAlive() {
 			if (!this.tab?.id) return false;
 
-			let alive = await browser.tabs
-				.sendMessage(this.tab?.id, "content-status")
-				.catch((e) => {
-					console.log(e);
-					return false;
-				});
+			let timer = undefined;
+			let alive = await Promise.race([
+				browser.tabs
+					.sendMessage(this.tab.id, "content-status")
+					.then((v) => v)
+					.catch((e) => {
+						console.log(e);
+						return false;
+					}),
+				new Promise((resolve) => {
+					timer = setTimeout(resolve, 3000);
+				}).then(() => false),
+			]);
+
+			if (timer !== undefined) clearTimeout(timer);
 
 			console.log(alive);
 
-			if (alive === false) {
+			if (alive !== "ok") {
 				try {
 					let response = await browser.scripting.executeScript({
 						target: { tabId: this.tab.id },

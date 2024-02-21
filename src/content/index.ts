@@ -32,11 +32,8 @@ class BugShot extends HTMLElement {
 
 		BugShotApp.mount(this.shadowRoot);
 
-		let modalsNode = document.createElement("div");
-		modalsNode.setAttribute("id", "modals");
-		this.shadowRoot?.firstElementChild?.appendChild(modalsNode);
 		BugShotApp.use(VueUniversalModal, {
-			teleportTarget: modalsNode,
+			teleportTarget: this.shadowRoot?.querySelector("#modals"),
 			modalComponent: "MyModal",
 		});
 
@@ -53,6 +50,8 @@ class BugShot extends HTMLElement {
 
 // Firefox `browser.tabs.executeScript()` requires scripts return a primitive value
 (() => {
+	console.log("BugShot content injected.");
+
 	// check to see if the element was defined beforehand if not define it
 	if (!customElements.get("bugshot-sidebar"))
 		customElements.define("bugshot-sidebar", BugShot);
@@ -82,7 +81,17 @@ class BugShot extends HTMLElement {
 
 		if (sender.id !== chrome.runtime.id) console.error(sender);
 
-		if (message === "content-status") sendResponse("ok");
+		let bsi = document.getElementsByTagName("bugshot-sidebar");
+		console.log(bsi);
+
+		if (bsi.length < 1) {
+			chrome.runtime.onMessage.removeListener(handleExternalMessages);
+			return sendResponse("");
+		}
+
+		if (message === "content-status") {
+			sendResponse("ok");
+		}
 		if (message === "login") {
 			useSettingsStore().disabled = false;
 			sendResponse("ok");
