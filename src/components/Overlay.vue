@@ -77,23 +77,9 @@ const createMark = async (event: MouseEvent) => {
 
 	overlay.showMarker = true;
 
-	const generateQuerySelector = (el: Element | null): string => {
-		if (el === null) return "";
-		if (el.tagName.toLowerCase() == "html") return "html";
-		let str = el.tagName.toLowerCase();
-
-		str += el.id != "" ? "#" + el.id : "";
-
-		if (el.classList && el.classList.length > 0) {
-			el.classList.forEach((item) => {
-				str += "." + item;
-			});
-		}
-
-		return generateQuerySelector(el.parentElement) + " > " + str;
-	};
-
-	store.selector = generateQuerySelector(element);
+	store.selector = unique(element, {
+		fromRoot: true,
+	});
 
 	store.devicePixelRatio = window.devicePixelRatio;
 
