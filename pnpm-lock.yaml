@@ -41,6 +41,9 @@ devDependencies:
   axios:
     specifier: ^1.6.7
     version: 1.6.7
+  bowser:
+    specifier: ^2.11.0
+    version: 2.11.0
   chokidar:
     specifier: ^3.6.0
     version: 3.6.0
@@ -1499,6 +1502,10 @@ packages:
   /binary-extensions@2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
     engines: {node: '>=8'}
+    dev: true
+
+  /bowser@2.11.0:
+    resolution: {integrity: sha512-AlcaJBi/pqqJBIQ8U9Mcpc9i8Aqxn88Skv5d+xBX006BY5u8N3mGLHa5Lgppa7L/HfwgwLgZ6NYs+Ag6uUmJRA==}
     dev: true
 
   /brace-expansion@1.1.11:

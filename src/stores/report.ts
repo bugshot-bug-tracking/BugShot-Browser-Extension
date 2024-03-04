@@ -2,8 +2,7 @@ import { defineStore } from "pinia";
 import axios from "axios";
 import { useMainStore } from "./main";
 import { Bug } from "~/models/Bug";
-import getOS from "~/util/getOS";
-import getBrowser from "~/util/getBrowser";
+import Bowser from "bowser";
 import { User } from "~/models/User";
 import { useAuthStore } from "./auth";
 
@@ -38,6 +37,8 @@ export const useReportStore = defineStore("report", {
 		async submit() {
 			let status_id = useMainStore().getFirstStatus?.id;
 
+			const bowser = Bowser.getParser(window.navigator.userAgent);
+
 			// send bug data and get bug object
 			let bug = (
 				await axios.post(`statuses/${status_id}/bugs`, {
@@ -54,8 +55,12 @@ export const useReportStore = defineStore("report", {
 						: {}),
 
 					url: window.location.href,
-					operating_system: getOS(),
-					browser: `${getBrowser().name} ${getBrowser().version}`,
+					operating_system: `${bowser.getOSName()} ${
+						bowser.getOS().versionName
+					}`,
+					browser: `${bowser.getBrowserName()} ${
+						bowser.getBrowserVersion().split(".")[0]
+					}`,
 					selector: this.selector,
 					resolution: `${window.screen.width}x${window.screen.height}`,
 					order_number: 0,
@@ -96,6 +101,8 @@ export const useReportStore = defineStore("report", {
 		async guestSubmit() {
 			let creator = await useAuthStore().getGuestUser();
 
+			const bowser = Bowser.getParser(window.navigator.userAgent);
+
 			// send bug data and get bug object
 			let bug = (
 				await axios.post(`bugs/store-with-token`, {
@@ -112,8 +119,12 @@ export const useReportStore = defineStore("report", {
 						: {}),
 
 					url: window.location.href,
-					operating_system: getOS(),
-					browser: `${getBrowser().name} ${getBrowser().version}`,
+					operating_system: `${bowser.getOSName()} ${
+						bowser.getOS().versionName
+					}`,
+					browser: `${bowser.getBrowserName()} ${
+						bowser.getBrowserVersion().split(".")[0]
+					}`,
 					selector: this.selector,
 					resolution: `${window.screen.width}x${window.screen.height}`,
 					order_number: 0,
