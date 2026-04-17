@@ -19,12 +19,12 @@ const sharedConfig = {
 	version: pkg.version,
 	description: pkg.description,
 	icons: {
-		"16": "./assets/extension_icons/icon_16x16.png",
-		"32": "./assets/extension_icons/icon_32x32.png",
-		"48": "./assets/extension_icons/icon_48x48.png",
-		"96": "./assets/extension_icons/icon_96x96.png",
-		"128": "./assets/extension_icons/icon_128x128.png",
-		"256": "./assets/extension_icons/icon_256x256.png",
+		"16": "assets/extension_icons/icon_16x16.png",
+		"32": "assets/extension_icons/icon_32x32.png",
+		"48": "assets/extension_icons/icon_48x48.png",
+		"96": "assets/extension_icons/icon_96x96.png",
+		"128": "assets/extension_icons/icon_128x128.png",
+		"256": "assets/extension_icons/icon_256x256.png",
 	},
 	permissions: ["activeTab", "tabs", "storage", "scripting"],
 
@@ -36,9 +36,7 @@ const sharedConfig = {
 	],
 };
 
-export function getManifest(
-	target: Target = Target.CHROMIUM
-): Manifest.WebExtensionManifest {
+export function getManifest(target: Target = Target.CHROMIUM): Manifest.WebExtensionManifest {
 	// update this file to update this manifest.json
 	// can also be conditional based on your need
 
@@ -79,9 +77,7 @@ export function getManifest(
 	};
 }
 
-export function getManifestV2(
-	target: Target = Target.FIREFOX
-): Manifest.WebExtensionManifest {
+export function getManifestV2(target: Target = Target.FIREFOX): Manifest.WebExtensionManifest {
 	// update this file to update this manifest.json
 	// can also be conditional based on your need
 
@@ -94,12 +90,12 @@ export function getManifestV2(
 
 		browser_action: {
 			default_icon: {
-				"16": "./assets/extension_icons/icon_16x16.png",
-				"32": "./assets/extension_icons/icon_32x32.png",
-				"48": "./assets/extension_icons/icon_48x48.png",
-				"96": "./assets/extension_icons/icon_96x96.png",
-				"128": "./assets/extension_icons/icon_128x128.png",
-				"256": "./assets/extension_icons/icon_256x256.png",
+				"16": "assets/extension_icons/icon_16x16.png",
+				"32": "assets/extension_icons/icon_32x32.png",
+				"48": "assets/extension_icons/icon_48x48.png",
+				"96": "assets/extension_icons/icon_96x96.png",
+				"128": "assets/extension_icons/icon_128x128.png",
+				"256": "assets/extension_icons/icon_256x256.png",
 			},
 			default_title: sharedConfig.name,
 			default_popup: "./popup/index.html",
