@@ -64,13 +64,12 @@
 						v-model="store.bug.deadline"
 						:placeholder="t('no_deadline')"
 						:locale="locale"
-						:format="format"
-						:previewFormat="format"
+						:formats="{ input: format, preview: format }"
 						@cleared="clearDeadline"
-						:selectText="t('select.select')"
-						:cancelText="t('cancel')"
-						:teleport="datepicker"
-						:altPosition="altPosition"
+						:action-row="{
+							selectBtnLabel: t('select.select'),
+							cancelBtnLabel: t('cancel'),
+						}"
 					/>
 
 					<div ref="datepicker" relative></div>
@@ -186,6 +185,7 @@ import { useReportStore } from "~/stores/report";
 import { useI18nStore } from "~/stores/i18n";
 import { User } from "~/models/User";
 import { useAuthStore } from "~/stores/auth";
+	import { de, enUS } from "date-fns/locale";
 
 defineProps({
 	show: {
@@ -213,13 +213,7 @@ const { t, d } = useI18n();
 
 const store = useReportStore();
 
-const datepicker = ref(null);
-const altPosition = (el: HTMLElement | undefined) => ({
-	top: "1em",
-	left: 0,
-});
-
-const locale = computed(() => useI18nStore().getCurrentLocale);
+const locale = computed(() => (useI18nStore().getCurrentLocale === "de" ? de : enUS));
 const format = (date: Date) => d(new Date(date).toISOString(), "short");
 
 const data = reactive({

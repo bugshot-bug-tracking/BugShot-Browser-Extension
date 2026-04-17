@@ -1,4 +1,4 @@
-@import "@vuepic/vue-datepicker/src/VueDatePicker/style/main.scss";
+@import "@vuepic/vue-datepicker/dist/main.css";
 
 .vue-universal-modal {
 	&:focus-visible {
@@ -104,6 +104,17 @@ svg {
 	}
 }
 
-.dp__select {
-	color: #18b984;
+.dp__action_button {
+	--dp-primary-text-color: var(--bs-green-dark);
+	--dp-primary-color: transparent;
+	--dp-text-color: var(--bs-gray);
+	--dp-border-color: transparent;
+
+	font-weight: bold;
+
+	&:hover {
+		--dp-primary-text-color: var(--bs-green);
+		background-color: hsla(0, 0%, 50%, 0.25);
+		font-weight: bolder;
+	}
 }

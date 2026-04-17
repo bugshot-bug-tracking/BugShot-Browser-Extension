@@ -12,6 +12,29 @@ export default defineConfig(({ mode }) => {
 			"process.env.NODE_ENV": `"'${mode}'"`,
 		},
 
+		css: {
+			postcss: {
+				plugins: [
+					{
+						postcssPlugin: "replace-root",
+						Rule(rule) {
+							if (rule.selector === ":root") {
+								rule.selector = ":host";
+							}
+						},
+
+						Declaration(decl) {
+							if (decl.value && decl.value.includes("rem")) {
+								decl.value = decl.value.replace(/(-?\d*\.?\d+)rem/g, (_, num) => {
+									return `${num}em`;
+								});
+							}
+						},
+					},
+				],
+			},
+		},
+
 		build: {
 			watch: isDev ? {} : undefined,
 			outDir: r(`dist/${mode}/${target}/content`),
@@ -26,6 +49,14 @@ export default defineConfig(({ mode }) => {
 			rollupOptions: {
 				output: {
 					entryFileNames: "[name].js",
+					assetFileNames: (assetInfo) => {
+						// Check if the asset is a CSS file and rename it
+						if (assetInfo.names && assetInfo.names[0] && assetInfo.names[0].endsWith(".css")) {
+							return "style.css"; // Custom name for the CSS file
+						}
+						// Default naming for other assets (e.g., images)
+						return assetInfo.names?.[0] || "[name].[ext]";
+					},
 					extend: true,
 					format: "iife",
 				},
